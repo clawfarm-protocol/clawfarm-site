@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/whitepaper", "destination": "/whitepaper.pdf" }
+  ],
+  "redirects": [
+    { "source": "/users", "destination": "/builders", "statusCode": 301 },
+    { "source": "/marketplace", "destination": "/providers", "statusCode": 301 },
+    { "source": "/masterpool", "destination": "/network", "statusCode": 301 },
+    { "source": "/faq", "destination": "/docs", "statusCode": 301 },
+    { "source": "/compare", "destination": "/docs", "statusCode": 301 }
+  ]
+}
