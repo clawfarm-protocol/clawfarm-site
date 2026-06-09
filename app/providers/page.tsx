@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Providers — ClawFarm',
-  description: 'Provider registration surface for anonymous ClawFarm inference endpoints, dual-signed proof settlement, and challenger-driven enforcement.',
+  description: 'Provider registration surface for ClawFarm inference endpoints, compact receipt settlement, pending USDC revenue, and challenger-driven enforcement.',
   alternates: { canonical: '/providers' },
 }
 

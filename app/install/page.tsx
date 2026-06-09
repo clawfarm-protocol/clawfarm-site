@@ -47,10 +47,10 @@ export default function InstallPage() {
               </p>
             </article>
             <article className="border-panel">
-              <h3>Carry proof, not identity.</h3>
+              <h3>Carry receipts, not identity.</h3>
               <p>
                 The protocol does not inspect where capacity comes from. It asks for a
-                wallet, a 100 Test USDC bond, declared offerings, and a dual-signed proof for
+                wallet, a 100 Test USDC stake, declared offerings, and a signed compact receipt for
                 each settled session.
               </p>
             </article>
@@ -102,7 +102,7 @@ export default function InstallPage() {
               </p>
             </article>
             <article className="border-panel">
-              <h3>Sign proof</h3>
+              <h3>Sign receipt</h3>
               <p>
                 You and the requesting app sign a compact usage receipt. Either party submits
                 it on-chain.
