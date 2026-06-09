@@ -5,3 +5,6 @@ node_modules
 /out
 *.tsbuildinfo
 .ipfs-deploy.json
+.impeccable.md
+AGENTS.md
+.playwright-cli
