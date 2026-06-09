@@ -10,7 +10,7 @@ facts disagree, update the website to match the contract.
 
 ## Phase 1 Model
 
-- Providers register a wallet-controlled endpoint and stake 100 Test USDC on devnet.
+- Providers register a wallet-controlled ProviderAccount and stake 100 Test USDC on devnet.
 - Wallet-paid inference is recorded through compact receipts, not direct per-call reward payouts.
 - Receipt recording splits Test USDC into provider-pending revenue and treasury revenue.
 - Provider-share USDC releases only after the receipt finalizes through the attestation lifecycle.

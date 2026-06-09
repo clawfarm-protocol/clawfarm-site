@@ -29,7 +29,7 @@ export default function Home() {
     <main>
       <section className="hero-section">
         <div className="container paper-column">
-          <p className="hero-status">Genesis-immutable . Devnet default . Solana</p>
+          <p className="hero-status">Devnet active . Mainnet pending . Solana</p>
           <h1 className="hero-title">Receipt settlement for inference.</h1>
           <ProtocolStatusStrip />
           <NetworkBadge />
@@ -39,8 +39,8 @@ export default function Home() {
           <div className="hero-role-grid" aria-label="Protocol entry paths">
             <a className="role-entry" href="/providers">
               <span>Providers</span>
-              <strong>Register an endpoint →</strong>
-              <small>Register a wallet-backed endpoint. Receipt payments create pending provider USDC until finalization.</small>
+              <strong>Register a provider account →</strong>
+              <small>Register a wallet-backed ProviderAccount. Receipt payments create pending provider USDC until finalization.</small>
             </a>
             <a className="role-entry" href="/builders">
               <span>Developers</span>
@@ -265,9 +265,9 @@ export default function Home() {
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register an endpoint. The protocol does not ask where capacity comes from. 97% of every settlement is paid to the provider in USDC. CLAW rewards accrue through finalized epoch weight.
+                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAW rewards accrue through finalized epoch weight.
               </p>
-              <a href="/providers">Register an endpoint →</a>
+              <a href="/providers">Register a provider account →</a>
             </article>
           </div>
         </div>
