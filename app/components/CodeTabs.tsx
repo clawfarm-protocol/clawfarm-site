@@ -11,16 +11,26 @@ const examples: Record<Lang, { label: string; code: string }> = {
 
 const cf = new ClawFarm({ cluster: 'devnet' })
 
-const receipt = await cf.receipts.submit({
-  model: 'model-l-001',
-  provider: providerWallet,
+const prepared = await cf.receipts.prepare({
+  providerWallet,
   payer: connectedWallet.publicKey,
+  payerUsdcToken,
+  requestNonce,
+  metadata: {
+    model: 'model-l-001',
+    unit: 'tokens',
+  },
   promptTokens: 420,
   completionTokens: 180,
-  totalUsdc: '0.025000',
+  chargeUsdc: '0.025000',
 })
 
-console.log(receipt.status)`,
+const receipt = await cf.receipts.submit(prepared, {
+  gatewaySigner,
+  paymentDelegate,
+})
+
+console.log(receipt.receiptPda)`,
   },
   py: {
     label: 'Python',
@@ -28,16 +38,24 @@ console.log(receipt.status)`,
 
 cf = ClawFarm(cluster="devnet")
 
-receipt = cf.receipts.submit(
-    model="model-l-001",
-    provider=provider_wallet,
-    payer=connected_wallet,
+prepared = cf.receipts.prepare(
+    provider_wallet=provider_wallet,
+    payer=connected_wallet.public_key,
+    payer_usdc_token=payer_usdc_token,
+    request_nonce=request_nonce,
+    metadata={"model": "model-l-001", "unit": "tokens"},
     prompt_tokens=420,
     completion_tokens=180,
-    total_usdc="0.025000",
+    charge_usdc="0.025000",
 )
 
-print(receipt.status)`,
+receipt = cf.receipts.submit(
+    prepared,
+    gateway_signer=gateway_signer,
+    payment_delegate=payment_delegate,
+)
+
+print(receipt.receipt_pda)`,
   },
   rs: {
     label: 'Rust',
@@ -45,17 +63,27 @@ print(receipt.status)`,
 
 let cf = Client::new("devnet");
 
-let receipt = cf.receipts()
-    .model("model-l-001")
-    .provider(provider_wallet)
-    .payer(connected_wallet)
+let prepared = cf.receipts().prepare()
+    .provider_wallet(provider_wallet)
+    .payer(connected_wallet.pubkey())
+    .payer_usdc_token(payer_usdc_token)
+    .request_nonce(request_nonce)
+    .metadata_model("model-l-001")
+    .metadata_unit("tokens")
     .prompt_tokens(420)
     .completion_tokens(180)
-    .total_usdc("0.025000")
-    .submit()
+    .charge_usdc("0.025000")
+    .build()
     .await?;
 
-println!("{}", receipt.status);`,
+let receipt = cf.receipts()
+    .submit(prepared)
+    .gateway_signer(gateway_signer)
+    .payment_delegate(payment_delegate)
+    .send()
+    .await?;
+
+println!("{}", receipt.receipt_pda);`,
   },
 }
 
