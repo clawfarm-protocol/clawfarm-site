@@ -24,7 +24,7 @@ const uniqueFiles = [...new Set(files)].filter((file) => !file.endsWith('.png') 
 
 const globalChecks = [
   { name: 'Chinese text', pattern: /[\p{Script=Han}]/u },
-  { name: 'local absolute path', pattern: /(\/Users\/|\/home\/|\/root\/|~\/\.config|id\.json|keypair\\.json)/ },
+  { name: 'local absolute path', pattern: /(\/Users\/|\/home\/|\/root\/|~\/\.config|id\.json|keypair\.json)/ },
   { name: 'RPC API-key URL', pattern: /(api-key=|helius-rpc\.com)/i },
   { name: 'private key material', pattern: /(BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|seed phrase|mnemonic|\[[0-9]{1,3}(,\s*[0-9]{1,3}){31,}\])/i },
 ]
