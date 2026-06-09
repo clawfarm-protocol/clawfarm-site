@@ -2,21 +2,14 @@ import type { ReactNode } from 'react'
 
 import CodeTabs from './components/CodeTabs'
 import SettlementFeed from './components/SettlementFeed'
-import { GENESIS_LIVE, type LiveSurfaceState } from './lib/config'
-
-const protocolNumbers = [
-  ['1B', 'CLAF total supply'],
-  ['0%', 'allocation'],
-  ['97/3', 'provider settlement / protocol fee'],
-  ['10 yr', 'emission schedule'],
-]
-
-const miningStats = [
-  ['CLAF mined today', '—'],
-  ['Current epoch emission', '—'],
-  ['Halving countdown', '—'],
-  ['Fixed total supply', '1,000,000,000'],
-]
+import type { LiveSurfaceState } from './lib/config'
+import {
+  HomeProtocolState,
+  NetworkBadge,
+  ProtocolNumberWall,
+  ProtocolStatusStrip,
+  TreasurySnapshot,
+} from './components/ProtocolNetworkPanels'
 
 const miningEvents: string[][] = []
 const miningEventsState: LiveSurfaceState = 'loading'
@@ -31,32 +24,6 @@ const registryRows = [
   ['model-v-002', '—', '—', '—'],
 ]
 
-const protocolState = {
-  network: [
-    ['Network', 'Solana mainnet'],
-    ['Program ID', '—'],
-    ['Genesis slot', '—'],
-    ['Upgrade authority', 'renounced'],
-    ['Admin key', 'none'],
-    ['Current epoch', '—'],
-  ],
-  activity: [
-    ['Total providers', '—'],
-    ['Total consumers', '—'],
-    ['24h volume (USDC)', '—'],
-    ['24h settlements', '—'],
-    ['CLAF circulating', '—'],
-    ['CLAF burned', '—'],
-  ],
-}
-
-const treasuryStats = [
-  ['Protocol treasury inflow', '—'],
-  ['Pending buyback', '—'],
-  ['Total CLAF burned', '—'],
-  ['Next burn epoch', '—'],
-]
-
 const burnRows: string[][] = []
 const burnRowsState: LiveSurfaceState = 'loading'
 
@@ -65,27 +32,23 @@ export default function Home() {
     <main>
       <section className="hero-section">
         <div className="container paper-column">
-          <p className="hero-status">Genesis-immutable · 0% allocation · Solana</p>
-          <h1 className="hero-title">Mining inference.</h1>
-          <div className="live-status-strip" aria-label="Protocol status">
-            <span className="status-dot" aria-hidden="true" />
-            <span>Protocol live</span>
-            <span>Current epoch: <data data-live-field="current-epoch">—</data></span>
-            <span>Genesis: <data data-live-field="genesis-status">{GENESIS_LIVE ? 'active' : 'inactive'}</data></span>
-          </div>
+          <p className="hero-status">Genesis-immutable . Devnet default . Solana</p>
+          <h1 className="hero-title">Receipt settlement for inference.</h1>
+          <ProtocolStatusStrip />
+          <NetworkBadge />
           <p className="hero-copy">
-            The settlement protocol for the inference economy.
+            ClawFarm records wallet-paid inference receipts, splits USDC at record time, and turns finalized usage into epoch reward weight.
           </p>
           <div className="hero-role-grid" aria-label="Protocol entry paths">
             <a className="role-entry" href="/providers">
               <span>Providers</span>
               <strong>Register an endpoint →</strong>
-              <small>Supply capacity from any source. Settlement pays USDC and mines CLAF.</small>
+              <small>Register a wallet-backed endpoint. Receipt payments create pending provider USDC until finalization.</small>
             </a>
             <a className="role-entry" href="/builders">
               <span>Developers</span>
               <strong>Start with the SDK →</strong>
-              <small>Call any registered model. Every settled call mines CLAF to the wallet.</small>
+              <small>Submit compact receipts through the attestation program. Finalized usage earns buyer-side epoch weight.</small>
             </a>
           </div>
           <p className="tertiary-link">
@@ -99,7 +62,7 @@ export default function Home() {
           <SectionHeader eyebrow="Settlement" title="Settlement, live." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
-            The 3% protocol split is treasury inflow. Data rows are bound to the live settlement source.
+            The 3% treasury split is booked when a receipt payment is recorded. Provider USDC stays pending until the receipt is finalized.
           </p>
         </div>
       </section>
@@ -108,18 +71,28 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Mining" title="Mining." />
           <p className="section-intro">
-            Each inference call mines CLAF. Emission splits 70% to the providing side and 30% to the consuming side.
+            Receipts do not pay direct per-call rewards. Finalized usage activates buyer and provider epoch weight, then permissionless epoch finalization makes rewards claimable into locked streams.
           </p>
-          <div className="stat-strip mining-strip" data-live-state="loading">
-            {miningStats.map(([label, value]) => (
-              <div className="treasury-stat" key={label}>
-                <span>{label}</span>
-                <p data-live-field={label.toLowerCase().replaceAll(' ', '-')}>{value}</p>
-              </div>
-            ))}
+          <div className="stat-strip mining-strip">
+            <div className="treasury-stat">
+              <span>Provider epoch pool</span>
+              <p>70%</p>
+            </div>
+            <div className="treasury-stat">
+              <span>Buyer epoch pool</span>
+              <p>30%</p>
+            </div>
+            <div className="treasury-stat">
+              <span>Reward lock</span>
+              <p>180 days</p>
+            </div>
+            <div className="treasury-stat">
+              <span>Devnet challenge window</span>
+              <p>30 sec</p>
+            </div>
           </div>
           <p className="section-footnote wide-footnote">
-            Epoch length is 1 hour. Halving occurs every 2 years across a 10-year emission horizon; about 968.75M CLAF can emit, and the residual remains uncirculated.
+            The devnet challenge window is intentionally short for testing. Mainnet timing remains pending until mainnet config is deployed.
           </p>
           <div className="protocol-table-shell burn-table-shell" data-live-state={miningEventsState}>
             <table className="protocol-table">
@@ -127,7 +100,7 @@ export default function Home() {
                 <tr>
                   <th>Wallet</th>
                   <th>Role</th>
-                  <th className="num-col">CLAF amount</th>
+                  <th className="num-col">CLAW amount</th>
                   <th className="num-col">Timestamp</th>
                 </tr>
               </thead>
@@ -161,16 +134,9 @@ export default function Home() {
       <section className="section" id="state">
         <div className="container">
           <SectionHeader eyebrow="State" title="The protocol, in four numbers." />
-          <div className="number-wall">
-            {protocolNumbers.map(([value, label]) => (
-              <div className="number-cell" key={label}>
-                <p>{value}</p>
-                <span>{label}</span>
-              </div>
-            ))}
-          </div>
+          <ProtocolNumberWall />
           <p className="section-footnote wide-footnote">
-            Fixed at Genesis. Cannot be modified by any party including the original author.
+            Values are rendered from the selected network profile. Devnet is the default first-visit network.
           </p>
         </div>
       </section>
@@ -231,7 +197,7 @@ export default function Home() {
       <section className="section" id="protocol-state">
         <div className="container">
           <SectionHeader eyebrow="Explorer" title="Protocol state." />
-          <StateGrid network={protocolState.network} activity={protocolState.activity} />
+          <HomeProtocolState />
           <p className="table-action">
             <a href="/state">Full state view →</a>
           </p>
@@ -240,37 +206,30 @@ export default function Home() {
 
       <section className="section" id="treasury">
         <div className="container">
-          <SectionHeader eyebrow="Treasury" title="Treasury and burn." />
+          <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Every protocol-routed settlement collects a 3% fee in USDC. At each 1-hour epoch boundary, if the Treasury PDA balance exceeds 100 USDC, accumulated USDC swaps to CLAF via Jupiter and burns. No human trigger. No admin key. No discretionary spending.
+            Every recorded receipt splits wallet-paid USDC immediately: 97% to provider pending revenue and 3% to the treasury USDC vault. The current contract does not expose an automated buyback path.
           </p>
-          <div className="stat-strip" data-live-state="loading">
-            {treasuryStats.map(([label, value]) => (
-              <div className="treasury-stat" key={label}>
-                <span>{label}</span>
-                <p data-live-field={label.toLowerCase().replaceAll(' ', '-')}>{value}</p>
-              </div>
-            ))}
-          </div>
+          <TreasurySnapshot />
           <div className="protocol-table-shell burn-table-shell" data-live-state={burnRowsState}>
             <table className="protocol-table">
               <thead>
                 <tr>
                   <th>Date</th>
                   <th className="num-col">USDC in</th>
-                  <th className="num-col">CLAF burned</th>
+                  <th className="num-col">CLAW burned</th>
                   <th>Tx</th>
                 </tr>
               </thead>
               <tbody>
                 {burnRowsState === 'loading' ? (
                   <tr>
-                    <td className="empty-row" colSpan={4}>Loading burn events.</td>
+                    <td className="empty-row" colSpan={4}>No burn stream is exposed by the current contract.</td>
                   </tr>
                 ) : null}
                 {burnRowsState === 'empty' ? (
                   <tr>
-                    <td className="empty-row" colSpan={4}>No burn events yet.</td>
+                    <td className="empty-row" colSpan={4}>No contract burn stream is configured.</td>
                   </tr>
                 ) : null}
                 {burnRowsState === 'populated'
@@ -286,7 +245,7 @@ export default function Home() {
               </tbody>
             </table>
           </div>
-          <p className="section-footnote wide-footnote">Burn rows populate from the live treasury source. Evaluation occurs at the next epoch boundary.</p>
+          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the static devnet snapshot. Mainnet remains pending until deployment records exist.</p>
           <p className="table-action">
             <a href="/state#treasury">Full state view →</a>
           </p>
@@ -310,15 +269,15 @@ export default function Home() {
           <div className="economics-stack">
             <article>
               <h3>Emission</h3>
-              <p>CLAF emission is fixed at Genesis. Every epoch releases a known amount against settled protocol activity.</p>
+              <p>CLAW emission inventory is minted at Genesis. Epoch rewards are allocated by finalized buyer and provider usage weight.</p>
             </article>
             <article>
               <h3>Settlement</h3>
-              <p>USDC settlement is per call. The provider receives 97%; the protocol receives 3% for buyback-and-burn.</p>
+              <p>USDC settlement is receipt-based. The provider share is held in pending revenue until receipt finalization.</p>
             </article>
             <article>
               <h3>Distribution</h3>
-              <p>Mining splits across both sides of usage: 70% to the providing side and 30% to the consuming side.</p>
+              <p>Reward claims create locked streams. Owners withdraw vested CLAW over the configured lock period.</p>
             </article>
           </div>
         </div>
@@ -337,7 +296,7 @@ export default function Home() {
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register an endpoint. The protocol does not ask where capacity comes from. 97% of every settlement is paid to the provider in USDC. CLAF rewards accrue automatically by settled volume.
+                Register an endpoint. The protocol does not ask where capacity comes from. 97% of every settlement is paid to the provider in USDC. CLAW rewards accrue through finalized epoch weight.
               </p>
               <a href="/providers">Register an endpoint →</a>
             </article>
@@ -377,36 +336,5 @@ function SupplyLayer({
       <h3><span>{label}</span> — {title}</h3>
       <p>{children}</p>
     </article>
-  )
-}
-
-function StateGrid({
-  network,
-  activity,
-}: {
-  network: string[][]
-  activity: string[][]
-}) {
-  return (
-    <div className="state-grid">
-      <StatePanel title="Network" rows={network} />
-      <StatePanel title="Activity" rows={activity} />
-    </div>
-  )
-}
-
-function StatePanel({ title, rows }: { title: string; rows: string[][] }) {
-  return (
-    <section className="state-panel">
-      <h3>{title}</h3>
-      <dl className="kv-list">
-        {rows.map(([label, value]) => (
-          <div className="kv-row" key={label}>
-            <dt>{label}</dt>
-            <dd data-live-field={label.toLowerCase().replaceAll(' ', '-')}>{value}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
   )
 }
