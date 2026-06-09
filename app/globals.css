@@ -1122,3 +1122,68 @@ strong {
     text-align: left;
   }
 }
+
+.nav-tools {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.network-switch {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.network-switch button {
+  min-height: 34px;
+  padding: 7px 10px;
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.network-switch button:last-child {
+  border-right: 0;
+}
+
+.network-switch button.is-active {
+  color: var(--bg-primary);
+  background: var(--accent);
+}
+
+.network-switch button:not(.is-active):hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+@media (max-width: 760px) {
+  .nav-inner {
+    height: auto;
+    min-height: 64px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+  }
+
+  .nav-tools {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .network-switch {
+    width: 100%;
+  }
+
+  .network-switch button {
+    flex: 1;
+  }
+}
