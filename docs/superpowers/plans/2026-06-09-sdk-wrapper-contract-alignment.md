@@ -1,6 +1,6 @@
 # SDK Wrapper Contract Alignment Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Align all public SDK, CLI, HTTP, and provider onboarding examples with the current devnet contract shape while keeping them framed as wrapper targets.
 
@@ -24,7 +24,7 @@
 **Files:**
 - Modify: `scripts/verify-site-content.mjs`
 
-- [ ] **Step 1: Add guard patterns that fail on current public examples**
+- [x] **Step 1: Add guard patterns that fail on current public examples**
 
 In `scripts/verify-site-content.mjs`, replace the `publicCopyChecks` array with this exact array:
 
@@ -44,7 +44,7 @@ const publicCopyChecks = [
 ]
 ```
 
-- [ ] **Step 2: Run verification and confirm it fails on current copy**
+- [x] **Step 2: Run verification and confirm it fails on current copy**
 
 Run:
 
@@ -54,7 +54,7 @@ npm run verify:site
 
 Expected: FAIL. The output should identify current examples such as `Genesis-immutable`, one-step `receipts.submit({ ... model ... })`, the `curl https://api.clawfarm.network/v1/devnet/receipts` example, `Register an endpoint`, or `npx clawfarm provider register`.
 
-- [ ] **Step 3: Commit the failing guard**
+- [x] **Step 3: Commit the failing guard**
 
 Run:
 
@@ -68,7 +68,7 @@ git commit -m "test: guard sdk wrapper contract copy"
 **Files:**
 - Modify: `app/components/CodeTabs.tsx`
 
-- [ ] **Step 1: Replace the `examples` object with wrapper-target examples**
+- [x] **Step 1: Replace the `examples` object with wrapper-target examples**
 
 In `app/components/CodeTabs.tsx`, replace the entire `examples` constant with this exact code:
 
@@ -157,7 +157,7 @@ println!("{}", receipt.receipt_pda);`,
 }
 ```
 
-- [ ] **Step 2: Run the content verification guard**
+- [x] **Step 2: Run the content verification guard**
 
 Run:
 
@@ -167,7 +167,7 @@ npm run verify:site
 
 Expected: still FAIL because `app/docs/page.tsx`, `app/install/page.tsx`, `app/page.tsx`, or `README.md` still contain guarded stale examples/copy.
 
-- [ ] **Step 3: Run TypeScript check**
+- [x] **Step 3: Run TypeScript check**
 
 Run:
 
@@ -177,7 +177,7 @@ npx tsc --noEmit
 
 Expected: PASS. The component still only renders strings.
 
-- [ ] **Step 4: Commit CodeTabs examples**
+- [x] **Step 4: Commit CodeTabs examples**
 
 Run:
 
@@ -191,7 +191,7 @@ git commit -m "docs: align sdk wrapper examples"
 **Files:**
 - Modify: `app/docs/page.tsx`
 
-- [ ] **Step 1: Replace the `toc` array**
+- [x] **Step 1: Replace the `toc` array**
 
 In `app/docs/page.tsx`, replace the `toc` array with this exact code:
 
@@ -217,7 +217,7 @@ const toc = [
 ]
 ```
 
-- [ ] **Step 2: Replace the Quickstart and SDK sections**
+- [x] **Step 2: Replace the Quickstart and SDK sections**
 
 In `app/docs/page.tsx`, replace everything from `<section id="quickstart">` through the closing `</section>` immediately before `<section id="gateway-selection">` with this exact JSX:
 
@@ -347,7 +347,7 @@ let receipt = cf.receipts()
             </section>
 ```
 
-- [ ] **Step 3: Replace the architecture code block**
+- [x] **Step 3: Replace the architecture code block**
 
 In the `Architecture` subsection, replace the existing `<pre className="code-block">` block with this exact block:
 
@@ -365,7 +365,7 @@ MASTERPOOL LAYER
   ProviderAccount · Test USDC split · Epoch weight · Locked CLAW streams · Vault accounting`}</code></pre>
 ```
 
-- [ ] **Step 4: Replace receipt lifecycle copy**
+- [x] **Step 4: Replace receipt lifecycle copy**
 
 Replace the receipt lifecycle `<pre className="code-block">` block with this exact block:
 
@@ -380,7 +380,7 @@ Replace the receipt lifecycle `<pre className="code-block">` block with this exa
 8. Finalized epochs create locked CLAW streams for claimable rewards.`}</code></pre>
 ```
 
-- [ ] **Step 5: Replace devnet timing copy**
+- [x] **Step 5: Replace devnet timing copy**
 
 In the Devnet parameters section, replace this line:
 
@@ -394,7 +394,7 @@ with this exact line:
 <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet timing remains pending until mainnet config is deployed.</div>
 ```
 
-- [ ] **Step 6: Run verification and TypeScript checks**
+- [x] **Step 6: Run verification and TypeScript checks**
 
 Run:
 
@@ -405,7 +405,7 @@ npx tsc --noEmit
 
 Expected: `verify:site` may still FAIL because `app/install/page.tsx`, `app/page.tsx`, or `README.md` still contain guarded copy. `npx tsc --noEmit` should PASS.
 
-- [ ] **Step 7: Commit docs page rewrite**
+- [x] **Step 7: Commit docs page rewrite**
 
 Run:
 
@@ -419,7 +419,7 @@ git commit -m "docs: explain current devnet contract shape"
 **Files:**
 - Modify: `app/install/page.tsx`
 
-- [ ] **Step 1: Replace provider hero and path copy**
+- [x] **Step 1: Replace provider hero and path copy**
 
 In `app/install/page.tsx`, make these exact text replacements:
 
@@ -464,7 +464,7 @@ becomes:
 The on-chain registration is endpoint-agnostic: endpoint details remain in off-chain directory metadata.
 ```
 
-- [ ] **Step 2: Replace the setup code block**
+- [x] **Step 2: Replace the setup code block**
 
 Replace the setup `<pre className="code-block">` under caption `Install` with this exact JSX block:
 
@@ -481,7 +481,7 @@ clawfarm directory configure \
   --models model-l-001,model-l-002`}</code></pre>
 ```
 
-- [ ] **Step 3: Replace the setup caption**
+- [x] **Step 3: Replace the setup caption**
 
 Replace:
 
@@ -495,7 +495,7 @@ with:
 <p className="caption">Provider wrapper target</p>
 ```
 
-- [ ] **Step 4: Add on-chain account requirements below the setup block**
+- [x] **Step 4: Add on-chain account requirements below the setup block**
 
 Immediately after the setup `<pre>` block from Step 2, add this paragraph:
 
@@ -505,7 +505,7 @@ Immediately after the setup `<pre>` block from Step 2, add this paragraph:
           </p>
 ```
 
-- [ ] **Step 5: Run verification and TypeScript checks**
+- [x] **Step 5: Run verification and TypeScript checks**
 
 Run:
 
@@ -516,7 +516,7 @@ npx tsc --noEmit
 
 Expected: `verify:site` may still FAIL because `app/page.tsx` or `README.md` still contain guarded endpoint-first copy. `npx tsc --noEmit` should PASS.
 
-- [ ] **Step 6: Commit install page rewrite**
+- [x] **Step 6: Commit install page rewrite**
 
 Run:
 
@@ -531,7 +531,7 @@ git commit -m "docs: reframe provider setup as wrapper target"
 - Modify: `app/page.tsx`
 - Modify: `README.md`
 
-- [ ] **Step 1: Update home page copy**
+- [x] **Step 1: Update home page copy**
 
 In `app/page.tsx`, make these exact text replacements:
 
@@ -575,7 +575,7 @@ becomes:
 Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAW rewards accrue through finalized epoch weight.
 ```
 
-- [ ] **Step 2: Update README copy**
+- [x] **Step 2: Update README copy**
 
 In `README.md`, replace:
 
@@ -589,7 +589,7 @@ with:
 - Providers register a wallet-controlled ProviderAccount and stake 100 Test USDC on devnet.
 ```
 
-- [ ] **Step 3: Run verification and TypeScript checks**
+- [x] **Step 3: Run verification and TypeScript checks**
 
 Run:
 
@@ -600,7 +600,7 @@ npx tsc --noEmit
 
 Expected: PASS for both commands if Tasks 1-5 are complete.
 
-- [ ] **Step 4: Commit endpoint copy cleanup**
+- [x] **Step 4: Commit endpoint copy cleanup**
 
 Run:
 
@@ -614,7 +614,7 @@ git commit -m "docs: use provider account copy"
 **Files:**
 - No source edits expected.
 
-- [ ] **Step 1: Run content verification**
+- [x] **Step 1: Run content verification**
 
 Run:
 
@@ -624,7 +624,7 @@ npm run verify:site
 
 Expected: PASS with a message like `Site content verification passed for 23 files.`
 
-- [ ] **Step 2: Run TypeScript check**
+- [x] **Step 2: Run TypeScript check**
 
 Run:
 
@@ -634,7 +634,7 @@ npx tsc --noEmit
 
 Expected: PASS with exit code 0.
 
-- [ ] **Step 3: Attempt production build**
+- [x] **Step 3: Attempt production build**
 
 Run:
 
@@ -644,7 +644,7 @@ npm run build
 
 Expected: PASS if Google Fonts are reachable. If it fails with `next/font` errors for `IBM Plex Sans` or `JetBrains Mono`, record the failure as an external Google Fonts fetch timeout and do not treat it as a content or TypeScript regression.
 
-- [ ] **Step 4: Inspect final git status**
+- [x] **Step 4: Inspect final git status**
 
 Run:
 
@@ -654,7 +654,7 @@ git status --short --branch
 
 Expected: clean worktree on `develop`, ahead of `origin/develop` by the new commits.
 
-- [ ] **Step 5: Commit final plan progress if execution updates this plan**
+- [x] **Step 5: Commit final plan progress if execution updates this plan**
 
 If this plan file was updated with progress during execution, run:
 
@@ -671,3 +671,28 @@ If the plan file was not updated during execution, do not create an empty commit
 - Placeholder scan: the plan contains no unresolved placeholders; placeholder-looking strings such as `<provider-wallet>` are intentional public example markers.
 - Type consistency: wrapper method names are consistent across docs and CodeTabs: `receipts.prepare` followed by `receipts.submit`.
 - Scope check: the plan only updates public documentation/examples and verification guard behavior; it does not implement SDK, CLI, HTTP gateway, or live contract calls.
+
+---
+
+## Execution Status Update - 2026-06-09
+
+All tasks in this plan were executed on `develop`.
+
+Completed commits:
+- `b327018` - `test: guard sdk wrapper contract copy`
+- `cfeeea9` - `docs: align sdk wrapper examples`
+- `ad91e34` - `docs: explain current devnet contract shape`
+- `3bc84b4` - `docs: reframe provider setup as wrapper target`
+- `5c16131` - `docs: use provider account copy`
+
+Final verification evidence:
+- `npm run verify:site` passed with `Site content verification passed for 23 files.`
+- `npx tsc --noEmit` passed with exit code 0.
+- `npm run build` was attempted and failed only while `next/font` fetched Google Fonts for `IBM Plex Sans` and `JetBrains Mono` with `ETIMEDOUT`. This remains an external font-fetch dependency in `app/layout.tsx`, not a content or TypeScript regression.
+
+Implementation notes:
+- Public SDK examples now use a wrapper-target `prepare` plus `submit` flow.
+- Docs now include the current devnet contract shape for `SubmitReceiptArgs`, compact receipt hashing, ed25519 proof instruction, payment delegate, and masterpool account categories.
+- Provider setup now distinguishes on-chain `masterpool.register_provider` wrapper behavior from off-chain directory metadata.
+- Home and README provider registration copy now uses provider-account language instead of endpoint-first language.
+
