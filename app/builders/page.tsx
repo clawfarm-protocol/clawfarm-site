@@ -26,7 +26,7 @@ export default function BuildersPage() {
           <div className="two-column">
             <article className="border-panel">
               <h3>Open consumption</h3>
-              <p>Applications, builders, and wallets submit receipt-backed requests from the same registry. No named consumer application is required.</p>
+              <p>Applications, builders, and wallets submit receipt-backed requests after choosing a provider from off-chain directory metadata. No named consumer application is required.</p>
             </article>
             <article className="border-panel">
               <h3>Epoch pool weight</h3>

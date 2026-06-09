@@ -13,7 +13,7 @@ export const providerRows: ProviderRow[] = [
   {
     provider: 'provider wallet',
     address: 'addr_demo_provider_001',
-    proofState: 'dual-signed',
+    proofState: 'signer-ready',
     services: 'model-l-001 · model-l-002',
     price: '—',
     quality: '—',
@@ -23,7 +23,7 @@ export const providerRows: ProviderRow[] = [
   {
     provider: 'provider wallet',
     address: 'addr_demo_provider_002',
-    proofState: 'dual-signed',
+    proofState: 'signer-ready',
     services: 'model-l-003 · model-l-004',
     price: '—',
     quality: '—',
@@ -33,7 +33,7 @@ export const providerRows: ProviderRow[] = [
   {
     provider: 'provider wallet',
     address: 'addr_demo_provider_003',
-    proofState: 'dual-signed',
+    proofState: 'signer-ready',
     services: 'model-i-001 · model-v-001',
     price: '—',
     quality: '—',

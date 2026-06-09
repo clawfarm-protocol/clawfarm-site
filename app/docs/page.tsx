@@ -12,7 +12,7 @@ const toc = [
   ['Configure devnet', '#configure-devnet'],
   ['First receipt', '#first-receipt'],
   ['SDK', '#sdk'],
-  ['Routing modes', '#routing-modes'],
+  ['Gateway selection', '#gateway-selection'],
   ['Provider', '#provider'],
   ['Models', '#models'],
   ['Protocol', '#protocol'],
@@ -109,16 +109,16 @@ receipt = cf.receipts.submit(
   -d '{"model":"model-l-001","provider":"<provider-wallet>","totalUsdc":"0.025000"}'`}</code></pre>
             </section>
 
-            <section id="routing-modes">
-              <h2>Routing modes</h2>
-              <p>Choose a routing objective before creating the receipt. The economic contract records the resulting provider, price, and usage snapshot.</p>
+            <section id="gateway-selection">
+              <h2>Gateway selection</h2>
+              <p>Applications or gateways choose the provider before receipt submission. The on-chain programs record the provider wallet, payer, payment amount, token usage, receipt hash, and epoch weights.</p>
               <div className="key-list">
-                <div>eco</div>
-                <div>Lowest-cost eligible provider.</div>
-                <div>auto</div>
-                <div>Balanced price, latency, and historical reliability.</div>
-                <div>premium</div>
-                <div>Highest-quality route for complex inference.</div>
+                <div>Directory</div>
+                <div>Endpoint, model, price, and limits are off-chain operator metadata.</div>
+                <div>Selection</div>
+                <div>Any app may choose a provider wallet before submitting a compact receipt.</div>
+                <div>Settlement</div>
+                <div>The contract settles only the compact receipt facts and configured vault accounting.</div>
               </div>
             </section>
 
@@ -133,21 +133,21 @@ receipt = cf.receipts.submit(
                 <div>Pricing</div>
                 <div>Input, output, request, image, second, or task units.</div>
                 <div>Receipts</div>
-                <div>Provider-side receipt signatures bind usage facts before on-chain settlement.</div>
+                <div>A configured provider or gateway signer signs the compact receipt hash before on-chain settlement.</div>
               </div>
               <p>The masterpool account does not store endpoint infrastructure; applications and gateways bind endpoint metadata outside the on-chain provider account.</p>
             </section>
 
             <section id="models">
               <h2>Models</h2>
-              <p>The live registry lists model identifiers, provider counts, clearing price, and observed receipt volume. Individual suppliers remain wallet-addressed.</p>
+              <p>Model identifiers are off-chain labels used by applications and gateway directories. The current on-chain receipt stores compact hashes, wallet identities, token counts, payment amount, and epoch weights.</p>
               <div className="key-list">
                 <div>model-l-001</div>
-                <div>Language model identifier. Provider count and price bind from registry state.</div>
+                <div>Language model identifier supplied as receipt metadata outside the ProviderAccount.</div>
                 <div>model-i-001</div>
-                <div>Image model identifier. Provider count and price bind from registry state.</div>
+                <div>Image model identifier supplied as receipt metadata outside the ProviderAccount.</div>
                 <div>model-v-001</div>
-                <div>Video model identifier. Provider count and price bind from registry state.</div>
+                <div>Video model identifier supplied as receipt metadata outside the ProviderAccount.</div>
               </div>
             </section>
 
@@ -158,8 +158,8 @@ receipt = cf.receipts.submit(
               <pre className="code-block"><code>{`WALLET / APP LAYER
   Users · Builders · Agents · Provider operators
 
-SERVICE REGISTRY
-  Registered endpoints · Model metadata · Provider signer records
+OFF-CHAIN DIRECTORY
+  Provider choices · Model labels · Provider signer records
 
 ATTESTATION LAYER
   Compact receipts · Challenge lifecycle · Finalization authority

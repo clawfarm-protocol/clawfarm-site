@@ -138,11 +138,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section" id="registry">
+      <section className="section" id="directory">
         <div className="container">
-          <SectionHeader eyebrow="Registry" title="Models on the protocol." />
+          <SectionHeader eyebrow="Directory" title="Model labels for receipts." />
           <p className="section-intro">
-            Any wallet can supply. Permissionless.
+            Any wallet can choose a provider. Directory data remains off-chain.
           </p>
           <div className="protocol-table-shell">
             <table className="protocol-table model-catalog-table">
@@ -169,7 +169,7 @@ export default function Home() {
             </table>
           </div>
           <p className="table-action">
-            <a href="/docs#models">Full model registry →</a>
+            <a href="/docs#models">Full model directory →</a>
           </p>
         </div>
       </section>
@@ -178,14 +178,14 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Supply" title="Identity-blind supply." />
           <div className="supply-grid">
-            <SupplyLayer label="Wallet" title="Provider wallet">
-              Registration is address-based. The protocol records wallet, bond, declared offerings, and endpoint metadata.
+            <SupplyLayer label="Wallet" title="Provider account">
+              Registration is address-based. The ProviderAccount records wallet, stake, pending revenue, counters, and status.
             </SupplyLayer>
-            <SupplyLayer label="Endpoint" title="Declared offerings">
-              Providers declare model IDs, price, quality, and limits. Source is not recorded.
+            <SupplyLayer label="Directory" title="Off-chain metadata">
+              Endpoint, model, price, quality, and limits belong to app, gateway, or operator-directory metadata.
             </SupplyLayer>
-            <SupplyLayer label="Proof" title="Dual-signed settlement">
-              A call settles only when user and provider sign request hash, response hash, token counts, and price.
+            <SupplyLayer label="Proof" title="Compact receipt">
+              Settlement requires a configured signer over the compact receipt hash plus delegated payer USDC authority.
             </SupplyLayer>
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Interface" title="The interface." />
           <p className="section-intro">
-            One SDK. Identical surface across registered endpoints and wallet-settled calls.
+            One SDK. Identical surface across off-chain provider choices and wallet-settled calls.
           </p>
           <CodeTabs />
           <p className="interface-note">SDK in TypeScript, Python, Rust. <a href="/docs#sdk">→ SDK reference</a></p>

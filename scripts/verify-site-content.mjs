@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
-const sourceRoots = ['app', 'README.md']
+const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs']
 const sourceArgs = sourceRoots.map((root) => `'${root}'`).join(' ')
 
 function listFiles(command) {
@@ -26,7 +26,7 @@ const globalChecks = [
   { name: 'Chinese text', pattern: /[\p{Script=Han}]/u },
   { name: 'local absolute path', pattern: /(\/Users\/|\/home\/|\/root\/|~\/\.config|id\.json|keypair\.json)/ },
   { name: 'RPC API-key URL', pattern: /(api-key=|helius-rpc\.com)/i },
-  { name: 'private key material', pattern: /(BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|seed phrase|mnemonic|\[[0-9]{1,3}(,\s*[0-9]{1,3}){31,}\])/i },
+  { name: 'private key material', pattern: /(BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|\b(seed phrase|mnemonic)\s*[:=]|\[[0-9]{1,3}(,\s*[0-9]{1,3}){31,}\])/i },
 ]
 
 const publicCopyChecks = [
@@ -35,6 +35,7 @@ const publicCopyChecks = [
   { name: 'unverified mainnet immutability', pattern: /\b(renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
   { name: 'old direct mining wording', pattern: /\b(mines CLAW to your wallet|mines CLAF to your wallet|CLAW mined|CLAF mined)\b/i },
+  { name: 'unsupported routing or registry wording', pattern: /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|dual-signed|user and provider sign|request hash|response hash|declared offerings)\b/i },
 ]
 
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')

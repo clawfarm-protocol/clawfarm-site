@@ -50,7 +50,7 @@ export default function InstallPage() {
               <h3>Carry receipts, not identity.</h3>
               <p>
                 The protocol does not inspect where capacity comes from. It asks for a
-                wallet, a 100 Test USDC stake, off-chain declared offerings, and a signed compact receipt for
+                wallet, a 100 Test USDC stake, off-chain directory metadata, and a signed compact receipt for
                 each settled session.
               </p>
             </article>
@@ -96,14 +96,13 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Serve</h3>
               <p>
-                The protocol routes requests to your endpoint based on mode, price, and
-                historical reliability. You serve inference normally.
+                Apps and gateways choose your provider wallet from off-chain directory metadata. You serve inference normally before a compact receipt is submitted.
               </p>
             </article>
             <article className="border-panel">
               <h3>Sign receipt</h3>
               <p>
-                You and the requesting app sign a compact usage receipt. The attestation flow submits the compact receipt with configured signer and delegate accounts.
+                A configured provider or gateway signer signs the compact receipt hash. The attestation flow submits that compact receipt with the payer and payment delegate accounts.
               </p>
             </article>
             <article className="border-panel">

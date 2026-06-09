@@ -1253,6 +1253,35 @@ strong {
   font-size: clamp(16px, 1.7vw, 22px);
 }
 
+@media (max-width: 760px) {
+  .network-switch button {
+    min-height: 44px;
+  }
+
+  .address-kv .kv-row,
+  .kv-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    padding: var(--space-sm) 0;
+  }
+
+  .kv-row dd {
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .protocol-metric-grid,
+  .stat-grid,
+  .stat-strip,
+  .number-wall,
+  .state-grid,
+  .supply-grid,
+  .action-columns,
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+}
+
 .section-spacer {
   height: var(--space-lg);
 }

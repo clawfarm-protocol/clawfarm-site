@@ -10,7 +10,7 @@ const mechanismBlocks = [
   {
     label: 'COMPACT RECEIPT',
     title: 'Settlement starts with signed receipt facts.',
-    body: 'Phase 1 records compact receipts that bind payer, provider, model, token usage, total Test USDC paid, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
+    body: 'Phase 1 records compact receipts that bind payer, provider wallet, metadata hash, token usage, total Test USDC paid, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
   },
   {
     label: 'PENDING USDC',

@@ -33,7 +33,7 @@ export default function ProviderTable({ rows }: { rows: ProviderRow[] }) {
               <td className="mono">{row.latency}</td>
               <td className="muted">{row.usage}</td>
               <td>
-                <Link href="/docs#quickstart" className="route-button">Route</Link>
+                <Link href="/docs#quickstart" className="route-button">Choose</Link>
               </td>
             </tr>
           ))}
