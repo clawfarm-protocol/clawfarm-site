@@ -32,10 +32,15 @@ const globalChecks = [
 const publicCopyChecks = [
   { name: 'stale token symbol', pattern: /\bCLAF\b/ },
   { name: 'unsupported buyback language', pattern: /\b(Jupiter|buyback|execute_buyback|swap aggregator|incinerator)\b/i },
-  { name: 'unverified mainnet immutability', pattern: /\b(renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
+  { name: 'unverified mainnet immutability', pattern: /\b(Genesis-immutable|renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
   { name: 'old direct mining wording', pattern: /\b(mines CLAW to your wallet|mines CLAF to your wallet|CLAW mined|CLAF mined)\b/i },
   { name: 'unsupported routing or registry wording', pattern: /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|dual-signed|user and provider sign|request hash|response hash|declared offerings)\b/i },
+  { name: 'contract-native HTTP API example', pattern: /curl https:\/\/api\.clawfarm\.network\/v1\/devnet\/receipts/i },
+  { name: 'endpoint-first provider registration', pattern: /\b(Register an endpoint|Register a wallet-backed endpoint|wallet-controlled endpoint|wallet-backed endpoint)\b/i },
+  { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
+  { name: 'old chained SDK receipt submit hides wrapper target', pattern: /\.receipts\(\)[\s\S]{0,400}\.model\(/ },
+  { name: 'unframed provider CLI example', pattern: /npx clawfarm provider register/i },
 ]
 
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')
