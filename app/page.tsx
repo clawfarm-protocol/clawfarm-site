@@ -24,9 +24,6 @@ const registryRows = [
   ['model-v-002', '—', '—', '—'],
 ]
 
-const burnRows: string[][] = []
-const burnRowsState: LiveSurfaceState = 'loading'
-
 export default function Home() {
   return (
     <main>
@@ -162,7 +159,7 @@ export default function Home() {
                   <tr key={model}>
                     <td>{model}</td>
                     <td className="right">
-                      <a className="count-link" href="/state#registry" data-live-field={`${model}-provider-count`}>{providers}</a>
+                      <a className="count-link" href="/state#overview" data-live-field={`${model}-provider-count`}>{providers}</a>
                     </td>
                     <td className="right" data-live-field={`${model}-price`}>{price}</td>
                     <td className="right" data-live-field={`${model}-volume`}>{volume}</td>
@@ -208,46 +205,18 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Every recorded receipt splits wallet-paid USDC immediately: 97% to provider pending revenue and 3% to the treasury USDC vault. The current contract does not expose an automated buyback path.
+            Every recorded receipt splits wallet-paid USDC immediately: 97% to provider pending revenue and 3% to the treasury USDC vault. The current contract does not expose an automated swap-and-retirement path.
           </p>
           <TreasurySnapshot />
-          <div className="protocol-table-shell burn-table-shell" data-live-state={burnRowsState}>
-            <table className="protocol-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th className="num-col">USDC in</th>
-                  <th className="num-col">CLAW burned</th>
-                  <th>Tx</th>
-                </tr>
-              </thead>
-              <tbody>
-                {burnRowsState === 'loading' ? (
-                  <tr>
-                    <td className="empty-row" colSpan={4}>No burn stream is exposed by the current contract.</td>
-                  </tr>
-                ) : null}
-                {burnRowsState === 'empty' ? (
-                  <tr>
-                    <td className="empty-row" colSpan={4}>No contract burn stream is configured.</td>
-                  </tr>
-                ) : null}
-                {burnRowsState === 'populated'
-                  ? burnRows.map(([date, usdc, burned, tx], index) => (
-                      <tr key={index}>
-                        <td>{date}</td>
-                        <td className="right">{usdc}</td>
-                        <td className="right">{burned}</td>
-                        <td>{tx}</td>
-                      </tr>
-                    ))
-                  : null}
-              </tbody>
-            </table>
+          <div className="key-list">
+            <div>Snapshot scope</div>
+            <div>Treasury and pending provider vault balances are exposed through the selected network profile.</div>
+            <div>Event stream</div>
+            <div>No automated swap-and-retirement event stream is exposed by the current contract.</div>
           </div>
           <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the static devnet snapshot. Mainnet remains pending until deployment records exist.</p>
           <p className="table-action">
-            <a href="/state#treasury">Full state view →</a>
+            <a href="/network#config">Full state view →</a>
           </p>
         </div>
       </section>
