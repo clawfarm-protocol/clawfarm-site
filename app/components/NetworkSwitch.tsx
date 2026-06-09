@@ -9,7 +9,7 @@ export default function NetworkSwitch() {
   const { networkId, setNetworkId } = useNetwork()
 
   return (
-    <div className="network-switch" aria-label="Network selection">
+    <div className="network-switch" aria-label="Network selection" role="group">
       {networkIds.map((id) => (
         <button
           aria-pressed={networkId === id}
