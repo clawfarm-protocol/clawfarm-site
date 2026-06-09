@@ -1187,3 +1187,66 @@ strong {
     flex: 1;
   }
 }
+
+.network-badge,
+.pending-panel {
+  max-width: var(--content-max);
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.network-badge {
+  display: grid;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+}
+
+.network-badge span,
+.network-badge small {
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.network-badge strong {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pending-panel h2,
+.pending-panel p {
+  margin: 0;
+}
+
+.pending-panel h2 {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.pending-panel p:last-child {
+  margin-top: var(--space-md);
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+
+.address-link {
+  color: var(--text-primary);
+}
+
+.address-kv .kv-row {
+  grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1fr);
+}
+
+.protocol-metric-grid {
+  margin-top: var(--space-lg);
+}
+
+.section-spacer {
+  height: var(--space-lg);
+}
