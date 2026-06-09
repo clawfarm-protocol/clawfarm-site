@@ -15,7 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through the gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
+            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -31,19 +31,18 @@ export default function InstallPage() {
       <section className="section">
         <div className="container">
           <div className="section-heading">
-            <h2>One endpoint path.</h2>
+            <h2>One provider account path.</h2>
           </div>
           <div className="two-column">
             <article className="border-panel">
-              <h3>Connect any AI inference endpoint.</h3>
+              <h3>Register a provider wallet.</h3>
               <p>
                 If you run an inference service, model deployment, or compute capacity,
                 register the provider wallet with ClawFarm. Publish model list, pricing, and limits in the gateway or operator directory.
                 The protocol records wallet, stake, status, receipt payment economics, and reward accounting on-chain.
               </p>
               <p>
-                The protocol is endpoint-agnostic: any HTTP endpoint that serves model
-                inference can be registered.
+                The on-chain registration is endpoint-agnostic: endpoint details remain in off-chain directory metadata.
               </p>
             </article>
             <article className="border-panel">
@@ -90,7 +89,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Register</h3>
               <p>
-                Run <span className="mono">npx clawfarm provider register</span> to create the on-chain ProviderAccount with wallet, stake, and status. Configure endpoint, models, and pricing in the gateway or operator directory.
+                A provider wrapper can call <span className="mono">masterpool.register_provider</span> to create the on-chain ProviderAccount with wallet, stake, and status. Configure endpoint, models, and pricing in an off-chain gateway or operator directory.
               </p>
             </article>
             <article className="border-panel">
@@ -120,17 +119,20 @@ export default function InstallPage() {
           <div className="section-heading">
             <h2>SDK setup.</h2>
           </div>
-          <p className="caption">Install</p>
-          <pre className="code-block"><code>{`git clone <provider-source-url>
-cd provider
-npm install
+          <p className="caption">Provider wrapper target</p>
+          <pre className="code-block"><code>{`# Wrapper target: calls masterpool.register_provider
+clawfarm provider register \
+  --cluster devnet \
+  --provider-wallet <provider-wallet> \
+  --provider-usdc-token <provider-usdc-token>
 
-npx clawfarm provider register \\\
-  --wallet <your-solana-wallet>
-
-npx clawfarm gateway configure \\\
-  --endpoint https://endpoint.invalid/v1 \\\
+# Wrapper target: writes off-chain directory metadata
+clawfarm directory configure \
+  --endpoint https://endpoint.invalid/v1 \
   --models model-l-001,model-l-002`}</code></pre>
+          <p className="section-footnote wide-footnote">
+            The provider wrapper signs with the provider wallet, transfers the configured 100 Test USDC stake, and supplies provider account, provider reward account, stake vault, provider USDC token, and Test USDC mint accounts.
+          </p>
 
           <div style={{ height: 32 }} />
 
