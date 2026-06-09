@@ -20,7 +20,7 @@ const mechanismBlocks = [
   {
     label: 'CLAW CHALLENGE',
     title: 'Challenges use CLAW bonds.',
-    body: 'A challenger posts the configured CLAW bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, and apply provider slash, challenger reward, and burn accounting.',
+    body: 'A challenger posts the configured CLAW bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
   },
 ]
 
@@ -53,29 +53,29 @@ export default function ProvidersPage() {
 
       <section className="section">
         <div className="container">
-          <SectionTitle eyebrow="Register" title="Register an endpoint." />
+          <SectionTitle eyebrow="Register" title="Register a provider wallet." />
           <p className="section-intro">
-            One way in. A wallet, a stake, an endpoint.
+            One on-chain record. A wallet, a stake, a status.
           </p>
           <p className="section-intro">
-            Registration requires a Solana wallet, a 100 Test USDC stake on devnet, and declared endpoint metadata.
+            On-chain registration records the provider wallet, 100 Test USDC stake, and active status. Endpoint, model, and pricing metadata belong to the off-chain gateway or operator directory layer.
           </p>
           <div className="dapp-card">
             <div className="field">
-              <label htmlFor="endpoint-url">Endpoint URL</label>
+              <label htmlFor="endpoint-url">Directory endpoint URL</label>
               <input id="endpoint-url" placeholder="https://endpoint.invalid/v1" type="text" />
             </div>
             <div className="field">
-              <label htmlFor="model-class">Model ID</label>
+              <label htmlFor="model-class">Directory model ID</label>
               <input id="model-class" placeholder="model-l-001" type="text" />
             </div>
             <div className="field-grid">
               <div className="field">
-                <label htmlFor="price">Price per unit (USDC)</label>
+                <label htmlFor="price">Directory price per unit (USDC)</label>
                 <input id="price" placeholder="—" type="text" />
               </div>
               <div className="field">
-                <label htmlFor="quality">Quality declaration</label>
+                <label htmlFor="quality">Directory quality declaration</label>
                 <input id="quality" placeholder="—" type="text" />
               </div>
             </div>
@@ -84,11 +84,11 @@ export default function ProvidersPage() {
               <input id="wallet" placeholder="addr_demo_7xQ…4fA" type="text" />
             </div>
             <div className="form-actions">
-              <button className="btn primary" disabled type="button">Register endpoint</button>
+              <button className="btn primary" disabled type="button">Register provider</button>
             </div>
           </div>
 
-          <SectionTitle eyebrow="Active registrations" title="Wallet endpoints" meta="Connect wallet" />
+          <SectionTitle eyebrow="Active registrations" title="Wallet providers" meta="Connect wallet" />
           <div className="protocol-table-shell">
             <table className="protocol-table">
               <thead>
@@ -103,7 +103,7 @@ export default function ProvidersPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="empty-row" colSpan={6}>Connect a wallet to view registered endpoints.</td>
+                  <td className="empty-row" colSpan={6}>Connect a wallet to view registered ProviderAccounts.</td>
                 </tr>
               </tbody>
             </table>

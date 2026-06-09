@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Register a Provider — ClawFarm',
-  description: 'Register an inference endpoint, set pricing, stake 100 Test USDC on devnet, sign receipts, and receive finalized provider-share USDC through ClawFarm.',
+  description: 'Register a provider wallet, stake 100 Test USDC on devnet, configure endpoint metadata off-chain, sign receipts, and receive finalized provider-share USDC through ClawFarm.',
   alternates: { canonical: '/install' },
 }
 
@@ -15,7 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register an inference endpoint with the protocol. Set your prices, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
+            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through the gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -38,8 +38,8 @@ export default function InstallPage() {
               <h3>Connect any AI inference endpoint.</h3>
               <p>
                 If you run an inference service, model deployment, or compute capacity,
-                register it with ClawFarm. Set your model list, pricing, and limits.
-                The protocol routes receipt-backed requests and records payment economics on-chain.
+                register the provider wallet with ClawFarm. Publish model list, pricing, and limits in the gateway or operator directory.
+                The protocol records wallet, stake, status, receipt payment economics, and reward accounting on-chain.
               </p>
               <p>
                 The protocol is endpoint-agnostic: any HTTP endpoint that serves model
@@ -50,7 +50,7 @@ export default function InstallPage() {
               <h3>Carry receipts, not identity.</h3>
               <p>
                 The protocol does not inspect where capacity comes from. It asks for a
-                wallet, a 100 Test USDC stake, declared offerings, and a signed compact receipt for
+                wallet, a 100 Test USDC stake, off-chain declared offerings, and a signed compact receipt for
                 each settled session.
               </p>
             </article>
@@ -90,8 +90,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Register</h3>
               <p>
-                Run <span className="mono">npx clawfarm provider register</span>. Configure endpoint,
-                models, pricing. Deposit the 100 Test USDC stake. The contract creates your ProviderAccount on-chain.
+                Run <span className="mono">npx clawfarm provider register</span> to create the on-chain ProviderAccount with wallet, stake, and status. Configure endpoint, models, and pricing in the gateway or operator directory.
               </p>
             </article>
             <article className="border-panel">
@@ -104,8 +103,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Sign receipt</h3>
               <p>
-                You and the requesting app sign a compact usage receipt. Either party submits
-                it on-chain.
+                You and the requesting app sign a compact usage receipt. The attestation flow submits the compact receipt with configured signer and delegate accounts.
               </p>
             </article>
             <article className="border-panel">
@@ -128,14 +126,16 @@ export default function InstallPage() {
 cd provider
 npm install
 
-npx clawfarm register \\
-  --endpoint https://endpoint.invalid/v1 \\
-  --models model-l-001,model-l-002 \\
-  --wallet <your-solana-wallet>`}</code></pre>
+npx clawfarm provider register \\\
+  --wallet <your-solana-wallet>
+
+npx clawfarm gateway configure \\\
+  --endpoint https://endpoint.invalid/v1 \\\
+  --models model-l-001,model-l-002`}</code></pre>
 
           <div style={{ height: 32 }} />
 
-          <p className="caption">Configure</p>
+          <p className="caption">Operator directory config</p>
           <pre className="code-block"><code>{`{
   "endpoint": "https://endpoint.invalid/v1",
   "wallet": "your_solana_wallet_address",

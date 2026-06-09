@@ -72,12 +72,12 @@ export default function BuildersPage() {
 
           <SectionTitle eyebrow="Balance" title="USDC allowance" />
           <div className="dapp-card narrow">
-            <span className="card-label">Current balance</span>
-            <p className="balance-value">—</p>
-            <p className="card-meta">Wallet payments authorize bounded Test USDC settlement for receipt-backed requests.</p>
+            <span className="card-label">Payment allowance</span>
+            <p className="balance-value">Not connected</p>
+            <p className="card-meta">Receipt payment uses configured payer token accounts and delegated transfer authority in the attestation flow.</p>
             <div className="dapp-actions">
-              <button className="btn primary" disabled type="button">Approve</button>
-              <button className="btn ghost" disabled type="button">Withdraw</button>
+              <button className="btn primary" disabled type="button">Connect wallet</button>
+              <a className="btn ghost" href="/docs#receipt-lifecycle">Read receipt docs</a>
             </div>
           </div>
         </div>

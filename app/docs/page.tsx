@@ -124,10 +124,10 @@ receipt = cf.receipts.submit(
 
             <section id="provider">
               <h2>Provider</h2>
-              <p>Providers register one wallet-controlled endpoint and stake Test USDC on devnet.</p>
+              <p>Providers register one wallet-controlled ProviderAccount and stake Test USDC on devnet.</p>
               <div className="key-list">
                 <div>Register</div>
-                <div>Call the provider registry with endpoint metadata, signer identity, wallet, and pricing.</div>
+                <div>Masterpool registration records the provider wallet, stake amount, and active status. Endpoint, model, and pricing metadata live in the off-chain gateway or operator directory layer.</div>
                 <div>Stake</div>
                 <div>Devnet provider stake: 100 Test USDC.</div>
                 <div>Pricing</div>
@@ -135,7 +135,7 @@ receipt = cf.receipts.submit(
                 <div>Receipts</div>
                 <div>Provider-side receipt signatures bind usage facts before on-chain settlement.</div>
               </div>
-              <p>The protocol does not specify what infrastructure backs a provider&apos;s endpoint.</p>
+              <p>The masterpool account does not store endpoint infrastructure; applications and gateways bind endpoint metadata outside the on-chain provider account.</p>
             </section>
 
             <section id="models">
@@ -173,7 +173,7 @@ MASTERPOOL LAYER
                 <div>clawfarm-masterpool</div>
                 <div>Owns reward, treasury, provider stake, provider pending revenue, and challenge-bond vault accounting.</div>
                 <div>ProviderAccount</div>
-                <div>Stores provider wallet, stake state, endpoint metadata, and registration status.</div>
+                <div>Stores provider wallet, stake state, pending revenue counters, challenge counters, and registration status.</div>
                 <div>ReceiptEconomicRecord</div>
                 <div>Stores immutable receipt-time payment split, epoch weight, challenge deadline, and economic status.</div>
               </div>
@@ -205,7 +205,7 @@ MASTERPOOL LAYER
                 <div>Rejected challenge</div>
                 <div>The challenger bond is burned and the receipt remains economically valid.</div>
                 <div>Accepted challenge</div>
-                <div>The bond is returned, provider-share USDC is refunded to the payer, provider CLAW slash accounting applies, and invalid receipt weight is removed.</div>
+                <div>The bond is returned, provider-share USDC is refunded to the payer, reward-vault transfer and burn economics apply, and activated receipt weight is removed when applicable.</div>
                 <div>Timeout stance</div>
                 <div>Receipt economics finalize only through the attestation lifecycle after the configured challenge window.</div>
               </div>
