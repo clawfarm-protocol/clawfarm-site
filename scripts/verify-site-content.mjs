@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
-const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs', 'docs/superpowers/plans']
+const sourceRoots = ['app', 'README.md']
 const sourceArgs = sourceRoots.map((root) => `'${root}'`).join(' ')
 
 function listFiles(command) {

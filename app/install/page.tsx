@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Register a Provider — ClawFarm',
-  description: 'Register an inference endpoint, set pricing, post a 100 USDC bond, sign usage proofs, and receive settlement through ClawFarm.',
+  description: 'Register an inference endpoint, set pricing, stake 100 Test USDC on devnet, sign receipts, and receive finalized provider-share USDC through ClawFarm.',
   alternates: { canonical: '/install' },
 }
 
@@ -15,9 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register an inference endpoint with the protocol. Set your prices. Serve
-            requests. Get paid in USDC on every settled call, plus CLAF from the
-            epoch pool.
+            Register an inference endpoint with the protocol. Set your prices, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -41,7 +39,7 @@ export default function InstallPage() {
               <p>
                 If you run an inference service, model deployment, or compute capacity,
                 register it with ClawFarm. Set your model list, pricing, and limits.
-                The protocol routes dual-signed requests and settles payment automatically.
+                The protocol routes receipt-backed requests and records payment economics on-chain.
               </p>
               <p>
                 The protocol is endpoint-agnostic: any HTTP endpoint that serves model
@@ -52,7 +50,7 @@ export default function InstallPage() {
               <h3>Carry proof, not identity.</h3>
               <p>
                 The protocol does not inspect where capacity comes from. It asks for a
-                wallet, a 100 USDC bond, declared offerings, and a dual-signed proof for
+                wallet, a 100 Test USDC bond, declared offerings, and a dual-signed proof for
                 each settled session.
               </p>
             </article>
@@ -65,19 +63,19 @@ export default function InstallPage() {
           <div className="stat-grid">
             <div className="stat-cell">
               <p className="stat-value">97%</p>
-              <p className="stat-desc">of every USDC payment</p>
+              <p className="stat-desc">provider-share Test USDC after finalization</p>
             </div>
             <div className="stat-cell">
               <p className="stat-value">70%</p>
-              <p className="stat-desc">of every epoch&apos;s CLAF emission</p>
+              <p className="stat-desc">provider epoch weight share</p>
             </div>
             <div className="stat-cell">
-              <p className="stat-value">100 USDC</p>
-              <p className="stat-desc">bond, refundable after 7-day exit</p>
+              <p className="stat-value">100 Test USDC</p>
+              <p className="stat-desc">devnet provider stake</p>
             </div>
             <div className="stat-cell">
               <p className="stat-value">180 days</p>
-              <p className="stat-desc">linear vesting on CLAF</p>
+              <p className="stat-desc">configured reward lock</p>
             </div>
           </div>
         </div>
@@ -93,7 +91,7 @@ export default function InstallPage() {
               <h3>Register</h3>
               <p>
                 Run <span className="mono">npx clawfarm provider register</span>. Configure endpoint,
-                models, pricing. Deposit 100 USDC bond. The contract creates your ProviderAccount on-chain.
+                models, pricing. Deposit the 100 Test USDC stake. The contract creates your ProviderAccount on-chain.
               </p>
             </article>
             <article className="border-panel">
@@ -106,15 +104,14 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Sign proof</h3>
               <p>
-                You and the requesting app dual-sign a usage receipt. Either party submits
+                You and the requesting app sign a compact usage receipt. Either party submits
                 it on-chain.
               </p>
             </article>
             <article className="border-panel">
               <h3>Receive</h3>
               <p>
-                After the 24-hour challenge window, 97% USDC is released to your wallet.
-                CLAF compensation vests linearly over 180 days from the epoch end.
+                After the receipt finalizes, provider-share Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are claimed from finalized epoch accounting and withdraw through locked CLAW streams.
               </p>
             </article>
           </div>
@@ -142,7 +139,7 @@ npx clawfarm register \\
           <pre className="code-block"><code>{`{
   "endpoint": "https://endpoint.invalid/v1",
   "wallet": "your_solana_wallet_address",
-  "bond_usdc": 100,
+  "stake_test_usdc": 100,
   "pricing": {
     "input_per_1m_tokens_usdc": 2.50,
     "output_per_1m_tokens_usdc": 10.00
@@ -163,9 +160,9 @@ npx clawfarm register \\
           </div>
           <div className="key-list">
             <div>clawfarm-protocol/contracts</div>
-            <div>Solana programs. Immutable since Genesis.</div>
+            <div>Solana programs for receipt settlement and reward accounting.</div>
             <div>clawfarm-protocol/provider-sdk</div>
-            <div>Provider tools.</div>
+            <div>Provider registration and receipt tools.</div>
             <div>clawfarm-protocol/sdk</div>
             <div>Builder SDK.</div>
           </div>

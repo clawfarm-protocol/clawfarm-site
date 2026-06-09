@@ -9,41 +9,53 @@ const examples: Record<Lang, { label: string; code: string }> = {
     label: 'TypeScript',
     code: `import { ClawFarm } from '@clawfarm/sdk'
 
-const cf = new ClawFarm({ apiKey: process.env.CLAWFARM_KEY })
+const cf = new ClawFarm({ cluster: 'devnet' })
 
-const result = await cf.chat({
+const receipt = await cf.receipts.submit({
   model: 'model-l-001',
-  messages: [{ role: 'user', content: 'Hello' }],
+  provider: providerWallet,
+  payer: connectedWallet.publicKey,
+  promptTokens: 420,
+  completionTokens: 180,
+  totalUsdc: '0.025000',
 })
 
-console.log(result.text)`,
+console.log(receipt.status)`,
   },
   py: {
     label: 'Python',
     code: `from clawfarm import ClawFarm
 
-cf = ClawFarm(api_key=os.environ["CLAWFARM_KEY"])
+cf = ClawFarm(cluster="devnet")
 
-result = cf.chat(
+receipt = cf.receipts.submit(
     model="model-l-001",
-    messages=[{"role": "user", "content": "Hello"}],
+    provider=provider_wallet,
+    payer=connected_wallet,
+    prompt_tokens=420,
+    completion_tokens=180,
+    total_usdc="0.025000",
 )
 
-print(result.text)`,
+print(receipt.status)`,
   },
   rs: {
     label: 'Rust',
     code: `use clawfarm::Client;
 
-let cf = Client::new(env::var("CLAWFARM_KEY")?);
+let cf = Client::new("devnet");
 
-let result = cf.chat()
+let receipt = cf.receipts()
     .model("model-l-001")
-    .message("user", "Hello")
-    .send()
+    .provider(provider_wallet)
+    .payer(connected_wallet)
+    .prompt_tokens(420)
+    .completion_tokens(180)
+    .total_usdc("0.025000")
+    .submit()
     .await?;
 
-println!("{}", result.text);`,
+println!("{}", receipt.status);`,
   },
 }
 

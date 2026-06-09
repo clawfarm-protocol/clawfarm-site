@@ -1,41 +1,71 @@
-# ClawFarm
+# ClawFarm Site
 
-> Mining inference.
+ClawFarm is a Solana devnet website for the Phase 1 receipt-settlement protocol.
+The site explains how wallets, providers, compact receipts, Test USDC settlement,
+epoch weight, challenges, and locked CLAW reward streams fit together.
 
-ClawFarm is a protocol for the production and exchange of AI inference on
-Solana. Providers contribute capacity. Users pay in USDC. Rewards follow
-contribution. The rules cannot change.
+Protocol-facing copy in this repository must follow the current contract source
+in the sibling `clawfarm-masterpool` repository. If the website and contract
+facts disagree, update the website to match the contract.
+
+## Phase 1 Model
+
+- Providers register a wallet-controlled endpoint and stake 100 Test USDC on devnet.
+- Wallet-paid inference is recorded through compact receipts, not direct per-call reward payouts.
+- Receipt recording splits Test USDC into provider-pending revenue and treasury revenue.
+- Provider-share USDC releases only after the receipt finalizes through the attestation lifecycle.
+- Finalized receipts contribute buyer-side and provider-side epoch weight for CLAW rewards.
+- Epoch rewards are claimed into locked CLAW streams rather than paid directly per request.
+- Challenges use CLAW bonds and can invalidate receipt economics when accepted.
 
 ## Site Structure
 
-- `/` - Landing page, settlement feed, model list, protocol state, treasury preview, SDK example, and protocol facts.
-- `/providers` - Provider registry with filters, sorting controls, and demo data.
-- `/state` - Protocol state, treasury, and burn accounting stub.
-- `/docs` - SDK guides and protocol specification.
-- `/install` - Provider registration entry point.
-- `/network` - Protocol state and treasury contract view.
-- `/whitepaper` - PDF whitepaper.
+- `/` - Landing page, protocol framing, model surface, and SDK entry point.
+- `/builders` - Wallet and builder receipt flow for inference consumption.
+- `/providers` - Provider registration and receipt-settlement mechanism overview.
+- `/install` - Provider onboarding copy and devnet registration configuration.
+- `/docs` - Devnet SDK snippets, receipt lifecycle, Phase 1 economics, and parameters.
+- `/network` - Protocol state and network-facing status surfaces.
+- `/whitepaper` - Whitepaper route.
 
 Legacy paths redirect to the nearest current page to preserve external links.
 
-## Build
+## Development
 
 ```bash
-git clone https://github.com/clawfarm-protocol/clawfarm-site
-cd clawfarm-site
 npm install
+npm run dev
+```
+
+Open the local development URL printed by Next.js.
+
+## Verification
+
+Run the site audit, TypeScript check, and production build before delivery:
+
+```bash
+npm run verify:site
+npx tsc --noEmit
 npm run build
 ```
 
-The `out/` directory contains the static export.
+The production build can fail if `next/font/google` cannot fetch Google Fonts in
+the local network environment. Record that separately from content or TypeScript
+verification failures.
+
+## Static Export
+
+```bash
+npm run build
+```
+
+The `out/` directory contains the static export when the build succeeds.
 
 ## IPFS Deploy
 
-Use environment variables for Pinata credentials:
-
-```bash
-PINATA_API_KEY=... PINATA_SECRET_API_KEY=... node deploy-ipfs.js
-```
+Deployment credentials are intentionally not documented in public copy. Configure
+Pinata or any other publisher through local environment management, then run the
+repository deployment script from a trusted operator shell.
 
 ## Community
 

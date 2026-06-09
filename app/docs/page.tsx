@@ -2,15 +2,15 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Documentation — ClawFarm',
-  description: 'SDK, integration guides, and full protocol specification for ClawFarm.',
+  description: 'Devnet SDK, receipt lifecycle, and Phase 1 protocol economics for ClawFarm.',
   alternates: { canonical: '/docs' },
 }
 
 const toc = [
   ['Quickstart', '#quickstart'],
   ['Install', '#install'],
-  ['Authenticate', '#authenticate'],
-  ['First request', '#first-request'],
+  ['Configure devnet', '#configure-devnet'],
+  ['First receipt', '#first-receipt'],
   ['SDK', '#sdk'],
   ['Routing modes', '#routing-modes'],
   ['Provider', '#provider'],
@@ -18,11 +18,10 @@ const toc = [
   ['Protocol', '#protocol'],
   ['Architecture', '#architecture'],
   ['Smart contracts', '#contracts'],
-  ['Settlement', '#settlement'],
-  ['Buyback mechanism', '#buyback'],
-  ['Anti-fraud', '#anti-fraud'],
-  ['Tokenomics', '#tokenomics'],
-  ['Genesis parameters', '#genesis-parameters'],
+  ['Receipt lifecycle', '#receipt-lifecycle'],
+  ['Phase 1 economics', '#phase-1-economics'],
+  ['Challenges', '#challenges'],
+  ['Devnet parameters', '#devnet-parameters'],
   ['Reproducibility', '#reproducibility'],
   ['Resources', '#resources'],
 ]
@@ -33,7 +32,7 @@ export default function DocsPage() {
       <section className="hero-section">
         <div className="container">
           <h1 className="page-title">Documentation</h1>
-          <p className="page-copy">SDK, integration guides, and full protocol specification.</p>
+          <p className="page-copy">Devnet integration guides and Phase 1 receipt-settlement specification.</p>
         </div>
       </section>
 
@@ -50,56 +49,69 @@ export default function DocsPage() {
           <article className="docs-content">
             <section id="quickstart">
               <h2>Quickstart</h2>
-              <p>Route one inference request through ClawFarm and receive a signed usage receipt.</p>
+              <p>Submit one receipt-backed inference request on devnet and record its economic state on-chain.</p>
               <h3 id="install">Install</h3>
               <pre className="code-block"><code>{`npm install @clawfarm/sdk`}</code></pre>
-              <h3 id="authenticate">Authenticate</h3>
+              <h3 id="configure-devnet">Configure devnet</h3>
               <pre className="code-block"><code>{`import { ClawFarm } from '@clawfarm/sdk'
 
 const cf = new ClawFarm({
-  apiKey: process.env.CLAWFARM_KEY
+  cluster: 'devnet'
 })`}</code></pre>
-              <h3 id="first-request">First request</h3>
-              <pre className="code-block"><code>{`const result = await cf.chat({
+              <h3 id="first-receipt">First receipt</h3>
+              <pre className="code-block"><code>{`const receipt = await cf.receipts.submit({
   model: 'model-l-001',
-  mode: 'auto',
-  messages: [{ role: 'user', content: 'Summarize this file.' }]
+  provider: providerWallet,
+  payer: connectedWallet.publicKey,
+  promptTokens: 420,
+  completionTokens: 180,
+  totalUsdc: '0.025000'
 })
 
-console.log(result.provider)
-console.log(result.usageProof)`}</code></pre>
+console.log(receipt.receiptPda)
+console.log(receipt.economicRecordPda)`}</code></pre>
             </section>
 
             <section id="sdk">
               <h2>SDK</h2>
-              <p>Use TypeScript, Python, Rust, or direct HTTP calls with the same routing model.</p>
+              <p>Use TypeScript, Python, Rust, or direct HTTP calls to submit compact receipt data against devnet configuration.</p>
               <h3>TypeScript</h3>
-              <pre className="code-block"><code>{`await cf.chat({
+              <pre className="code-block"><code>{`await cf.receipts.submit({
   model: 'model-l-002',
-  mode: 'premium',
-  messages
+  provider: providerWallet,
+  payer: connectedWallet.publicKey,
+  promptTokens: 800,
+  completionTokens: 220,
+  totalUsdc: '0.050000'
 })`}</code></pre>
               <h3>Python</h3>
               <pre className="code-block"><code>{`from clawfarm import ClawFarm
 
-cf = ClawFarm(api_key=os.environ["CLAWFARM_KEY"])
-result = cf.chat(model="model-l-001", mode="auto", messages=messages)`}</code></pre>
+cf = ClawFarm(cluster="devnet")
+receipt = cf.receipts.submit(
+    model="model-l-001",
+    provider=provider_wallet,
+    payer=connected_wallet,
+    total_usdc="0.025000",
+)`}</code></pre>
               <h3>Rust</h3>
-              <pre className="code-block"><code>{`let result = client
-    .chat("model-l-001")
-    .mode("eco")
-    .messages(messages)
-    .send()
+              <pre className="code-block"><code>{`let receipt = Client::new("devnet")
+    .receipts()
+    .model("model-l-001")
+    .provider(provider_wallet)
+    .payer(connected_wallet)
+    .total_usdc("0.025000")
+    .submit()
     .await?;`}</code></pre>
               <h3>HTTP API</h3>
-              <pre className="code-block"><code>{`curl https://api.clawfarm.network/v1/route \\
-  -H "Authorization: Bearer $CLAWFARM_KEY" \\
-  -d '{"model":"model-l-001","mode":"auto","messages":[{"role":"user","content":"Hello"}]}'`}</code></pre>
+              <pre className="code-block"><code>{`curl https://api.clawfarm.network/v1/devnet/receipts \
+  -H "Content-Type: application/json" \
+  -d '{"model":"model-l-001","provider":"<provider-wallet>","totalUsdc":"0.025000"}'`}</code></pre>
             </section>
 
             <section id="routing-modes">
               <h2>Routing modes</h2>
-              <p>Choose the routing objective per request: cost, balance, or quality.</p>
+              <p>Choose a routing objective before creating the receipt. The economic contract records the resulting provider, price, and usage snapshot.</p>
               <div className="key-list">
                 <div>eco</div>
                 <div>Lowest-cost eligible provider.</div>
@@ -112,23 +124,23 @@ result = cf.chat(model="model-l-001", mode="auto", messages=messages)`}</code></
 
             <section id="provider">
               <h2>Provider</h2>
-              <p>Providers register one endpoint, one bond, and one pricing table.</p>
+              <p>Providers register one wallet-controlled endpoint and stake Test USDC on devnet.</p>
               <div className="key-list">
                 <div>Register</div>
-                <div>Call the provider registry with endpoint, models, wallet, and pricing.</div>
-                <div>Bond</div>
-                <div>Provider bond: 100 USDC.</div>
+                <div>Call the provider registry with endpoint metadata, signer identity, wallet, and pricing.</div>
+                <div>Stake</div>
+                <div>Devnet provider stake: 100 Test USDC.</div>
                 <div>Pricing</div>
                 <div>Input, output, request, image, second, or task units.</div>
-                <div>Usage proofs</div>
-                <div>Requester and provider dual-sign a receipt before settlement.</div>
+                <div>Receipts</div>
+                <div>Provider-side receipt signatures bind usage facts before on-chain settlement.</div>
               </div>
               <p>The protocol does not specify what infrastructure backs a provider&apos;s endpoint.</p>
             </section>
 
             <section id="models">
               <h2>Models</h2>
-              <p>The live registry lists model identifiers, provider counts, clearing price, and 30d volume. Individual suppliers remain wallet-addressed.</p>
+              <p>The live registry lists model identifiers, provider counts, clearing price, and observed receipt volume. Individual suppliers remain wallet-addressed.</p>
               <div className="key-list">
                 <div>model-l-001</div>
                 <div>Language model identifier. Provider count and price bind from registry state.</div>
@@ -141,148 +153,97 @@ result = cf.chat(model="model-l-001", mode="auto", messages=messages)`}</code></
 
             <section id="protocol">
               <h2>Protocol</h2>
-              <p>ClawFarm is a contract-executed settlement protocol for AI inference.</p>
+              <p>ClawFarm Phase 1 is a receipt-driven settlement protocol for AI inference on Solana.</p>
               <h3 id="architecture">Architecture</h3>
-              <pre className="code-block"><code>{`AGENT / APP LAYER
-  Apps · Agents · Demand Apps · Frontends
+              <pre className="code-block"><code>{`WALLET / APP LAYER
+  Users · Builders · Agents · Provider operators
 
 SERVICE REGISTRY
-  Model APIs · GPU nodes · Routers · Custom endpoints
+  Registered endpoints · Model metadata · Provider signer records
 
-PROTOCOL LAYER
-  Escrow · Registry · Metering · Proofs · Settlement · Compensation
+ATTESTATION LAYER
+  Compact receipts · Challenge lifecycle · Finalization authority
 
-PROVIDER LAYER
-  Inference endpoints · Capacity pools · Operator wallets`}</code></pre>
+MASTERPOOL LAYER
+  Test USDC split · Epoch weight · Locked CLAW streams · Vault accounting`}</code></pre>
               <h3 id="contracts">Smart contracts</h3>
               <div className="key-list">
-                <div>Escrow</div>
-                <div>Holds user USDC until a valid usage proof is settled.</div>
-                <div>Registry</div>
-                <div>Stores provider endpoint hash, bond state, pricing, and wallet.</div>
-                <div>Metering</div>
-                <div>Records route mode, provider, price, account, and usage units.</div>
-                <div>Settlement</div>
-                <div>Splits payment and updates epoch accounting.</div>
+                <div>clawfarm-attestation</div>
+                <div>Verifies compact receipts, stores receipt status, opens challenges, and finalizes receipt economics through CPI.</div>
+                <div>clawfarm-masterpool</div>
+                <div>Owns reward, treasury, provider stake, provider pending revenue, and challenge-bond vault accounting.</div>
+                <div>ProviderAccount</div>
+                <div>Stores provider wallet, stake state, endpoint metadata, and registration status.</div>
+                <div>ReceiptEconomicRecord</div>
+                <div>Stores immutable receipt-time payment split, epoch weight, challenge deadline, and economic status.</div>
               </div>
-              <h3 id="settlement">Settlement</h3>
-              <pre className="code-block"><code>{`User escrow
-  → dual-signed usage proof
-  → settlement contract
-  → 97% provider wallet
-  → 3% Treasury PDA`}</code></pre>
-              <h3 id="buyback">Treasury Contract</h3>
-              <p>
-                A protocol-owned PDA accumulating 3% of every settlement and executing
-                automated buyback-and-burn at epoch boundaries.
-              </p>
+              <h3 id="receipt-lifecycle">Receipt lifecycle</h3>
+              <pre className="code-block"><code>{`1. Wallet authorizes bounded Test USDC settlement.
+2. Provider serves inference and signs compact receipt facts.
+3. Attestation submits the receipt and records payment through masterpool CPI.
+4. Masterpool splits Test USDC into provider-pending and treasury vaults.
+5. Receipt survives or fails the challenge window.
+6. Finalized receipts activate buyer/provider epoch weight.
+7. Finalized epochs create locked CLAW streams for claimable rewards.`}</code></pre>
+              <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
-                <div>Trigger</div>
-                <div>epoch end, when Treasury balance ≥ 100 USDC</div>
-                <div>Mechanism</div>
-                <div>swap aggregator CPI, USDC → CLAF</div>
-                <div>Slippage</div>
-                <div>1% max</div>
-                <div>Max swap</div>
-                <div>0.5% of CLAF/USDC pool liquidity per epoch</div>
-                <div>Destination</div>
-                <div className="mono">1nc1nerator11111111111111111111111111111111</div>
+                <div>USDC split</div>
+                <div>97% provider-share Test USDC, 3% treasury Test USDC on the current devnet deployment.</div>
+                <div>Provider release</div>
+                <div>Provider-share USDC remains pending until attestation marks the receipt finalized.</div>
+                <div>Epoch reward</div>
+                <div>Receipts record buyer and provider epoch weight; rewards are not paid directly per call.</div>
+                <div>Pool split</div>
+                <div>30% buyer-side CLAW pool and 70% provider-side CLAW pool by finalized epoch weight.</div>
+                <div>Reward lock</div>
+                <div>Claimed epoch rewards create locked streams using the configured lock-days snapshot.</div>
               </div>
-              <p>The contract executes when conditions are met.</p>
-              <pre className="code-block"><code>{`97% → Provider wallet
- 3% → Treasury PDA → automated buyback-and-burn`}</code></pre>
-              <h3 id="anti-fraud">Anti-fraud</h3>
+              <h3 id="challenges">Challenges</h3>
               <div className="key-list">
-                <div>Challenge bond</div>
-                <div>2 USDC</div>
-                <div>Challenge period</div>
-                <div>24 hours</div>
-                <div>Slash</div>
-                <div>30 CLAF per challenge success: 21 to challenger, 9 burned</div>
-                <div>Unstake</div>
-                <div>7-day waiting period</div>
+                <div>Bond unit</div>
+                <div>Challenges are bonded in CLAW.</div>
+                <div>Rejected challenge</div>
+                <div>The challenger bond is burned and the receipt remains economically valid.</div>
+                <div>Accepted challenge</div>
+                <div>The bond is returned, provider-share USDC is refunded to the payer, provider CLAW slash accounting applies, and invalid receipt weight is removed.</div>
+                <div>Timeout stance</div>
+                <div>Receipt economics finalize only through the attestation lifecycle after the configured challenge window.</div>
               </div>
-              <h3 id="tokenomics">Tokenomics</h3>
+              <h3 id="devnet-parameters">Devnet parameters</h3>
               <div className="key-list">
-                <div>Total supply</div>
-                <div>1,000,000,000 CLAF</div>
-                <div>Team allocation</div>
-                <div>0%</div>
-                <div>Provider pool</div>
-                <div>70% of epoch emission</div>
-                <div>Developer pool</div>
-                <div>30% of epoch emission</div>
-                <div>Protocol fee</div>
-                <div>3% auto buyback-and-burn via swap aggregator</div>
-                <div>Vesting</div>
-                <div>180-day linear</div>
-              </div>
-              <p>
-                Parameters are set at Genesis and persist for the lifetime of the protocol&apos;s
-                emission schedule.
-              </p>
-              <h3 id="roadmap">Roadmap</h3>
-              <div className="key-list">
-                <div>Genesis (block 0)</div>
-                <div>
-                  All contracts deployed. 1B CLAF minted to emission pool PDA.
-                  Mint authority transferred to PDA. Freeze authority disabled. Upgrade authority renounced.
-                  Deployer wallet keys discarded after Genesis confirmation.
-                </div>
-                <div>After Genesis</div>
-                <div>The protocol runs. Halving every 2 years. Emission schedule and parameters are fixed at deployment.</div>
-              </div>
-              <h3 id="genesis-parameters">Appendix A: Genesis Parameters</h3>
-              <div className="key-list">
-                <div>Chain</div><div>Solana</div>
-                <div>Token</div><div>CLAF (SPL)</div>
-                <div>Total supply</div><div>1,000,000,000</div>
-                <div>Emission period</div><div>10 years</div>
-                <div>Halving</div><div>Every 2 years</div>
-                <div>Epoch</div><div>1 hour (configurable per block)</div>
-                <div>Provider pool</div><div>70% of epoch emission</div>
-                <div>Developer pool</div><div>30% of epoch emission</div>
-                <div>Vesting</div><div>180-day linear</div>
-                <div>Provider bond</div><div>100 USDC</div>
-                <div>Challenge bond</div><div>2 USDC</div>
-                <div>Challenge slash</div><div>30 CLAF</div>
-                <div>Challenge period</div><div>24 hours</div>
-                <div>Unstake period</div><div>7 days</div>
-                <div>Provider revenue</div><div>97%</div>
-                <div>Protocol fee</div><div>3% (auto buyback-and-burn via swap aggregator)</div>
-                <div>Treasury trigger</div><div>≥ 100 USDC balance</div>
-                <div>Buyback slippage</div><div>1% max</div>
-                <div>Buyback max per epoch</div><div>0.5% of CLAF/USDC pool liquidity</div>
-                <div>Upgrade authority</div><div>Renounced at Genesis</div>
-                <div>Parameters</div><div>Set at Genesis, persistent for emission lifecycle</div>
+                <div>Cluster</div><div>Solana devnet</div>
+                <div>Masterpool program</div><div className="mono">DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q</div>
+                <div>Attestation program</div><div className="mono">BwRMqumgiHbeMhG9xs1a76vUjmprrokr6WsPCzhz3pKK</div>
+                <div>CLAW mint</div><div className="mono">EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui</div>
+                <div>Test USDC mint</div><div className="mono">Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553</div>
+                <div>Provider stake</div><div>100 Test USDC</div>
+                <div>Challenge bond</div><div>Configured CLAW bond on devnet.</div>
+                <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet uses the production challenge-window configuration before launch.</div>
+                <div>Reward lock</div><div>Configured lock-days snapshot; current Phase 1 default is 180 days.</div>
               </div>
             </section>
 
             <section id="reproducibility">
               <h2>Reproducibility</h2>
-              <p>Genesis state and builds are independently reproducible.</p>
-              <h3>Genesis state script</h3>
-              <pre className="code-block"><code>{`npx clawfarm genesis-check \\
-  --cluster mainnet-beta \\
-  --token CLAF \\
-  --expected-supply 1000000000`}</code></pre>
-              <h3>Reproducible builds</h3>
-              <pre className="code-block"><code>{`git clone <source-repository-url>
-cd contracts
-npm ci
-npm run build
-npm run test`}</code></pre>
+              <p>Contract state and builds should be verified against the current clawfarm-masterpool repository.</p>
+              <h3>Devnet state check</h3>
+              <pre className="code-block"><code>{`npx clawfarm phase1 status --cluster devnet`}</code></pre>
+              <h3>Contract build</h3>
+              <pre className="code-block"><code>{`git clone <contract-source-url>
+cd clawfarm-masterpool
+anchor build
+anchor test`}</code></pre>
             </section>
 
             <section id="resources">
               <h2>Resources</h2>
               <p>Reference files and mirrors for developers, providers, and auditors.</p>
               <div className="key-list">
-                <div>Whitepaper PDF</div>
-                <div><a className="text-link" href="/docs#protocol">Protocol section →</a></div>
-                <div>IPFS mirror</div>
-                <div><a className="text-link" href="https://ipfs.io/ipfs/clawfarm-protocol" target="_blank" rel="noopener">Open mirror →</a></div>
-                <div>Source</div>
+                <div>Contract source</div>
+                <div>Protocol facts derive from the current clawfarm-masterpool repository.</div>
+                <div>Phase 1 economics</div>
+                <div>Receipt settlement, epoch weight, challenge, and reward-stream accounting.</div>
+                <div>Website source</div>
                 <div>Repository URL publishes after protocol organization migration.</div>
               </div>
             </section>

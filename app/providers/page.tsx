@@ -8,19 +8,19 @@ export const metadata: Metadata = {
 
 const mechanismBlocks = [
   {
-    label: 'DUAL-SIGNED PROOF',
-    title: 'Both sides sign what was served.',
-    body: 'Every session produces a usage proof signed by both the user and the provider: request hash, response hash, token counts, and agreed price. A session settles only if both signatures are present. Neither side can unilaterally distort the settlement amount. The protocol does not inspect the inference itself; it requires both parties to sign what was served.',
+    label: 'COMPACT RECEIPT',
+    title: 'Settlement starts with signed receipt facts.',
+    body: 'Phase 1 records compact receipts that bind payer, provider, model, token usage, total Test USDC paid, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
   },
   {
-    label: 'SETTLEMENT & REWARD',
-    title: 'USDC clears first. CLAF follows volume.',
-    body: 'On settlement, 97% of USDC moves to the provider wallet and 3% moves to the protocol treasury. CLAF emission is distributed on settled volume: Provider Pool 70%, Developer Pool 30%. Providers priced below the network average earn higher CLAF weight through the price-relative term.',
+    label: 'PENDING USDC',
+    title: 'Provider revenue waits for finalization.',
+    body: 'Wallet-paid Test USDC is split at record time: the provider share moves into the provider-pending vault and the treasury share moves into the treasury vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
   },
   {
-    label: 'BOND & CHALLENGE',
-    title: 'Enforcement is challenger-driven.',
-    body: 'Registration requires a 100 USDC bond. Any party may post a small bond to challenge a suspect settlement; upheld challenges slash the provider. Quality factor Q decays on failed delivery or upheld challenge. Enforcement is permissionless and challenger-driven, not operator-driven.',
+    label: 'CLAW CHALLENGE',
+    title: 'Challenges use CLAW bonds.',
+    body: 'A challenger posts the configured CLAW bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, and apply provider slash, challenger reward, and burn accounting.',
   },
 ]
 
@@ -32,7 +32,7 @@ export default function ProvidersPage() {
           <p className="hero-status">Providers</p>
           <h1 className="hero-title">Supply inference.</h1>
           <p className="hero-copy">
-            The protocol does not ask who you are or where inference comes from. It asks only that each settled call carries proof.
+            The protocol does not ask who you are or where inference comes from. It asks that each finalized receipt carries auditable economic state.
           </p>
         </div>
       </section>
@@ -55,10 +55,10 @@ export default function ProvidersPage() {
         <div className="container">
           <SectionTitle eyebrow="Register" title="Register an endpoint." />
           <p className="section-intro">
-            One way in. A wallet, a bond, an endpoint.
+            One way in. A wallet, a stake, an endpoint.
           </p>
           <p className="section-intro">
-            Registration requires a Solana wallet, a 100 USDC bond, and declared model, price, and quality offerings.
+            Registration requires a Solana wallet, a 100 Test USDC stake on devnet, and declared endpoint metadata.
           </p>
           <div className="dapp-card">
             <div className="field">
@@ -97,7 +97,7 @@ export default function ProvidersPage() {
                   <th>Model</th>
                   <th className="num-col">Price</th>
                   <th className="num-col">24h calls</th>
-                  <th className="num-col">24h USDC</th>
+                  <th className="num-col">Pending USDC</th>
                   <th>Status</th>
                 </tr>
               </thead>

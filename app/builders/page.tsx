@@ -16,7 +16,7 @@ export default function BuildersPage() {
           <p className="hero-status">Developers</p>
           <h1 className="hero-title">Consume inference.</h1>
           <p className="hero-copy">
-            Any wallet can call any registered model and pay in USDC. Every call you make mines CLAF to your wallet.
+            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAW rewards.
           </p>
         </div>
       </section>
@@ -26,15 +26,15 @@ export default function BuildersPage() {
           <div className="two-column">
             <article className="border-panel">
               <h3>Open consumption</h3>
-              <p>Applications, builders, and wallets consume from the same registry. No named consumer application is required.</p>
+              <p>Applications, builders, and wallets submit receipt-backed requests from the same registry. No named consumer application is required.</p>
             </article>
             <article className="border-panel">
-              <h3>Mining on demand</h3>
-              <p>Every call you make mines CLAF to your wallet. The consuming side receives 30% of epoch CLAF emission, weighted by settled usage.</p>
+              <h3>Epoch pool weight</h3>
+              <p>Finalized receipts add buyer-side weight to the epoch pool. Buyer rewards are claimed from finalized epoch accounting and stream as locked CLAW.</p>
             </article>
             <article className="border-panel">
-              <h3>Escrow PDA</h3>
-              <p>USDC is deposited into a non-custodial escrow PDA derived from the wallet address. Funds release only on a dual-signed proof; no external key controls escrow.</p>
+              <h3>Economic record</h3>
+              <p>Each submitted receipt creates an economic record with Test USDC split snapshots, challenge timing, and buyer/provider weight. Provider-share USDC remains pending until finalization.</p>
             </article>
           </div>
         </div>
@@ -59,24 +59,24 @@ export default function BuildersPage() {
                   <th>Model</th>
                   <th className="num-col">Tokens</th>
                   <th className="num-col">USDC</th>
-                  <th className="num-col">CLAF mined</th>
+                  <th className="num-col">Epoch weight</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="empty-row" colSpan={5}>Connect a wallet to view calls.</td>
+                  <td className="empty-row" colSpan={5}>Connect a wallet to view receipt-backed usage.</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <SectionTitle eyebrow="Balance" title="USDC escrow" />
+          <SectionTitle eyebrow="Balance" title="USDC allowance" />
           <div className="dapp-card narrow">
             <span className="card-label">Current balance</span>
             <p className="balance-value">—</p>
-            <p className="card-meta">Top-ups credit after confirmation. Withdrawals remain wallet-controlled.</p>
+            <p className="card-meta">Wallet payments authorize bounded Test USDC settlement for receipt-backed requests.</p>
             <div className="dapp-actions">
-              <button className="btn primary" disabled type="button">Top up</button>
+              <button className="btn primary" disabled type="button">Approve</button>
               <button className="btn ghost" disabled type="button">Withdraw</button>
             </div>
           </div>
