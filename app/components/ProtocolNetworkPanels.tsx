@@ -46,6 +46,19 @@ function PendingPanel({ profile }: { profile: NetworkProfile }) {
   )
 }
 
+function formatDurationSeconds(seconds: string): string {
+  const duration = Number(seconds)
+  if (!Number.isFinite(duration)) return seconds
+  if (duration === 3600) return '1 hour'
+  if (duration % 60 === 0) return `${duration / 60} minutes`
+  return `${duration} seconds`
+}
+
+function formatTotalSupply(value: string): string {
+  if (value === '1000000000.000000') return '1B'
+  return value.replace(/\.0+$/, '')
+}
+
 export function NetworkBadge() {
   const { profile } = useNetwork()
 
@@ -78,10 +91,10 @@ export function ProtocolNumberWall() {
   const config = profile.config
   const items: Metric[] = config
     ? [
-        { label: `${profile.tokenSymbol} total supply`, value: '1B' },
+        { label: `${profile.tokenSymbol} total supply`, value: formatTotalSupply(config.emissionTotalClaw) },
         { label: 'Provider USDC share', value: formatBps(config.providerUsdcShareBps) },
         { label: 'Treasury USDC share', value: formatBps(config.treasuryUsdcShareBps) },
-        { label: 'Epoch duration', value: '1 hour' },
+        { label: 'Epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
       ]
     : [
         { label: 'Deployment status', value: 'Pending' },

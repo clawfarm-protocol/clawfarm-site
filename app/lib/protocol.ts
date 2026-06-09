@@ -218,5 +218,5 @@ export function shortAddress(address: string | null | undefined): string {
 export function explorerAddressUrl(network: NetworkProfile, address: string | null | undefined): string | null {
   if (!address) return null
   const cluster = network.explorerCluster === 'devnet' ? '?cluster=devnet' : ''
-  return `https://explorer.solana.com/address/${address}${cluster}`
+  return `https://explorer.solana.com/address/${encodeURIComponent(address)}${cluster}`
 }

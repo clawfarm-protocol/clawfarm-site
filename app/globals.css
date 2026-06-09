@@ -1247,6 +1247,12 @@ strong {
   margin-top: var(--space-lg);
 }
 
+.protocol-metric-grid .stat-value {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: clamp(16px, 1.7vw, 22px);
+}
+
 .section-spacer {
   height: var(--space-lg);
 }
