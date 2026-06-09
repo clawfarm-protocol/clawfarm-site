@@ -10,9 +10,9 @@ const toc = [
   ['Quickstart', '#quickstart'],
   ['Install', '#install'],
   ['Configure devnet', '#configure-devnet'],
-  ['First receipt', '#first-receipt'],
-  ['SDK', '#sdk'],
-  ['Gateway selection', '#gateway-selection'],
+  ['SDK wrapper target', '#sdk-wrapper-target'],
+  ['Current contract shape', '#current-contract-shape'],
+  ['Gateway wrapper target', '#gateway-wrapper-target'],
   ['Provider', '#provider'],
   ['Models', '#models'],
   ['Protocol', '#protocol'],
@@ -49,64 +49,126 @@ export default function DocsPage() {
           <article className="docs-content">
             <section id="quickstart">
               <h2>Quickstart</h2>
-              <p>Submit one receipt-backed inference request on devnet and record its economic state on-chain.</p>
+              <p>
+                The devnet contract path is Solana-native. SDK examples on this page are wrapper targets: the wrapper must build the compact receipt fields, proof instruction, token delegate, PDAs, and masterpool accounts before sending the transaction.
+              </p>
               <h3 id="install">Install</h3>
               <pre className="code-block"><code>{`npm install @clawfarm/sdk`}</code></pre>
               <h3 id="configure-devnet">Configure devnet</h3>
               <pre className="code-block"><code>{`import { ClawFarm } from '@clawfarm/sdk'
 
 const cf = new ClawFarm({
-  cluster: 'devnet'
+  cluster: 'devnet',
 })`}</code></pre>
-              <h3 id="first-receipt">First receipt</h3>
-              <pre className="code-block"><code>{`const receipt = await cf.receipts.submit({
-  model: 'model-l-001',
-  provider: providerWallet,
+            </section>
+
+            <section id="sdk-wrapper-target">
+              <h2>SDK wrapper target</h2>
+              <p>
+                A contract-aligned wrapper should prepare receipt hashes first, then submit the prepared receipt with a gateway-capable signer proof and payer payment delegate.
+              </p>
+              <h3>TypeScript</h3>
+              <pre className="code-block"><code>{`const prepared = await cf.receipts.prepare({
+  providerWallet,
   payer: connectedWallet.publicKey,
+  payerUsdcToken,
+  requestNonce,
+  metadata: {
+    model: 'model-l-001',
+    unit: 'tokens',
+  },
   promptTokens: 420,
   completionTokens: 180,
-  totalUsdc: '0.025000'
+  chargeUsdc: '0.025000',
+})
+
+const receipt = await cf.receipts.submit(prepared, {
+  gatewaySigner,
+  paymentDelegate,
 })
 
 console.log(receipt.receiptPda)
 console.log(receipt.economicRecordPda)`}</code></pre>
-            </section>
-
-            <section id="sdk">
-              <h2>SDK</h2>
-              <p>Use TypeScript, Python, Rust, or direct HTTP calls to submit compact receipt data against devnet configuration.</p>
-              <h3>TypeScript</h3>
-              <pre className="code-block"><code>{`await cf.receipts.submit({
-  model: 'model-l-002',
-  provider: providerWallet,
-  payer: connectedWallet.publicKey,
-  promptTokens: 800,
-  completionTokens: 220,
-  totalUsdc: '0.050000'
-})`}</code></pre>
               <h3>Python</h3>
-              <pre className="code-block"><code>{`from clawfarm import ClawFarm
+              <pre className="code-block"><code>{`prepared = cf.receipts.prepare(
+    provider_wallet=provider_wallet,
+    payer=connected_wallet.public_key,
+    payer_usdc_token=payer_usdc_token,
+    request_nonce=request_nonce,
+    metadata={"model": "model-l-001", "unit": "tokens"},
+    prompt_tokens=420,
+    completion_tokens=180,
+    charge_usdc="0.025000",
+)
 
-cf = ClawFarm(cluster="devnet")
 receipt = cf.receipts.submit(
-    model="model-l-001",
-    provider=provider_wallet,
-    payer=connected_wallet,
-    total_usdc="0.025000",
+    prepared,
+    gateway_signer=gateway_signer,
+    payment_delegate=payment_delegate,
 )`}</code></pre>
               <h3>Rust</h3>
-              <pre className="code-block"><code>{`let receipt = Client::new("devnet")
-    .receipts()
-    .model("model-l-001")
-    .provider(provider_wallet)
-    .payer(connected_wallet)
-    .total_usdc("0.025000")
-    .submit()
+              <pre className="code-block"><code>{`let prepared = cf.receipts().prepare()
+    .provider_wallet(provider_wallet)
+    .payer(connected_wallet.pubkey())
+    .payer_usdc_token(payer_usdc_token)
+    .request_nonce(request_nonce)
+    .metadata_model("model-l-001")
+    .metadata_unit("tokens")
+    .prompt_tokens(420)
+    .completion_tokens(180)
+    .charge_usdc("0.025000")
+    .build()
+    .await?;
+
+let receipt = cf.receipts()
+    .submit(prepared)
+    .gateway_signer(gateway_signer)
+    .payment_delegate(payment_delegate)
+    .send()
     .await?;`}</code></pre>
-              <h3>HTTP API</h3>
-              <pre className="code-block"><code>{`curl https://api.clawfarm.network/v1/devnet/receipts \
-  -H "Content-Type: application/json" \
-  -d '{"model":"model-l-001","provider":"<provider-wallet>","totalUsdc":"0.025000"}'`}</code></pre>
+            </section>
+
+            <section id="current-contract-shape">
+              <h2>Current devnet contract shape</h2>
+              <p>
+                The SDK wrapper target maps to `attestation.submit_receipt`. The contract does not accept model IDs or endpoint metadata as direct receipt fields; those values belong in metadata that the wrapper hashes.
+              </p>
+              <div className="key-list">
+                <div>SubmitReceiptArgs</div>
+                <div>request_nonce_hash, metadata_hash, prompt_tokens, completion_tokens, charge_atomic, receipt_hash.</div>
+                <div>Receipt hash</div>
+                <div>Built with the clawfarm:receipt:v2 domain, provider wallet, payer, Test USDC mint, token counts, and charge amount.</div>
+                <div>Proof instruction</div>
+                <div>The transaction includes an immediately preceding ed25519 verification instruction for the configured gateway-capable signer over receipt_hash.</div>
+                <div>Payment delegate</div>
+                <div>The payer authorizes bounded Test USDC movement through the payer token account and payment delegate signer.</div>
+                <div>Masterpool accounts</div>
+                <div>The wrapper supplies config, provider account, epoch cursor/state, receipt economic record, treasury vault, and provider pending vault accounts.</div>
+              </div>
+            </section>
+
+            <section id="gateway-wrapper-target">
+              <h2>Gateway wrapper target</h2>
+              <p>
+                A gateway API may collect receipt metadata, but it must create or return a Solana transaction that follows the current devnet contract shape. It is not a contract-native REST endpoint.
+              </p>
+              <pre className="code-block"><code>{`POST /devnet/receipt-transactions
+{
+  "providerWallet": "<provider-wallet>",
+  "payer": "<payer-wallet>",
+  "payerUsdcToken": "<payer-usdc-token>",
+  "requestNonce": "<client-generated-nonce>",
+  "metadata": {
+    "model": "model-l-001",
+    "unit": "tokens"
+  },
+  "promptTokens": 420,
+  "completionTokens": 180,
+  "chargeUsdc": "0.025000"
+}`}</code></pre>
+              <p>
+                The gateway wrapper response should contain a transaction or signing payload that includes the ed25519 proof instruction and `attestation.submit_receipt` accounts.
+              </p>
             </section>
 
             <section id="gateway-selection">
@@ -159,13 +221,13 @@ receipt = cf.receipts.submit(
   Users · Builders · Agents · Provider operators
 
 OFF-CHAIN DIRECTORY
-  Provider choices · Model labels · Provider signer records
+  Provider choices · Model labels · Endpoint metadata · Price metadata
 
 ATTESTATION LAYER
-  Compact receipts · Challenge lifecycle · Finalization authority
+  ProviderSigner records · Compact receipts · Challenge lifecycle · Finalization authority
 
 MASTERPOOL LAYER
-  Test USDC split · Epoch weight · Locked CLAW streams · Vault accounting`}</code></pre>
+  ProviderAccount · Test USDC split · Epoch weight · Locked CLAW streams · Vault accounting`}</code></pre>
               <h3 id="contracts">Smart contracts</h3>
               <div className="key-list">
                 <div>clawfarm-attestation</div>
@@ -178,13 +240,14 @@ MASTERPOOL LAYER
                 <div>Stores immutable receipt-time payment split, epoch weight, challenge deadline, and economic status.</div>
               </div>
               <h3 id="receipt-lifecycle">Receipt lifecycle</h3>
-              <pre className="code-block"><code>{`1. Wallet authorizes bounded Test USDC settlement.
-2. Provider serves inference and signs compact receipt facts.
-3. Attestation submits the receipt and records payment through masterpool CPI.
-4. Masterpool splits Test USDC into provider-pending and treasury vaults.
-5. Receipt survives or fails the challenge window.
-6. Finalized receipts activate buyer/provider epoch weight.
-7. Finalized epochs create locked CLAW streams for claimable rewards.`}</code></pre>
+              <pre className="code-block"><code>{`1. Wallet authorizes bounded Test USDC settlement through a payer token delegate.
+2. App or gateway prepares request_nonce_hash, metadata_hash, charge_atomic, and receipt_hash.
+3. A configured gateway-capable signer signs receipt_hash, and the transaction includes the ed25519 proof instruction.
+4. Attestation submits the compact receipt and records payment through masterpool CPI.
+5. Masterpool splits Test USDC into provider-pending and treasury vaults.
+6. Receipt survives or fails the challenge window.
+7. Finalized receipts activate buyer/provider epoch weight and release provider pending USDC.
+8. Finalized epochs create locked CLAW streams for claimable rewards.`}</code></pre>
               <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
                 <div>USDC split</div>
@@ -218,7 +281,7 @@ MASTERPOOL LAYER
                 <div>Test USDC mint</div><div className="mono">Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553</div>
                 <div>Provider stake</div><div>100 Test USDC</div>
                 <div>Challenge bond</div><div>Configured CLAW bond on devnet.</div>
-                <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet uses the production challenge-window configuration before launch.</div>
+                <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet timing remains pending until mainnet config is deployed.</div>
                 <div>Reward lock</div><div>Configured lock-days snapshot; current Phase 1 default is 180 days.</div>
               </div>
             </section>
