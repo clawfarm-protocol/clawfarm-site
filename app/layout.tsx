@@ -8,7 +8,7 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'ClawFarm',
-  description: 'The settlement protocol for the inference economy.',
+  description: 'The mining inference protocol for the AI economy.',
   url: 'https://clawfarm.network',
   logo: 'https://clawfarm.network/favicon.svg',
   potentialAction: {
@@ -33,22 +33,22 @@ const jetBrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'ClawFarm — Receipt-settled inference',
-  description: 'ClawFarm is the settlement protocol for the inference economy.',
+  title: 'ClawFarm — Mining inference',
+  description: 'The mining inference protocol for the AI economy.',
   applicationName: 'ClawFarm',
   keywords: [
     'ClawFarm',
-    'CLAW',
-    'receipt-settled inference',
+    'CLAF',
+    'mining inference',
     'AI inference protocol',
     'permissionless AI',
     'Solana AI',
     'receipt settlement protocol',
-    'AI inference settlement',
+    'AI inference mining',
   ],
   metadataBase: new URL('https://clawfarm.network'),
   openGraph: {
-    title: 'ClawFarm — Receipt-settled inference',
+    title: 'ClawFarm — Mining inference',
     description: 'The settlement protocol for the inference economy.',
     type: 'website',
     url: 'https://clawfarm.network',
@@ -58,14 +58,14 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'ClawFarm — Receipt-settled inference',
+        alt: 'ClawFarm — Mining inference',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ClawFarm — Receipt-settled inference',
-    description: 'A protocol for receipt-settled AI inference.',
+    title: 'ClawFarm — Mining inference',
+    description: 'A protocol for mining inference on Solana.',
     images: ['/og-image.png'],
   },
   alternates: {
