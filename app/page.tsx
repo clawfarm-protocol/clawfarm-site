@@ -29,23 +29,23 @@ export default function Home() {
     <main>
       <section className="hero-section">
         <div className="container paper-column">
-          <p className="hero-status">Devnet active . Mainnet pending . Solana</p>
-          <h1 className="hero-title">Receipt settlement for inference.</h1>
+          <p className="hero-status">Devnet active . Mainnet Genesis pending . Solana</p>
+          <h1 className="hero-title">Mining inference.</h1>
           <ProtocolStatusStrip />
           <NetworkBadge />
           <p className="hero-copy">
-            ClawFarm records wallet-paid inference receipts, splits USDC at record time, and turns finalized usage into epoch reward weight.
+            ClawFarm turns paid AI inference into mining weight. Providers contribute capacity, buyers pay in USDC, and CLAF rewards follow finalized contribution.
           </p>
           <div className="hero-role-grid" aria-label="Protocol entry paths">
             <a className="role-entry" href="/providers">
               <span>Providers</span>
               <strong>Register a provider account →</strong>
-              <small>Register a wallet-backed ProviderAccount. Receipt payments create pending provider USDC until finalization.</small>
+              <small>Register a wallet-backed ProviderAccount. Finalized provider usage contributes to Provider Pool mining weight.</small>
             </a>
             <a className="role-entry" href="/builders">
               <span>Developers</span>
               <strong>Start with the SDK →</strong>
-              <small>Submit compact receipts through the attestation program. Finalized usage earns buyer-side epoch weight.</small>
+              <small>Prepare compact receipts through wrapper tools. Finalized paid usage contributes to Buyer Pool mining weight.</small>
             </a>
           </div>
           <p className="tertiary-link">
@@ -66,30 +66,30 @@ export default function Home() {
 
       <section className="section" id="mining">
         <div className="container">
-          <SectionHeader eyebrow="Mining" title="Mining." />
+          <SectionHeader eyebrow="Mining" title="Inference becomes mining weight." />
           <p className="section-intro">
-            Receipts do not pay direct per-call rewards. Finalized usage activates buyer and provider epoch weight, then permissionless epoch finalization makes rewards claimable into locked streams.
+            Paid inference is the contribution event. Current devnet records that contribution through finalized receipt settlement; Genesis mainnet targets the full mining economy around a fixed CLAF cap.
           </p>
           <div className="stat-strip mining-strip">
             <div className="treasury-stat">
-              <span>Provider epoch pool</span>
+              <span>Provider Pool</span>
               <p>70%</p>
             </div>
             <div className="treasury-stat">
-              <span>Buyer epoch pool</span>
+              <span>Buyer Pool</span>
               <p>30%</p>
             </div>
             <div className="treasury-stat">
-              <span>Reward lock</span>
-              <p>180 days</p>
+              <span>CLAF cap</span>
+              <p>1B</p>
             </div>
             <div className="treasury-stat">
-              <span>Devnet challenge window</span>
-              <p>30 sec</p>
+              <span>Current devnet lock</span>
+              <p>180 days</p>
             </div>
           </div>
           <p className="section-footnote wide-footnote">
-            The devnet challenge window is intentionally short for testing. Mainnet timing remains pending until mainnet config is deployed.
+            Current devnet realizes mining weight through finalized receipt settlement rather than direct per-call token payouts. Mainnet Genesis timing and full target mechanics remain pending until mainnet config is deployed.
           </p>
           <div className="protocol-table-shell burn-table-shell" data-live-state={miningEventsState}>
             <table className="protocol-table">
@@ -97,7 +97,7 @@ export default function Home() {
                 <tr>
                   <th>Wallet</th>
                   <th>Role</th>
-                  <th className="num-col">CLAW amount</th>
+                  <th className="num-col">CLAF amount</th>
                   <th className="num-col">Timestamp</th>
                 </tr>
               </thead>
@@ -205,14 +205,14 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Every recorded receipt splits wallet-paid USDC immediately: 97% to provider pending revenue and 3% to the treasury USDC vault. The current contract does not expose an automated swap-and-retirement path.
+            Genesis mainnet target: automated buyback-and-burn closes the cost-subsidy loop. Current devnet only books the 3% treasury USDC share when a receipt payment is recorded; automated buyback-and-burn is not enabled on devnet.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
             <div>Snapshot scope</div>
             <div>Treasury and pending provider vault balances are exposed through the selected network profile.</div>
             <div>Event stream</div>
-            <div>No automated swap-and-retirement event stream is exposed by the current contract.</div>
+            <div>Current devnet exposes no automated buyback-and-burn event stream.</div>
           </div>
           <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the static devnet snapshot. Mainnet remains pending until deployment records exist.</p>
           <p className="table-action">
@@ -238,7 +238,7 @@ export default function Home() {
           <div className="economics-stack">
             <article>
               <h3>Emission</h3>
-              <p>CLAW emission inventory is minted at Genesis. Epoch rewards are allocated by finalized buyer and provider usage weight.</p>
+              <p>CLAF has a fixed 1B cap. Genesis mainnet targets the complete mining-inference economy; current devnet uses the deployed reward vault and epoch accounting for testing.</p>
             </article>
             <article>
               <h3>Settlement</h3>
@@ -246,7 +246,7 @@ export default function Home() {
             </article>
             <article>
               <h3>Distribution</h3>
-              <p>Reward claims create locked streams. Owners withdraw vested CLAW over the configured lock period.</p>
+              <p>Reward claims create locked streams. Owners withdraw vested CLAF over the configured lock period.</p>
             </article>
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function Home() {
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAW rewards accrue through finalized epoch weight.
+                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and finalized usage contributes to Provider Pool mining weight for CLAF rewards.
               </p>
               <a href="/providers">Register a provider account →</a>
             </article>
