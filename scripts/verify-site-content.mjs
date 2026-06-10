@@ -88,6 +88,9 @@ const buybackTermPattern = /\b(Jupiter|execute_buyback|swap aggregator|incinerat
 const immutabilityTermPattern = /\b(Genesis-immutable|deployer wallet keys discarded|immutable|immutability|upgrade authority renounced)\b/i
 const registryTermPattern = /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)\b/i
 const dualSignatureTermPattern = /\b(dual-signed|dual-signature|dual signature|user and provider sign|request hash|response hash)\b/i
+const staleFixedSettlementSplitPattern = /\b(97%\s+provider|provider-share\s+97%|provider-share\s+(?:Test\s+)?USDC|3%\s+treasury\s+split|97%\s+to\s+provider\s+pending\s+revenue\s+and\s+3%\s+to\s+treasury)\b/i
+const sdkChargeFieldPattern = /\bchargeUsdc\b|\bcharge_usdc\b|\.charge_usdc\(/g
+const sdkTaxRateFieldPattern = /\btaxRateBps\b|\btax_rate_bps\b|\.tax_rate_bps\(/
 
 function currentDevnetClaimPattern(termPattern, distance) {
   return new RegExp(
@@ -177,6 +180,19 @@ function firstDirectPayoutClaim(text) {
   return firstNonNegatedClaim(text, directPayoutPattern, directPayoutPattern)
 }
 
+function firstSdkChargeWithoutTaxRate(text) {
+  for (const match of text.matchAll(sdkChargeFieldPattern)) {
+    const contextStart = Math.max(0, match.index - 500)
+    const contextEnd = Math.min(text.length, match.index + 500)
+    const context = text.slice(contextStart, contextEnd)
+
+    if (!sdkTaxRateFieldPattern.test(context)) {
+      return match[0]
+    }
+  }
+  return null
+}
+
 const publicCopyChecks = [
   { name: 'stale public token symbol', pattern: /\bCLAW\b/ },
   {
@@ -202,6 +218,8 @@ const publicCopyChecks = [
   { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
   { name: 'old chained SDK receipt submit hides wrapper target', pattern: /\.receipts\(\)[\s\S]{0,400}\.model\(/ },
   { name: 'unframed provider CLI example', pattern: /npx clawfarm provider register/i },
+  { name: 'stale fixed settlement split language', pattern: staleFixedSettlementSplitPattern },
+  { name: 'SDK charge example missing receipt tax rate', match: firstSdkChargeWithoutTaxRate },
 ]
 
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')

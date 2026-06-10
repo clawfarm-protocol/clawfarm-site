@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Register a Provider — ClawFarm',
-  description: 'Register a provider wallet, stake 100 Test USDC on devnet, configure endpoint metadata off-chain, sign receipts, and receive finalized provider-share USDC through ClawFarm.',
+  description: 'Register a provider wallet, stake 100 Test USDC on devnet, configure endpoint metadata off-chain, sign receipts, and receive finalized base-charge USDC through ClawFarm.',
   alternates: { canonical: '/install' },
 }
 
@@ -15,7 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side mining weight for CLAF rewards.
+            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive base-charge USDC after receipt finalization. Finalized usage contributes provider-side mining weight for CLAF rewards.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -61,8 +61,8 @@ export default function InstallPage() {
         <div className="container">
           <div className="stat-grid">
             <div className="stat-cell">
-              <p className="stat-value">97%</p>
-              <p className="stat-desc">provider-share Test USDC after finalization</p>
+              <p className="stat-value">100% of base</p>
+              <p className="stat-desc">provider-pending Test USDC after finalization</p>
             </div>
             <div className="stat-cell">
               <p className="stat-value">70%</p>
@@ -107,7 +107,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Receive</h3>
               <p>
-                After the receipt finalizes, provider-share Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are claimed from finalized epoch accounting and withdraw through locked CLAF streams.
+                After the receipt finalizes, provider base-charge Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are claimed from finalized epoch accounting and withdraw through locked CLAF streams.
               </p>
             </article>
           </div>

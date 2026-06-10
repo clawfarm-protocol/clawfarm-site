@@ -59,7 +59,7 @@ export default function Home() {
           <SectionHeader eyebrow="Settlement" title="Settlement, live." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
-            The 3% treasury split is booked when a receipt payment is recorded. Provider USDC stays pending until the receipt is finalized.
+            Receipt tax is booked when a payment is recorded. With taxRateBps: 30, treasury receives 3% of the base charge while the base charge stays pending for the provider until finalization.
           </p>
         </div>
       </section>
@@ -205,7 +205,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Genesis mainnet target: automated buyback-and-burn closes the cost-subsidy loop. Current devnet only books the 3% treasury USDC share when a receipt payment is recorded; automated buyback-and-burn is not enabled on devnet.
+            Genesis mainnet target: automated buyback-and-burn closes the cost-subsidy loop. Current devnet records a receipt tax on the base charge when payment is recorded; automated buyback-and-burn is not enabled on devnet.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
@@ -242,7 +242,7 @@ export default function Home() {
             </article>
             <article>
               <h3>Settlement</h3>
-              <p>USDC settlement is receipt-based. The provider share is held in pending revenue until receipt finalization.</p>
+              <p>USDC settlement is receipt-based. The base provider charge is held in pending revenue until receipt finalization, while receipt tax is booked to treasury at record time.</p>
             </article>
             <article>
               <h3>Distribution</h3>
@@ -265,7 +265,7 @@ export default function Home() {
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and finalized usage contributes to Provider Pool mining weight for CLAF rewards.
+                Register a provider account. The protocol does not ask where capacity comes from. Base-charge USDC releases after receipt finalization, and finalized usage contributes to Provider Pool mining weight for CLAF rewards.
               </p>
               <a href="/providers">Register a provider account →</a>
             </article>

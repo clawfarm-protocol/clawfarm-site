@@ -28,8 +28,8 @@ type CoreAccounts = {
 export type ProtocolConfigSnapshot = {
   masterpoolConfigVersion: string
   providerStakeUsdc: string
-  providerUsdcShareBps: number
-  treasuryUsdcShareBps: number
+  receiptTaxRateBps: number
+  supportedReceiptTaxRateBps: number[]
   providerEpochPoolShareBps: number
   buyerEpochPoolShareBps: number
   challengeBondClaw: string
@@ -137,8 +137,8 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     config: {
       masterpoolConfigVersion: '2',
       providerStakeUsdc: '100.000000',
-      providerUsdcShareBps: 970,
-      treasuryUsdcShareBps: 30,
+      receiptTaxRateBps: 30,
+      supportedReceiptTaxRateBps: [5, 10, 15, 20, 25, 30],
       providerEpochPoolShareBps: 700,
       buyerEpochPoolShareBps: 300,
       challengeBondClaw: '2.000000',

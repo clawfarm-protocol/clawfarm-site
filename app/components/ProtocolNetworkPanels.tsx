@@ -92,8 +92,8 @@ export function ProtocolNumberWall() {
   const items: Metric[] = config
     ? [
         { label: `${profile.tokenSymbol} total supply`, value: formatTotalSupply(config.emissionTotalClaw) },
-        { label: 'Provider USDC share', value: formatBps(config.providerUsdcShareBps) },
-        { label: 'Treasury USDC share', value: formatBps(config.treasuryUsdcShareBps) },
+        { label: 'Provider base charge', value: '100% of base' },
+        { label: 'Receipt tax rate', value: formatBps(config.receiptTaxRateBps) },
         { label: 'Epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
       ]
     : [
@@ -164,7 +164,7 @@ export function TreasurySnapshot() {
   const config = profile.config
   const balances = profile.balances
   const items: Metric[] = [
-    { label: 'Treasury share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
+    { label: 'Receipt tax rate', value: config ? formatBps(config.receiptTaxRateBps) : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: balances ? `${balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Challenge bond vault', value: balances ? `${balances.challengeBondVaultClaw} ${profile.tokenSymbol}` : '-' },
@@ -196,8 +196,9 @@ export function StateDashboard() {
 
   const economics: Metric[] = [
     { label: 'Provider stake', value: config ? `${config.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Provider USDC share', value: config ? formatBps(config.providerUsdcShareBps) : '-' },
-    { label: 'Treasury USDC share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
+    { label: 'Provider pending', value: config ? 'Base charge' : '-' },
+    { label: 'Receipt tax rate', value: config ? formatBps(config.receiptTaxRateBps) : '-' },
+    { label: 'Supported tax rates', value: config ? config.supportedReceiptTaxRateBps.map(formatBps).join(', ') : '-' },
     { label: 'Provider reward pool', value: config ? formatBps(config.providerEpochPoolShareBps) : '-' },
     { label: 'Buyer reward pool', value: config ? formatBps(config.buyerEpochPoolShareBps) : '-' },
     { label: 'Challenge bond', value: config ? `${config.challengeBondClaw} ${profile.tokenSymbol}` : '-' },

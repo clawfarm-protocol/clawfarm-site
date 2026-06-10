@@ -23,6 +23,7 @@ const prepared = await cf.receipts.prepare({
   promptTokens: 420,
   completionTokens: 180,
   chargeUsdc: '0.025000',
+  taxRateBps: 30,
 })
 
 const receipt = await cf.receipts.submit(prepared, {
@@ -47,6 +48,7 @@ prepared = cf.receipts.prepare(
     prompt_tokens=420,
     completion_tokens=180,
     charge_usdc="0.025000",
+    tax_rate_bps=30,
 )
 
 receipt = cf.receipts.submit(
@@ -73,6 +75,7 @@ let prepared = cf.receipts().prepare()
     .prompt_tokens(420)
     .completion_tokens(180)
     .charge_usdc("0.025000")
+    .tax_rate_bps(30)
     .build()
     .await?;
 

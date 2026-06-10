@@ -10,17 +10,17 @@ const mechanismBlocks = [
   {
     label: 'COMPACT RECEIPT',
     title: 'Settlement starts with signed receipt facts.',
-    body: 'Phase 1 records compact receipts that bind payer, provider wallet, metadata hash, token usage, total Test USDC paid, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
+    body: 'Phase 1 records compact receipts that bind payer, provider wallet, metadata hash, token usage, base Test USDC charge, receipt tax rate, and the service epoch. The receipt is the economic source of truth for tax accounting, challenge timing, and buyer/provider epoch weight.',
   },
   {
     label: 'PENDING USDC',
     title: 'Provider revenue waits for finalization.',
-    body: 'Wallet-paid Test USDC is split at record time: the provider share moves into the provider-pending vault and the treasury share moves into the treasury vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
+    body: 'Wallet-paid Test USDC moves in two transfers at record time: the receipt tax moves into the treasury vault and the base charge moves into the provider-pending vault. Base-charge USDC releases only after the receipt survives the challenge window and finalizes.',
   },
   {
     label: 'CLAF CHALLENGE',
     title: 'Challenges use CLAF bonds.',
-    body: 'A challenger posts the configured CLAF bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
+    body: 'A challenger posts the configured CLAF bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider base-charge USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
   },
 ]
 

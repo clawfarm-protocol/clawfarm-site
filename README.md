@@ -7,7 +7,7 @@ inference into mining weight. Providers contribute capacity, buyers pay in USDC,
 and CLAF rewards follow finalized contribution.
 
 Current devnet is the active receipt-settlement subset: compact receipts,
-Test USDC splits, provider pending revenue, challenges, epoch weight, and locked
+Test USDC tax accounting, provider pending revenue, challenges, epoch weight, and locked
 reward streams. Genesis mainnet is the target full protocol layer: fixed CLAF
 cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and
 automated buyback-and-burn target.
@@ -16,8 +16,8 @@ automated buyback-and-burn target.
 
 - Providers register a wallet-controlled ProviderAccount and stake 100 Test USDC on devnet.
 - Wallet-paid inference is recorded through compact receipts, not direct per-call reward payouts.
-- Receipt recording splits Test USDC into provider-pending revenue and treasury revenue.
-- Provider-share USDC releases only after the receipt finalizes through the attestation lifecycle.
+- Receipt recording transfers receipt tax to treasury and the base charge to provider-pending revenue.
+- Provider base-charge USDC releases only after the receipt finalizes through the attestation lifecycle.
 - Finalized receipts contribute buyer-side and provider-side mining weight for CLAF rewards.
 - Epoch rewards are claimed into locked CLAF streams rather than paid directly per request.
 - Challenges use CLAF bonds and can invalidate receipt economics when accepted.

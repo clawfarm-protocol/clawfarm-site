@@ -107,6 +107,7 @@ const cf = new ClawFarm({
   promptTokens: 420,
   completionTokens: 180,
   chargeUsdc: '0.025000',
+  taxRateBps: 30,
 })
 
 const receipt = await cf.receipts.submit(prepared, {
@@ -126,6 +127,7 @@ console.log(receipt.economicRecordPda)`}</code></pre>
     prompt_tokens=420,
     completion_tokens=180,
     charge_usdc="0.025000",
+    tax_rate_bps=30,
 )
 
 receipt = cf.receipts.submit(
@@ -144,6 +146,7 @@ receipt = cf.receipts.submit(
     .prompt_tokens(420)
     .completion_tokens(180)
     .charge_usdc("0.025000")
+    .tax_rate_bps(30)
     .build()
     .await?;
 
@@ -162,9 +165,9 @@ let receipt = cf.receipts()
               </p>
               <div className="key-list">
                 <div>SubmitReceiptArgs</div>
-                <div>request_nonce_hash, metadata_hash, prompt_tokens, completion_tokens, charge_atomic, receipt_hash.</div>
+                <div>request_nonce_hash, metadata_hash, prompt_tokens, completion_tokens, charge_atomic, tax_rate_bps, receipt_hash.</div>
                 <div>Receipt hash</div>
-                <div>Built with the clawfarm:receipt:v2 domain, provider wallet, payer, Test USDC mint, token counts, and charge amount.</div>
+                <div>Built with the clawfarm:receipt:v2 domain, provider wallet, payer, Test USDC mint, token counts, base charge amount, and tax rate.</div>
                 <div>Proof instruction</div>
                 <div>The transaction includes an immediately preceding ed25519 verification instruction for the configured gateway-capable signer over receipt_hash.</div>
                 <div>Payment delegate</div>
@@ -191,7 +194,8 @@ let receipt = cf.receipts()
   },
   "promptTokens": 420,
   "completionTokens": 180,
-  "chargeUsdc": "0.025000"
+  "chargeUsdc": "0.025000",
+  "taxRateBps": 30
 }`}</code></pre>
               <p>
                 The gateway wrapper response should contain a transaction or signing payload that includes the ed25519 proof instruction and `attestation.submit_receipt` accounts.
@@ -254,7 +258,7 @@ ATTESTATION LAYER
   ProviderSigner records · Compact receipts · Challenge lifecycle · Finalization authority
 
 MASTERPOOL LAYER
-  ProviderAccount · Test USDC split · Epoch weight · Locked CLAF streams · Vault accounting`}</code></pre>
+  ProviderAccount · Test USDC tax accounting · Epoch weight · Locked CLAF streams · Vault accounting`}</code></pre>
               <h3 id="contracts">Smart contracts</h3>
               <div className="key-list">
                 <div>clawfarm-attestation</div>
@@ -264,23 +268,23 @@ MASTERPOOL LAYER
                 <div>ProviderAccount</div>
                 <div>Stores provider wallet, stake state, pending revenue counters, challenge counters, and registration status.</div>
                 <div>ReceiptEconomicRecord</div>
-                <div>Stores immutable receipt-time payment split, epoch weight, challenge deadline, and economic status.</div>
+                <div>Stores immutable receipt-time base charge, tax snapshots, epoch weight, challenge deadline, and economic status.</div>
               </div>
               <h3 id="receipt-lifecycle">Receipt lifecycle</h3>
               <pre className="code-block"><code>{`1. Wallet authorizes bounded Test USDC settlement through a payer token delegate.
-2. App or gateway prepares request_nonce_hash, metadata_hash, charge_atomic, and receipt_hash.
+2. App or gateway prepares request_nonce_hash, metadata_hash, charge_atomic, tax_rate_bps, and receipt_hash.
 3. A configured gateway-capable signer signs receipt_hash, and the transaction includes the ed25519 proof instruction.
 4. Attestation submits the compact receipt and records payment through masterpool CPI.
-5. Masterpool splits Test USDC into provider-pending and treasury vaults.
+5. Masterpool transfers the receipt tax to treasury and the base charge to provider-pending.
 6. Receipt survives or fails the challenge window.
 7. Finalized receipts activate buyer/provider epoch weight and release provider pending USDC.
 8. Finalized epochs create locked CLAF streams for claimable rewards.`}</code></pre>
               <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
-                <div>USDC split</div>
-                <div>97% provider-share Test USDC, 3% treasury Test USDC on the current devnet deployment.</div>
+                <div>Receipt tax</div>
+                <div><span className="mono">charge_atomic</span> / <span className="mono">total_usdc_paid</span> is the base provider charge. <span className="mono">tax_rate_bps</span> is one of 5, 10, 15, 20, 25, or 30; 30 means a 3% treasury tax on the base charge.</div>
                 <div>Provider release</div>
-                <div>Provider-share USDC remains pending until attestation marks the receipt finalized.</div>
+                <div>The base charge remains pending until attestation marks the receipt finalized. Payer delegated allowance must cover base charge plus tax.</div>
                 <div>Epoch reward</div>
                 <div>Receipts record buyer and provider epoch weight; rewards are not paid directly per call.</div>
                 <div>Pool split</div>
@@ -295,7 +299,7 @@ MASTERPOOL LAYER
                 <div>Rejected challenge</div>
                 <div>The challenger bond is burned and the receipt remains economically valid.</div>
                 <div>Accepted challenge</div>
-                <div>The bond is returned, provider-share USDC is refunded to the payer, reward-vault transfer and burn economics apply, and activated receipt weight is removed when applicable.</div>
+                <div>The bond is returned, provider base-charge USDC is refunded to the payer, reward-vault transfer and burn economics apply, and activated receipt weight is removed when applicable.</div>
                 <div>Timeout stance</div>
                 <div>Receipt economics finalize only through the attestation lifecycle after the configured challenge window.</div>
               </div>
@@ -317,6 +321,7 @@ MASTERPOOL LAYER
                 <div>Provider pending USDC vault</div><div className="mono">1f6F21ivF3DYivHRz5Zv17E83o98FkWpdAHMdeEduJk</div>
                 <div>Epoch cursor</div><div className="mono">C7Fe9jXNUSPGdCaFJatU54ZKu8xPvNePswu4K3UVGX5j</div>
                 <div>Provider stake</div><div>100 Test USDC</div>
+                <div>Receipt tax rates</div><div>Supported <span className="mono">tax_rate_bps</span> values: 5, 10, 15, 20, 25, 30. Current wrapper examples use 30, a 3% tax on the base charge.</div>
                 <div>Challenge bond</div><div>Configured CLAF bond on devnet.</div>
                 <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet timing remains pending until mainnet config is deployed.</div>
                 <div>Reward lock</div><div>Configured lock-days snapshot; current Phase 1 default is 180 days.</div>

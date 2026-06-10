@@ -34,7 +34,7 @@ export default function BuildersPage() {
             </article>
             <article className="border-panel">
               <h3>Economic record</h3>
-              <p>Each submitted receipt creates an economic record with Test USDC split snapshots, challenge timing, and buyer/provider weight. Provider-share USDC remains pending until finalization.</p>
+              <p>Each submitted receipt creates an economic record with base-charge and tax snapshots, challenge timing, and buyer/provider weight. Provider base-charge USDC remains pending until finalization.</p>
             </article>
           </div>
         </div>
