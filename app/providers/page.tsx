@@ -18,9 +18,9 @@ const mechanismBlocks = [
     body: 'Wallet-paid Test USDC is split at record time: the provider share moves into the provider-pending vault and the treasury share moves into the treasury vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
   },
   {
-    label: 'CLAW CHALLENGE',
-    title: 'Challenges use CLAW bonds.',
-    body: 'A challenger posts the configured CLAW bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
+    label: 'CLAF CHALLENGE',
+    title: 'Challenges use CLAF bonds.',
+    body: 'A challenger posts the configured CLAF bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
   },
 ]
 
@@ -32,7 +32,7 @@ export default function ProvidersPage() {
           <p className="hero-status">Providers</p>
           <h1 className="hero-title">Supply inference.</h1>
           <p className="hero-copy">
-            The protocol does not ask who you are or where inference comes from. It asks that each finalized receipt carries auditable economic state.
+            Providers contribute inference capacity to the mining network. Current devnet records finalized receipt usage as Provider Pool mining weight while endpoint, model, and pricing metadata stay off-chain.
           </p>
         </div>
       </section>

@@ -14,9 +14,9 @@ export default function BuildersPage() {
       <section className="hero-section">
         <div className="container paper-column">
           <p className="hero-status">Developers</p>
-          <h1 className="hero-title">Consume inference.</h1>
+          <h1 className="hero-title">Create demand. Mine by usage.</h1>
           <p className="hero-copy">
-            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAW rewards.
+            Buyers contribute paid demand to the network. Finalized receipt-backed usage contributes to Buyer Pool mining weight for CLAF rewards.
           </p>
         </div>
       </section>
@@ -30,7 +30,7 @@ export default function BuildersPage() {
             </article>
             <article className="border-panel">
               <h3>Epoch pool weight</h3>
-              <p>Finalized receipts add buyer-side weight to the epoch pool. Buyer rewards are claimed from finalized epoch accounting and stream as locked CLAW.</p>
+              <p>Finalized receipts add buyer-side weight to the epoch pool. Buyer rewards are claimed from finalized epoch accounting and stream as locked CLAF.</p>
             </article>
             <article className="border-panel">
               <h3>Economic record</h3>
@@ -44,7 +44,7 @@ export default function BuildersPage() {
         <div className="container">
           <SectionTitle eyebrow="SDK" title="Start with the SDK." />
           <CodeTabs />
-          <p className="interface-note">SDK reference: <a href="/docs#sdk">/docs#sdk →</a></p>
+          <p className="interface-note">SDK reference: <a href="/docs#sdk-wrapper-target">/docs#sdk-wrapper-target →</a></p>
         </div>
       </section>
 

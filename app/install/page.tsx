@@ -15,7 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
+            Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side mining weight for CLAF rewards.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -107,7 +107,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Receive</h3>
               <p>
-                After the receipt finalizes, provider-share Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are claimed from finalized epoch accounting and withdraw through locked CLAW streams.
+                After the receipt finalizes, provider-share Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are claimed from finalized epoch accounting and withdraw through locked CLAF streams.
               </p>
             </article>
           </div>
