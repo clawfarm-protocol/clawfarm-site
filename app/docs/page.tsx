@@ -61,6 +61,9 @@ export default function DocsPage() {
               <p>
                 ClawFarm is mining inference: providers contribute capacity, buyers pay for inference in USDC, and CLAF rewards follow finalized contribution. Receipt settlement is the current mechanism shorthand, not the whole protocol story.
               </p>
+              <p>
+                On the current devnet deployment, payment, stake, pending provider revenue, and treasury accounting use Test USDC while the protocol-level settlement model remains USDC-denominated.
+              </p>
               <div className="key-list">
                 <div>Mining inference</div>
                 <div>Paid usage becomes buyer-side and provider-side mining weight.</div>
@@ -299,10 +302,20 @@ MASTERPOOL LAYER
               <h3 id="devnet-parameters">Devnet parameters</h3>
               <div className="key-list">
                 <div>Cluster</div><div>Solana devnet</div>
-                <div>Masterpool program</div><div className="mono">DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q</div>
-                <div>Attestation program</div><div className="mono">BwRMqumgiHbeMhG9xs1a76vUjmprrokr6WsPCzhz3pKK</div>
-                <div>CLAF mint</div><div className="mono">EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui</div>
-                <div>Test USDC mint</div><div className="mono">Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553</div>
+                <div>Deployment record</div><div>Devnet Phase 1 deployment created 2026-06-10T12:07:31.160Z.</div>
+                <div>Masterpool program</div><div className="mono">3gaSkyvgHJQxYpHJNxTBqSNrPMvu9fcCpoQkBsMKo3fg</div>
+                <div>Attestation program</div><div className="mono">En7rhJSk1VXq7YaNRszGqWos8tz6f9GbpF6qRU83ZeFC</div>
+                <div>CLAF mint</div><div className="mono">Ez9N4FXcGPB5VpUTPY71dAjSEMbigUosBkaksVQyg1Rk</div>
+                <div>Test USDC mint</div><div className="mono">DuAQqzKYxmxb2XHyMCHwSigSbpowMvhXxjfnU4vkjHrE</div>
+                <div>Pool authority</div><div className="mono">2bBrzVKaz2L2LZmx1yceKRfxbtn4RKv4SmWbBKW1nE3K</div>
+                <div>Masterpool config</div><div className="mono">Gg1Aos3GXR7bWEgUi3eVoAhW9kcWQiA4D643CgvoqRnx</div>
+                <div>Attestation config</div><div className="mono">9Wmkya3gEzX8eAqgYJqTjEaGJYdwEw7QB78DE87JuGRk</div>
+                <div>Reward vault</div><div className="mono">vZ4knPgRo2aYK3k3Tc9h3VVvKeQN1syGetPuUdeZr6e</div>
+                <div>Challenge bond vault</div><div className="mono">34Yf2fXtBHiRY3CsE8Zowr66NbktHvgYeLZwwCHdiDg3</div>
+                <div>Treasury USDC vault</div><div className="mono">3VBogLjhkfDv2oLU9YSuDAN8F2oSCY9jamyiSGAxFsJX</div>
+                <div>Provider stake USDC vault</div><div className="mono">CzcWMHyA78nAo8nN5Qosi7XfH4xJTMQNybSE7t2JFWYj</div>
+                <div>Provider pending USDC vault</div><div className="mono">1f6F21ivF3DYivHRz5Zv17E83o98FkWpdAHMdeEduJk</div>
+                <div>Epoch cursor</div><div className="mono">C7Fe9jXNUSPGdCaFJatU54ZKu8xPvNePswu4K3UVGX5j</div>
                 <div>Provider stake</div><div>100 Test USDC</div>
                 <div>Challenge bond</div><div>Configured CLAF bond on devnet.</div>
                 <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet timing remains pending until mainnet config is deployed.</div>

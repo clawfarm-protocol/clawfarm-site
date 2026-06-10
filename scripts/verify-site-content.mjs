@@ -104,9 +104,16 @@ function isAllowedGenesisBuybackTargetClause(clause, sentence) {
 }
 
 function isAllowedDocsProtocolObjectiveBuybackTarget(text, index) {
-  const nearbyText = text.slice(Math.max(0, index - 220), index + 220)
+  const approvedPattern = /<div>Genesis mainnet target<\/div>\s*<div>Fixed CLAF cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and automated buyback-and-burn target\.<\/div>/g
 
-  return /<div>Genesis mainnet target<\/div>\s*<div>Fixed CLAF cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and automated buyback-and-burn target\.<\/div>/.test(nearbyText)
+  for (const match of text.matchAll(approvedPattern)) {
+    const buybackIndex = match[0].indexOf('buyback')
+    if (buybackIndex !== -1 && index === match.index + buybackIndex) {
+      return true
+    }
+  }
+
+  return false
 }
 
 function firstBuybackClaim(text) {
