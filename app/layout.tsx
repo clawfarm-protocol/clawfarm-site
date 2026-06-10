@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://clawfarm.network'),
   openGraph: {
     title: 'ClawFarm — Mining inference',
-    description: 'The settlement protocol for the inference economy.',
+    description: 'The mining inference protocol for the AI economy.',
     type: 'website',
     url: 'https://clawfarm.network',
     siteName: 'ClawFarm',
