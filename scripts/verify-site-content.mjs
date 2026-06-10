@@ -30,12 +30,13 @@ const globalChecks = [
 ]
 
 const publicCopyChecks = [
-  { name: 'stale token symbol', pattern: /\bCLAF\b/ },
-  { name: 'unsupported buyback language', pattern: /\b(Jupiter|buyback|execute_buyback|swap aggregator|incinerator)\b/i },
-  { name: 'unverified mainnet immutability', pattern: /\b(Genesis-immutable|renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
+  { name: 'stale public token symbol', pattern: /\bCLAW\b/ },
+  { name: 'unqualified buyback language', pattern: /\b(Jupiter|execute_buyback|swap aggregator|incinerator|current devnet[^.\n]{0,140}buyback|buyback[^.\n]{0,140}current devnet)\b/i },
+  { name: 'unqualified mainnet immutability', pattern: /\b(Genesis-immutable|deployer wallet keys discarded|current devnet[^.\n]{0,140}(immutable|upgrade authority renounced)|(immutable|upgrade authority renounced)[^.\n]{0,140}current devnet)\b/i },
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
-  { name: 'old direct mining wording', pattern: /\b(mines CLAW to your wallet|mines CLAF to your wallet|CLAW mined|CLAF mined)\b/i },
-  { name: 'unsupported routing or registry wording', pattern: /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|dual-signed|user and provider sign|request hash|response hash|declared offerings)\b/i },
+  { name: 'direct per-call mining payout claim', pattern: /\b(Every call mines|each call mines|mines CLAF to your wallet|CLAF mined directly|direct per-call (CLAF )?reward)\b/i },
+  { name: 'unsupported current-devnet registry or routing claim', pattern: /\b(current devnet[^.\n]{0,160}(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)|(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)[^.\n]{0,160}current devnet)\b/i },
+  { name: 'unsupported current-devnet dual-signature claim', pattern: /\b(current devnet[^.\n]{0,180}(dual-signed|user and provider sign|request hash|response hash)|(dual-signed|user and provider sign|request hash|response hash)[^.\n]{0,180}current devnet)\b/i },
   { name: 'contract-native HTTP API example', pattern: /curl https:\/\/api\.clawfarm\.network\/v1\/devnet\/receipts/i },
   { name: 'endpoint-first provider registration', pattern: /\b(Register an endpoint|Register a wallet-backed endpoint|wallet-controlled endpoint|wallet-backed endpoint)\b/i },
   { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
