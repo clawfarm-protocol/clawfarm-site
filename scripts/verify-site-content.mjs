@@ -45,16 +45,6 @@ function clauseAround(text, index) {
   return text.slice(start, end)
 }
 
-function sentenceAround(text, index) {
-  const previousBreaks = ['.', '\n', '!', '?'].map((separator) => text.lastIndexOf(separator, index))
-  const start = Math.max(...previousBreaks) + 1
-  const nextBreaks = ['.', '\n', '!', '?']
-    .map((separator) => text.indexOf(separator, index))
-    .filter((position) => position !== -1)
-  const end = nextBreaks.length > 0 ? Math.min(...nextBreaks) : text.length
-  return text.slice(start, end)
-}
-
 function claimIndex(match, termPattern) {
   if (!termPattern) {
     return match.index
@@ -96,14 +86,15 @@ function currentDevnetClaimPattern(termPattern, distance) {
   )
 }
 
+function isAllowedGenesisBuybackTargetClause(clause) {
+  return /^automated buyback-and-burn closes the cost-subsidy loop$/i.test(clause.trim())
+}
+
 function firstBuybackClaim(text) {
   for (const match of text.matchAll(globalPattern(buybackTermPattern))) {
     const clause = clauseAround(text, match.index)
-    const sentence = sentenceAround(text, match.index)
-    const isGenesisTarget =
-      /\bGenesis mainnet target\b/i.test(sentence) && /\bautomated buyback-and-burn\b/i.test(sentence)
 
-    if (!negatedClaimPattern.test(clause) && !isGenesisTarget) {
+    if (!negatedClaimPattern.test(clause) && !isAllowedGenesisBuybackTargetClause(clause)) {
       return match[0]
     }
   }
