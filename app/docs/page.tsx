@@ -27,6 +27,14 @@ const toc = [
   ['Resources', '#resources'],
 ]
 
+const tocSubLabels = new Set([
+  'Install',
+  'Configure devnet',
+  'SDK wrapper target',
+  'Current contract shape',
+  'Gateway wrapper target',
+])
+
 export default function DocsPage() {
   return (
     <main>
@@ -40,8 +48,8 @@ export default function DocsPage() {
       <section className="section">
         <div className="container docs-layout">
           <nav className="docs-toc" aria-label="Documentation sections">
-            {toc.map(([label, href], index) => (
-              <a className={index > 0 && index < 7 ? 'toc-sub' : undefined} href={href} key={href}>
+            {toc.map(([label, href]) => (
+              <a className={tocSubLabels.has(label) ? 'toc-sub' : undefined} href={href} key={href}>
                 {label}
               </a>
             ))}
@@ -57,7 +65,7 @@ export default function DocsPage() {
                 <div>Mining inference</div>
                 <div>Paid usage becomes buyer-side and provider-side mining weight.</div>
                 <div>Genesis mainnet target</div>
-                <div>Fixed CLAF cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and automated repurchase-and-burn target.</div>
+                <div>Fixed CLAF cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and automated buyback-and-burn target.</div>
                 <div>Current devnet subset</div>
                 <div>Receipt settlement, provider pending USDC, epoch weight, challenge window, and locked reward streams.</div>
               </div>
