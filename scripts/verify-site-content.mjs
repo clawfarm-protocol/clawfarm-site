@@ -35,52 +35,102 @@ function globalPattern(pattern) {
   return new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`)
 }
 
-function sentenceAround(text, index) {
-  const start = Math.max(text.lastIndexOf('.', index), text.lastIndexOf('\n', index)) + 1
-  const nextPeriod = text.indexOf('.', index)
-  const nextNewline = text.indexOf('\n', index)
-  const ends = [nextPeriod, nextNewline].filter((position) => position !== -1)
-  const end = ends.length > 0 ? Math.min(...ends) : text.length
+function clauseAround(text, index) {
+  const previousBreaks = ['.', '\n', ';', ':', '!', '?'].map((separator) => text.lastIndexOf(separator, index))
+  const start = Math.max(...previousBreaks) + 1
+  const nextBreaks = ['.', '\n', ';', ':', '!', '?']
+    .map((separator) => text.indexOf(separator, index))
+    .filter((position) => position !== -1)
+  const end = nextBreaks.length > 0 ? Math.min(...nextBreaks) : text.length
   return text.slice(start, end)
 }
 
-function firstNonNegatedClaim(text, pattern) {
+function claimIndex(match, termPattern) {
+  if (!termPattern) {
+    return match.index
+  }
+  const termMatch = match[0].match(termPattern)
+  return termMatch ? match.index + termMatch.index : match.index
+}
+
+function firstNonNegatedClaim(text, pattern, termPattern) {
   for (const match of text.matchAll(globalPattern(pattern))) {
-    if (!negatedClaimPattern.test(sentenceAround(text, match.index))) {
+    if (!negatedClaimPattern.test(clauseAround(text, claimIndex(match, termPattern)))) {
       return match[0]
     }
   }
   return null
 }
 
-function firstDirectPayoutClaim(text) {
-  return firstNonNegatedClaim(
-    text,
-    /\b(Every call mines|each call mines|mines (CLAW|CLAF) to your wallet|CLAW mined|CLAF mined|CLAF mined directly|direct per-call (CLAF )?reward)\b/i,
+function firstNonNegatedClaimInClauses(text, pattern) {
+  const clauses = text.split(/[.\n;:!?]/)
+  for (const clause of clauses) {
+    const match = clause.match(pattern)
+    if (match && !negatedClaimPattern.test(clause)) {
+      return match[0]
+    }
+  }
+  return null
+}
+
+const directPayoutPattern = /\b(Every call mines|each call mines|mines (CLAW|CLAF) to your wallet|CLAW mined|CLAF mined|CLAF mined directly|direct per-call (CLAF )?reward)\b/i
+const buybackTermPattern = /\b(Jupiter|execute_buyback|swap aggregator|incinerator|buyback)\b/i
+const immutabilityTermPattern = /\b(Genesis-immutable|deployer wallet keys discarded|immutable|immutability|upgrade authority renounced)\b/i
+const registryTermPattern = /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)\b/i
+const dualSignatureTermPattern = /\b(dual-signed|dual-signature|dual signature|user and provider sign|request hash|response hash)\b/i
+
+function currentDevnetClaimPattern(termPattern, distance) {
+  return new RegExp(
+    `\\b(current[- ]devnet[^.\\n]{0,${distance}}${termPattern.source}|${termPattern.source}[^.\\n]{0,${distance}}current[- ]devnet)\\b`,
+    'i',
   )
+}
+
+function firstBuybackClaim(text) {
+  return (
+    firstNonNegatedClaim(text, currentDevnetClaimPattern(buybackTermPattern, 140), buybackTermPattern) ||
+    firstNonNegatedClaimInClauses(text, buybackTermPattern)
+  )
+}
+
+function firstImmutabilityClaim(text) {
+  return (
+    firstNonNegatedClaim(text, currentDevnetClaimPattern(immutabilityTermPattern, 140), immutabilityTermPattern) ||
+    firstNonNegatedClaimInClauses(text, /\b(Genesis-immutable|deployer wallet keys discarded)\b/i)
+  )
+}
+
+function firstRegistryClaim(text) {
+  return firstNonNegatedClaim(text, currentDevnetClaimPattern(registryTermPattern, 160), registryTermPattern)
+}
+
+function firstDualSignatureClaim(text) {
+  return firstNonNegatedClaim(text, currentDevnetClaimPattern(dualSignatureTermPattern, 180), dualSignatureTermPattern)
+}
+
+function firstDirectPayoutClaim(text) {
+  return firstNonNegatedClaim(text, directPayoutPattern, directPayoutPattern)
 }
 
 const publicCopyChecks = [
   { name: 'stale public token symbol', pattern: /\bCLAW\b/ },
   {
     name: 'unqualified buyback language',
-    pattern: /\b(Jupiter|execute_buyback|swap aggregator|incinerator)\b/i,
-    match: (text) => firstNonNegatedClaim(text, /\b(current[- ]devnet[^.\n]{0,140}buyback|buyback[^.\n]{0,140}current[- ]devnet)\b/i),
+    match: firstBuybackClaim,
   },
   {
     name: 'unqualified mainnet immutability',
-    pattern: /\b(Genesis-immutable|deployer wallet keys discarded)\b/i,
-    match: (text) => firstNonNegatedClaim(text, /\b(current[- ]devnet[^.\n]{0,140}(immutable|immutability|upgrade authority renounced)|(immutable|immutability|upgrade authority renounced)[^.\n]{0,140}current[- ]devnet)\b/i),
+    match: firstImmutabilityClaim,
   },
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
   { name: 'direct per-call mining payout claim', match: firstDirectPayoutClaim },
   {
     name: 'unsupported current-devnet registry or routing claim',
-    match: (text) => firstNonNegatedClaim(text, /\b(current[- ]devnet[^.\n]{0,160}(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)|(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)[^.\n]{0,160}current[- ]devnet)\b/i),
+    match: firstRegistryClaim,
   },
   {
     name: 'unsupported current-devnet dual-signature claim',
-    match: (text) => firstNonNegatedClaim(text, /\b(current[- ]devnet[^.\n]{0,180}(dual-signed|dual-signature|dual signature|user and provider sign|request hash|response hash)|(dual-signed|dual-signature|dual signature|user and provider sign|request hash|response hash)[^.\n]{0,180}current[- ]devnet)\b/i),
+    match: firstDualSignatureClaim,
   },
   { name: 'contract-native HTTP API example', pattern: /curl https:\/\/api\.clawfarm\.network\/v1\/devnet\/receipts/i },
   { name: 'endpoint-first provider registration', pattern: /\b(Register an endpoint|Register a wallet-backed endpoint|wallet-controlled endpoint|wallet-backed endpoint)\b/i },
@@ -96,8 +146,7 @@ function scan(filesToScan, checks) {
   for (const file of filesToScan) {
     const text = readFileSync(file, 'utf8')
     for (const check of checks) {
-      const patternMatch = check.pattern ? text.match(check.pattern) : null
-      const match = patternMatch || (check.match ? check.match(text) : null)
+      const match = check.match ? check.match(text) : text.match(check.pattern)
       if (match) {
         failures.push(`${file}: ${check.name}: ${typeof match === 'string' ? match : match[0]}`)
       }
