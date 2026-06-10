@@ -70,7 +70,7 @@ export type NetworkProfile = {
   status: DeploymentStatus
   statusText: string
   snapshotLabel: string
-  tokenSymbol: 'CLAW'
+  tokenSymbol: 'CLAF'
   paymentMintLabel: string
   programs: ProgramAddresses
   mints: MintAddresses
@@ -113,7 +113,7 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     status: 'active',
     statusText: 'Devnet active',
     snapshotLabel: 'Devnet snapshot read on 2026-06-09',
-    tokenSymbol: 'CLAW',
+    tokenSymbol: 'CLAF',
     paymentMintLabel: 'Test USDC',
     programs: {
       masterpool: 'DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q',
@@ -177,7 +177,7 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     status: 'pending',
     statusText: 'Awaiting mainnet deployment',
     snapshotLabel: 'Mainnet deployment pending',
-    tokenSymbol: 'CLAW',
+    tokenSymbol: 'CLAF',
     paymentMintLabel: 'USDC',
     programs: emptyPrograms,
     mints: emptyMints,
