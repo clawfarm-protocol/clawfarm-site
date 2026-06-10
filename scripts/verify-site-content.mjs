@@ -116,6 +116,19 @@ function isAllowedDocsProtocolObjectiveBuybackTarget(text, index) {
   return false
 }
 
+function isAllowedReadmeGenesisBuybackTarget(text, index) {
+  const approvedPattern = /Genesis\s+mainnet\s+is\s+the\s+target\s+full\s+protocol\s+layer:\s+fixed\s+CLAF\s+cap,\s+Provider\s+Pool\s+70%,\s+Buyer\s+Pool\s+30%,\s+Genesis\s+immutable\s+launch\s+target,\s+and\s+automated\s+buyback-and-burn\s+target\./g
+
+  for (const match of text.matchAll(approvedPattern)) {
+    const buybackIndex = match[0].indexOf('buyback')
+    if (buybackIndex !== -1 && index === match.index + buybackIndex) {
+      return true
+    }
+  }
+
+  return false
+}
+
 function firstBuybackClaim(text) {
   for (const match of text.matchAll(globalPattern(buybackTermPattern))) {
     const clause = clauseAround(text, match.index)
@@ -124,7 +137,8 @@ function firstBuybackClaim(text) {
     if (
       !negatedClaimPattern.test(clause) &&
       !isAllowedGenesisBuybackTargetClause(clause, sentence) &&
-      !isAllowedDocsProtocolObjectiveBuybackTarget(text, match.index)
+      !isAllowedDocsProtocolObjectiveBuybackTarget(text, match.index) &&
+      !isAllowedReadmeGenesisBuybackTarget(text, match.index)
     ) {
       return match[0]
     }

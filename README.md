@@ -10,7 +10,7 @@ Current devnet is the active receipt-settlement subset: compact receipts,
 Test USDC splits, provider pending revenue, challenges, epoch weight, and locked
 reward streams. Genesis mainnet is the target full protocol layer: fixed CLAF
 cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and
-automated buy-back-and-burn target.
+automated buyback-and-burn target.
 
 ## Current Devnet Model
 
