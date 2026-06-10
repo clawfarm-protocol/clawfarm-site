@@ -96,14 +96,22 @@ function currentDevnetClaimPattern(termPattern, distance) {
   )
 }
 
-function isAllowedGenesisBuybackTargetClause(clause, sentence) {
+function isAllowedGenesisBuybackTargetClause(file, clause, sentence) {
+  if (file !== 'app/page.tsx') {
+    return false
+  }
+
   return (
     /^automated buyback-and-burn closes the cost-subsidy loop$/i.test(clause.trim()) &&
     /^\s*Genesis mainnet target\s*:\s*automated buyback-and-burn closes the cost-subsidy loop\s*$/i.test(sentence)
   )
 }
 
-function isAllowedDocsProtocolObjectiveBuybackTarget(text, index) {
+function isAllowedDocsProtocolObjectiveBuybackTarget(file, text, index) {
+  if (file !== 'app/docs/page.tsx') {
+    return false
+  }
+
   const approvedPattern = /<div>Genesis mainnet target<\/div>\s*<div>Fixed CLAF cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and automated buyback-and-burn target\.<\/div>/g
 
   for (const match of text.matchAll(approvedPattern)) {
@@ -116,7 +124,11 @@ function isAllowedDocsProtocolObjectiveBuybackTarget(text, index) {
   return false
 }
 
-function isAllowedReadmeGenesisBuybackTarget(text, index) {
+function isAllowedReadmeGenesisBuybackTarget(file, text, index) {
+  if (file !== 'README.md') {
+    return false
+  }
+
   const approvedPattern = /Genesis\s+mainnet\s+is\s+the\s+target\s+full\s+protocol\s+layer:\s+fixed\s+CLAF\s+cap,\s+Provider\s+Pool\s+70%,\s+Buyer\s+Pool\s+30%,\s+Genesis\s+immutable\s+launch\s+target,\s+and\s+automated\s+buyback-and-burn\s+target\./g
 
   for (const match of text.matchAll(approvedPattern)) {
@@ -129,16 +141,16 @@ function isAllowedReadmeGenesisBuybackTarget(text, index) {
   return false
 }
 
-function firstBuybackClaim(text) {
+function firstBuybackClaim(text, file) {
   for (const match of text.matchAll(globalPattern(buybackTermPattern))) {
     const clause = clauseAround(text, match.index)
     const sentence = sentenceAround(text, match.index)
 
     if (
       !negatedClaimPattern.test(clause) &&
-      !isAllowedGenesisBuybackTargetClause(clause, sentence) &&
-      !isAllowedDocsProtocolObjectiveBuybackTarget(text, match.index) &&
-      !isAllowedReadmeGenesisBuybackTarget(text, match.index)
+      !isAllowedGenesisBuybackTargetClause(file, clause, sentence) &&
+      !isAllowedDocsProtocolObjectiveBuybackTarget(file, text, match.index) &&
+      !isAllowedReadmeGenesisBuybackTarget(file, text, match.index)
     ) {
       return match[0]
     }
@@ -199,7 +211,7 @@ function scan(filesToScan, checks) {
   for (const file of filesToScan) {
     const text = readFileSync(file, 'utf8')
     for (const check of checks) {
-      const match = check.match ? check.match(text) : text.match(check.pattern)
+      const match = check.match ? check.match(text, file) : text.match(check.pattern)
       if (match) {
         failures.push(`${file}: ${check.name}: ${typeof match === 'string' ? match : match[0]}`)
       }
