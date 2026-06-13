@@ -11,8 +11,8 @@ type SettlementRow = {
   model: string
   tokens: string
   usdcSettled: string
-  providerSplit: string
-  protocolSplit: string
+  baseCharge: string
+  receiptTax: string
 }
 
 export default function SettlementFeed({
@@ -38,7 +38,7 @@ export default function SettlementFeed({
   }, [state, initialRows])
 
   return (
-    <div className="protocol-table-shell settlement-feed-shell" data-live-state={state}>
+    <div className="protocol-table-shell settlement-feed-shell" data-surface-state={state}>
       <table className="protocol-table settlement-table">
         <thead>
           <tr>
@@ -48,8 +48,8 @@ export default function SettlementFeed({
             <th>Model</th>
             <th className="num-col">Tokens metered</th>
             <th className="num-col">USDC settled</th>
-            <th className="num-col">Provider split</th>
-            <th className="num-col">Protocol split</th>
+            <th className="num-col">Base charge</th>
+            <th className="num-col">Receipt tax</th>
           </tr>
         </thead>
         <tbody>
@@ -72,8 +72,8 @@ export default function SettlementFeed({
                   <td>{row.model}</td>
                   <td className="right">{row.tokens}</td>
                   <td className="right">{row.usdcSettled}</td>
-                  <td className="right">{row.providerSplit}</td>
-                  <td className="right">{row.protocolSplit}</td>
+                  <td className="right">{row.baseCharge}</td>
+                  <td className="right">{row.receiptTax}</td>
                 </tr>
               ))
             : null}

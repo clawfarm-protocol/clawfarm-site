@@ -56,7 +56,7 @@ export default function Home() {
 
       <section className="section" id="settlement-feed">
         <div className="container">
-          <SectionHeader eyebrow="Settlement" title="Settlement, live." />
+          <SectionHeader eyebrow="Settlement" title="Settlement by receipt." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
             Receipt tax is booked when a payment is recorded. With taxRateBps: 30, treasury receives 3% of the base charge while the base charge stays pending for the provider until finalization.
@@ -91,7 +91,7 @@ export default function Home() {
           <p className="section-footnote wide-footnote">
             Current devnet realizes mining weight through finalized receipt settlement rather than direct per-call token payouts. Mainnet Genesis timing and full target mechanics remain pending until mainnet config is deployed.
           </p>
-          <div className="protocol-table-shell burn-table-shell" data-live-state={miningEventsState}>
+          <div className="protocol-table-shell burn-table-shell" data-surface-state={miningEventsState}>
             <table className="protocol-table">
               <thead>
                 <tr>
@@ -159,10 +159,10 @@ export default function Home() {
                   <tr key={model}>
                     <td>{model}</td>
                     <td className="right">
-                      <a className="count-link" href="/state#overview" data-live-field={`${model}-provider-count`}>{providers}</a>
+                      <a className="count-link" href="/state#overview" data-surface-field={`${model}-provider-count`}>{providers}</a>
                     </td>
-                    <td className="right" data-live-field={`${model}-price`}>{price}</td>
-                    <td className="right" data-live-field={`${model}-volume`}>{volume}</td>
+                    <td className="right" data-surface-field={`${model}-price`}>{price}</td>
+                    <td className="right" data-surface-field={`${model}-volume`}>{volume}</td>
                   </tr>
                 ))}
               </tbody>
