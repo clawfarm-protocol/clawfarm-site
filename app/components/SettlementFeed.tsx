@@ -38,7 +38,7 @@ export default function SettlementFeed({
   }, [state, initialRows])
 
   return (
-    <div className="protocol-table-shell settlement-feed-shell" data-live-state={state}>
+    <div className="protocol-table-shell settlement-feed-shell" data-surface-state={state}>
       <table className="protocol-table settlement-table">
         <thead>
           <tr>

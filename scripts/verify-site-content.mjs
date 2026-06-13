@@ -91,6 +91,7 @@ const dualSignatureTermPattern = /\b(dual-signed|dual-signature|dual signature|u
 const staleFixedSettlementSplitPattern = /\b(97%\s+provider|97%\s+to\s+provider\s+pending(?:\s+revenue)?|provider-share\s+97%|provider-share\s+(?:Test\s+)?USDC|3%\s+treasury\s+split|97%\s+to\s+provider\s+pending\s+revenue\s+and\s+3%\s+to\s+treasury)\b/i
 const sdkChargeFieldPattern = /\bchargeUsdc\b|\bcharge_usdc\b|\.charge_usdc\(/g
 const sdkTaxRateFieldPattern = /\btaxRateBps\b|\btax_rate_bps\b|\.tax_rate_bps\(/
+const staticSnapshotLivePattern = /\b(live|realtime|real-time)\b[^.\n]{0,120}\b(snapshot|vault|balance|epoch|state|profile)\b|\b(snapshot|vault|balance|epoch|state|profile)\b[^.\n]{0,120}\b(live|realtime|real-time)\b/i
 
 function currentDevnetClaimPattern(termPattern, distance) {
   return new RegExp(
@@ -218,6 +219,8 @@ const publicCopyChecks = [
   { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
   { name: 'old chained SDK receipt submit hides wrapper target', pattern: /\.receipts\(\)[\s\S]{0,400}\.model\(/ },
   { name: 'unframed provider CLI example', pattern: /npx clawfarm provider register/i },
+  { name: 'public faucet or test tooling language', pattern: /\b(faucet|claim_faucet|initialize_faucet|fund_faucet|set_faucet|faucet vault|test tooling|testing tooling)\b/i },
+  { name: 'static snapshot described as live', pattern: staticSnapshotLivePattern },
   { name: 'stale fixed settlement split language', pattern: staleFixedSettlementSplitPattern },
   { name: 'SDK charge example missing receipt tax rate', match: firstSdkChargeWithoutTaxRate },
 ]
