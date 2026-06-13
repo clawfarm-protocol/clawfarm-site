@@ -56,7 +56,7 @@ export default function Home() {
 
       <section className="section" id="settlement-feed">
         <div className="container">
-          <SectionHeader eyebrow="Settlement" title="Settlement, live." />
+          <SectionHeader eyebrow="Settlement" title="Settlement by receipt." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
             Receipt tax is booked when a payment is recorded. With taxRateBps: 30, treasury receives 3% of the base charge while the base charge stays pending for the provider until finalization.
