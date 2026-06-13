@@ -80,7 +80,7 @@ export function ProtocolStatusStrip() {
     <div className="live-status-strip" aria-label="Protocol status">
       <span className="status-dot" aria-hidden="true" />
       <span>{profile.statusText}</span>
-      <span>Epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
+      <span>Snapshot epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
       <span>Genesis minted: <data>{config ? formatBoolean(config.genesisMinted) : '-'}</data></span>
     </div>
   )
@@ -125,8 +125,8 @@ export function HomeProtocolState() {
   ]
 
   const activityRows: Metric[] = [
-    { label: 'Latest known epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
-    { label: 'Latest finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
+    { label: 'Snapshot epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
+    { label: 'Snapshot finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
     { label: 'Treasury vault', value: profile.balances ? `${profile.balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: profile.balances ? `${profile.balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
   ]
@@ -184,8 +184,8 @@ export function StateDashboard() {
     { label: 'Deployment', value: profile.statusText },
     { label: 'Masterpool', value: profile.programs.masterpool ? shortAddress(profile.programs.masterpool) : '-' },
     { label: 'Attestation', value: profile.programs.attestation ? shortAddress(profile.programs.attestation) : '-' },
-    { label: 'Latest known epoch', value: formatPending(epoch?.latestKnownEpoch) },
-    { label: 'Latest finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
+    { label: 'Snapshot epoch', value: formatPending(epoch?.latestKnownEpoch) },
+    { label: 'Snapshot finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
     { label: 'Reward vault', value: balances ? `${balances.rewardVaultClaw} ${profile.tokenSymbol}` : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider stake vault', value: balances ? `${balances.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },

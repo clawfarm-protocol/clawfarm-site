@@ -108,11 +108,11 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
   devnet: {
     id: 'devnet',
     label: 'Devnet',
-    clusterLabel: 'Solana devnet',
+    clusterLabel: 'Solana Devnet',
     explorerCluster: 'devnet',
     status: 'active',
-    statusText: 'Devnet active',
-    snapshotLabel: 'Devnet deployment created on 2026-06-10',
+    statusText: 'Default public devnet profile',
+    snapshotLabel: 'Devnet snapshot read on 2026-06-13 15:21:35 UTC',
     tokenSymbol: 'CLAF',
     paymentMintLabel: 'Test USDC',
     programs: {
@@ -156,8 +156,18 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
       finalizationPaused: false,
       claimsPaused: false,
     },
-    balances: null,
-    epochCursor: null,
+    balances: {
+      rewardVaultClaw: '999999679.002750',
+      challengeBondVaultClaw: '0.000000',
+      treasuryUsdc: '1.729261',
+      providerStakeUsdc: '200.000000',
+      providerPendingUsdc: '0.142197',
+    },
+    epochCursor: {
+      latestKnownEpoch: '75',
+      latestFinalizedEpoch: '74',
+      carryForwardClaw: '0.000000',
+    },
   },
   mainnet: {
     id: 'mainnet',
