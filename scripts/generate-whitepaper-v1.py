@@ -219,7 +219,7 @@ SECTIONS = [
         "4. Roles",
         [
             "A developer or user deposits USDC into an escrow PDA and consumes inference through an application or SDK. Funds leave escrow only through withdrawal or settlement against a dual-signed proof.",
-            "A provider registers an endpoint by posting a 100 USDC bond. The provider receives 97 percent of each settled call in USDC and earns CLAF from the Provider Pool according to settled volume, price weight, and quality factors.",
+            "A provider registers an endpoint by posting a 100 USDC bond. The provider selects a protocol-fee tier from 0.5 percent to 3.0 percent, in 0.5 percent increments. The provider receives the settlement remainder after the selected fee and earns CLAF from the Provider Pool according to actual fee contribution, price weight, and quality factors.",
             "A challenger is any party that posts a challenge bond against a suspect settlement. Challenges are permissionless. Enforcement is therefore not operator-driven; it is carried by the economic incentives of participants who can prove a fault.",
         ],
     ),
@@ -241,9 +241,9 @@ SECTIONS = [
     (
         "7. Settlement",
         [
-            "For a settled call, the payment amount is calculated from the provider's declared price and the metered usage in the signed proof. The settlement split is fixed: 97 percent of USDC goes to the provider wallet and 3 percent goes to the protocol treasury.",
-            "The split is not a fee schedule that can be updated by governance. There is no governance. There is no admin key. The split is a Genesis parameter. If different economics are desired, the remedy is a fork, not an upgrade.",
-            "The 3 percent treasury inflow is not an operating budget. It is not allocated to a foundation, contributors, marketing, or maintenance. It is the input to the automatic buyback-and-burn mechanism.",
+            "For a settled call, the payment amount A is calculated from the provider's declared price and the metered usage in the signed proof. The provider selects a protocol-fee rate r from the allowed set: 0.5 percent, 1.0 percent, 1.5 percent, 2.0 percent, 2.5 percent, or 3.0 percent. Treasury receives A x r. Provider pending revenue receives A x (1 - r).",
+            "The fee tier is provider-selected, not governance-selected. Lower fee tiers reduce the treasury contribution and reduce CLAF reward weight in the same proportion. A provider may choose lower friction for users, but cannot keep the same mining weight while contributing less to the protocol.",
+            "The protocol-fee inflow is not an operating budget. It is not allocated to a foundation, contributors, marketing, or maintenance. It is the accounting input that links settlement volume to mining weight and treasury accumulation.",
         ],
     ),
     (
@@ -251,14 +251,15 @@ SECTIONS = [
         [
             "Each settled inference call mines CLAF. Emission is divided between two pools: 70 percent to the providing side and 30 percent to the consuming side. The schedule runs for ten years and halves every two years.",
             "The maximum emitted supply over the schedule is approximately 968.75 million CLAF. The remaining approximately 31.25 million CLAF is never emitted by the protocol. Total supply is fixed at 1,000,000,000 CLAF.",
-            "Provider rewards are weighted by settled volume and by price relative to the network average. A provider that clears below the network average price receives a higher CLAF weight for the same volume. The mechanism subsidizes production of inference when USDC clearing price is below immediate marginal cost.",
-            "Developer rewards are earned by settled consumption. This gives the demand side a share of emission and helps bootstrap both sides of the network at the same time.",
+            "Within each pool, reward weight follows actual protocol-fee contribution rather than nominal settlement volume alone. A call settled at a lower fee tier contributes less mining weight than the same call settled at a higher fee tier. Token distribution therefore follows the amount of USDC fee paid into the protocol.",
+            "Provider rewards are additionally weighted by price relative to the network average. A provider that clears below the network average price receives a higher CLAF weight for the same fee contribution. The mechanism subsidizes production of inference when USDC clearing price is below immediate marginal cost.",
+            "Developer rewards are earned by settled consumption and inherit the same fee-contribution weighting. This gives the demand side a share of emission and helps bootstrap both sides of the network at the same time.",
         ],
     ),
     (
         "9. Treasury and burn",
         [
-            "The protocol treasury receives 3 percent of every settlement in USDC. At epoch boundaries, the treasury program evaluates whether accumulated USDC exceeds the configured threshold. If the threshold is met, USDC is swapped for CLAF through Jupiter and the acquired CLAF is burned.",
+            "The protocol treasury receives the provider-selected fee from every settlement in USDC. The allowed fee tiers range from 0.5 percent to 3.0 percent in 0.5 percent increments. At epoch boundaries, the treasury program evaluates whether accumulated USDC exceeds the configured threshold. If the threshold is met, USDC is swapped for CLAF through Jupiter and the acquired CLAF is burned.",
             "The default epoch length is one hour. The treasury swap threshold is 100 USDC. The slippage cap is 1 percent. The per-swap volume cap is 0.5 percent of relevant pool liquidity.",
             "This mechanism causes circulating supply to contract monotonically in protocol usage, subject to available liquidity and successful swap execution. No human trigger, admin key, or spending committee is involved.",
         ],
@@ -318,8 +319,9 @@ PARAMETERS = [
     ("Default epoch length", "1 hour"),
     ("Provider pool", "70 percent of epoch emission"),
     ("Developer pool", "30 percent of epoch emission"),
-    ("Provider settlement share", "97 percent of USDC settlement"),
-    ("Protocol fee", "3 percent of USDC settlement"),
+    ("Provider settlement share", "99.5 to 97.0 percent of USDC settlement"),
+    ("Protocol fee", "0.5 to 3.0 percent, provider-selected in 0.5 percent increments"),
+    ("Reward weight basis", "Proportional to actual USDC protocol fee contributed"),
     ("Treasury disposition", "100 percent buyback-and-burn"),
     ("Treasury threshold", "100 USDC"),
     ("Swap slippage cap", "1 percent"),
@@ -352,10 +354,13 @@ def build_story():
     abstract_text = (
         "ClawFarm is a protocol for mining AI inference. Providers register endpoints, "
         "users deposit USDC into non-custodial escrow, and each settled call produces "
-        "a dual-signed proof that determines payment and CLAF emission. Settlement is "
-        "fixed at 97 percent to the provider and 3 percent to the protocol treasury. "
+        "a dual-signed proof that determines payment and CLAF emission. Providers select "
+        "a protocol-fee tier between 0.5 percent and 3.0 percent, in 0.5 percent increments. "
+        "For settlement amount A and selected rate r, treasury receives A x r and provider "
+        "pending revenue receives A x (1 - r). "
         "CLAF emission follows a ten-year halving schedule, with 70 percent assigned "
-        "to providers and 30 percent assigned to developers and users. The protocol "
+        "to providers and 30 percent assigned to developers and users, weighted by "
+        "actual protocol-fee contribution. The protocol "
         "does not verify model identity or inspect inference content. It is source-blind "
         "by design, allowing any wallet, endpoint, and inference source to enter the same "
         "settleable network."
