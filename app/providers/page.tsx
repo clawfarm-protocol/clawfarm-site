@@ -10,12 +10,12 @@ const mechanismBlocks = [
   {
     label: 'COMPACT RECEIPT',
     title: 'Settlement starts with signed receipt facts.',
-    body: 'Phase 1 records compact receipts that bind payer, provider wallet, metadata hash, token usage, total Test USDC paid, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
+    body: 'Phase 1 records compact receipts that bind payer, provider wallet, metadata hash, token usage, total Test USDC paid, selected protocol-fee tier, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
   },
   {
     label: 'PENDING USDC',
     title: 'Provider revenue waits for finalization.',
-    body: 'Wallet-paid Test USDC is split at record time: the provider share moves into the provider-pending vault and the treasury share moves into the treasury vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
+    body: 'Wallet-paid Test USDC is split at record time by the provider-selected fee tier. Treasury receives 0.5% to 3.0% in 0.5% steps; the remainder moves into the provider-pending vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
   },
   {
     label: 'CLAW CHALLENGE',
@@ -58,7 +58,7 @@ export default function ProvidersPage() {
             One on-chain record. A wallet, a stake, a status.
           </p>
           <p className="section-intro">
-            On-chain registration records the provider wallet, 100 Test USDC stake, and active status. Endpoint, model, and pricing metadata belong to the off-chain gateway or operator directory layer.
+            On-chain registration records the provider wallet, 100 Test USDC stake, and active status. Endpoint, model, pricing, and protocol-fee tier metadata belong to the off-chain gateway or operator directory layer.
           </p>
           <div className="dapp-card">
             <div className="field">
@@ -78,6 +78,10 @@ export default function ProvidersPage() {
                 <label htmlFor="quality">Directory quality declaration</label>
                 <input id="quality" placeholder="—" type="text" />
               </div>
+            </div>
+            <div className="field">
+              <label htmlFor="fee-tier">Protocol-fee tier</label>
+              <input id="fee-tier" placeholder="0.5% · 1.0% · 1.5% · 2.0% · 2.5% · 3.0%" type="text" />
             </div>
             <div className="field">
               <label htmlFor="wallet">Payout wallet</label>

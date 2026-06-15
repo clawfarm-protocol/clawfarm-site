@@ -251,11 +251,11 @@ MASTERPOOL LAYER
               <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
                 <div>USDC split</div>
-                <div>97% provider-share Test USDC, 3% treasury Test USDC on the current devnet deployment.</div>
+                <div>Provider-selected protocol-fee tier: 0.5% to 3.0% in 0.5% increments. Treasury receives charge_atomic multiplied by the selected tier; provider-pending receives the remainder.</div>
                 <div>Provider release</div>
                 <div>Provider-share USDC remains pending until attestation marks the receipt finalized.</div>
                 <div>Epoch reward</div>
-                <div>Receipts record buyer and provider epoch weight; rewards are not paid directly per call.</div>
+                <div>Receipts record buyer and provider epoch weight from actual protocol-fee contribution; rewards are not paid directly per call.</div>
                 <div>Pool split</div>
                 <div>30% buyer-side CLAW pool and 70% provider-side CLAW pool by finalized epoch weight.</div>
                 <div>Reward lock</div>

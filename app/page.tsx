@@ -59,7 +59,7 @@ export default function Home() {
           <SectionHeader eyebrow="Settlement" title="Settlement, live." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
-            The 3% treasury split is booked when a receipt payment is recorded. Provider USDC stays pending until the receipt is finalized.
+            The provider-selected protocol-fee tier is booked when a receipt payment is recorded. Provider USDC stays pending until the receipt is finalized.
           </p>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Mining" title="Mining." />
           <p className="section-intro">
-            Receipts do not pay direct per-call rewards. Finalized usage activates buyer and provider epoch weight, then permissionless epoch finalization makes rewards claimable into locked streams.
+            Receipts do not pay direct per-call rewards. Finalized receipts activate buyer and provider epoch weight from actual protocol-fee contribution, then permissionless epoch finalization makes rewards claimable into locked streams.
           </p>
           <div className="stat-strip mining-strip">
             <div className="treasury-stat">
@@ -205,7 +205,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Every recorded receipt splits wallet-paid USDC immediately: 97% to provider pending revenue and 3% to the treasury USDC vault. The current contract does not expose an automated swap-and-retirement path.
+            Every recorded receipt applies the provider-selected protocol-fee tier: 0.5% to 3.0%, stepped by 0.5%. Treasury receives the selected fee; provider pending revenue receives the remainder. CLAF reward weight follows the actual USDC fee contributed. The current contract does not expose an automated swap-and-retirement path.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
@@ -242,7 +242,7 @@ export default function Home() {
             </article>
             <article>
               <h3>Settlement</h3>
-              <p>USDC settlement is receipt-based. The provider share is held in pending revenue until receipt finalization.</p>
+              <p>USDC settlement is receipt-based. The provider-selected fee tier routes a portion to treasury and holds the remainder in pending provider revenue until receipt finalization.</p>
             </article>
             <article>
               <h3>Distribution</h3>
