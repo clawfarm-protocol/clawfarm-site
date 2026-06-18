@@ -227,7 +227,7 @@ ATTESTATION LAYER
   ProviderSigner records · Compact receipts · Challenge lifecycle · Finalization authority
 
 MASTERPOOL LAYER
-  ProviderAccount · Test USDC split · Epoch weight · Locked CLAW streams · Vault accounting`}</code></pre>
+  ProviderAccount · Test USDC split · Epoch weight · Locked CLAF streams · Vault accounting`}</code></pre>
               <h3 id="contracts">Smart contracts</h3>
               <div className="key-list">
                 <div>clawfarm-attestation</div>
@@ -247,7 +247,7 @@ MASTERPOOL LAYER
 5. Masterpool splits Test USDC into provider-pending and treasury vaults.
 6. Receipt survives or fails the challenge window.
 7. Finalized receipts activate buyer/provider epoch weight and release provider pending USDC.
-8. Finalized epochs create locked CLAW streams for claimable rewards.`}</code></pre>
+8. Finalized epochs create locked CLAF streams for claimable rewards.`}</code></pre>
               <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
                 <div>USDC split</div>
@@ -257,14 +257,14 @@ MASTERPOOL LAYER
                 <div>Epoch reward</div>
                 <div>Receipts record buyer and provider epoch weight from actual protocol-fee contribution; rewards are not paid directly per call.</div>
                 <div>Pool split</div>
-                <div>30% buyer-side CLAW pool and 70% provider-side CLAW pool by finalized epoch weight.</div>
+                <div>30% buyer-side CLAF pool and 70% provider-side CLAF pool by finalized epoch weight.</div>
                 <div>Reward lock</div>
                 <div>Claimed epoch rewards create locked streams using the configured lock-days snapshot.</div>
               </div>
               <h3 id="challenges">Challenges</h3>
               <div className="key-list">
                 <div>Bond unit</div>
-                <div>Challenges are bonded in CLAW.</div>
+                <div>Challenges are bonded in CLAF.</div>
                 <div>Rejected challenge</div>
                 <div>The challenger bond is burned and the receipt remains economically valid.</div>
                 <div>Accepted challenge</div>
@@ -277,10 +277,10 @@ MASTERPOOL LAYER
                 <div>Cluster</div><div>Solana devnet</div>
                 <div>Masterpool program</div><div className="mono">DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q</div>
                 <div>Attestation program</div><div className="mono">BwRMqumgiHbeMhG9xs1a76vUjmprrokr6WsPCzhz3pKK</div>
-                <div>CLAW mint</div><div className="mono">EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui</div>
+                <div>CLAF mint</div><div className="mono">EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui</div>
                 <div>Test USDC mint</div><div className="mono">Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553</div>
                 <div>Provider stake</div><div>100 Test USDC</div>
-                <div>Challenge bond</div><div>Configured CLAW bond on devnet.</div>
+                <div>Challenge bond</div><div>Configured CLAF bond on devnet.</div>
                 <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet timing remains pending until mainnet config is deployed.</div>
                 <div>Reward lock</div><div>Configured lock-days snapshot; current Phase 1 default is 180 days.</div>
               </div>

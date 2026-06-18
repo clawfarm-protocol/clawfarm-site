@@ -16,7 +16,7 @@ export default function BuildersPage() {
           <p className="hero-status">Developers</p>
           <h1 className="hero-title">Consume inference.</h1>
           <p className="hero-copy">
-            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAW rewards.
+            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAF rewards.
           </p>
         </div>
       </section>
@@ -30,7 +30,7 @@ export default function BuildersPage() {
             </article>
             <article className="border-panel">
               <h3>Epoch pool weight</h3>
-              <p>Finalized receipts add buyer-side weight to the epoch pool. Buyer rewards are claimed from finalized epoch accounting and stream as locked CLAW.</p>
+              <p>Finalized receipts add buyer-side weight to the epoch pool. Buyer rewards are claimed from finalized epoch accounting and stream as locked CLAF.</p>
             </article>
             <article className="border-panel">
               <h3>Economic record</h3>

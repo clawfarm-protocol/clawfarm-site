@@ -2,7 +2,7 @@
 
 ClawFarm is a Solana devnet website for the Phase 1 receipt-settlement protocol.
 The site explains how wallets, providers, compact receipts, Test USDC settlement,
-epoch weight, challenges, and locked CLAW reward streams fit together.
+epoch weight, challenges, and locked CLAF reward streams fit together.
 
 Protocol-facing copy in this repository must follow the current contract source
 in the sibling `clawfarm-masterpool` repository. If the website and contract
@@ -14,9 +14,9 @@ facts disagree, update the website to match the contract.
 - Wallet-paid inference is recorded through compact receipts, not direct per-call reward payouts.
 - Receipt recording splits Test USDC into provider-pending revenue and treasury revenue.
 - Provider-share USDC releases only after the receipt finalizes through the attestation lifecycle.
-- Finalized receipts contribute buyer-side and provider-side epoch weight for CLAW rewards.
-- Epoch rewards are claimed into locked CLAW streams rather than paid directly per request.
-- Challenges use CLAW bonds and can invalidate receipt economics when accepted.
+- Finalized receipts contribute buyer-side and provider-side epoch weight for CLAF rewards.
+- Epoch rewards are claimed into locked CLAF streams rather than paid directly per request.
+- Challenges use CLAF bonds and can invalidate receipt economics when accepted.
 
 ## Site Structure
 

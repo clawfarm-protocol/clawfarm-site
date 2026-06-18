@@ -40,7 +40,7 @@ export default function StatePage() {
             <div>Finalize</div>
             <div>After the challenge window, receipt finalization activates the stored epoch weight and releases provider pending USDC.</div>
             <div>Claim</div>
-            <div>After epoch finalization, participants claim locked reward streams and withdraw vested CLAW.</div>
+            <div>After epoch finalization, participants claim locked reward streams and withdraw vested CLAF.</div>
           </div>
         </div>
       </section>
