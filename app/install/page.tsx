@@ -15,7 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register a provider wallet with the protocol. Publish endpoint, pricing, and protocol-fee tier metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized fee contribution determines provider-side epoch weight for CLAW rewards.
+            Register a provider wallet with the protocol. Publish endpoint, pricing, and protocol-fee tier metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized fee contribution determines provider-side epoch weight for CLAF rewards.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -107,7 +107,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Receive</h3>
               <p>
-                After the receipt finalizes, provider-share Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are weighted by actual protocol-fee contribution, claimed from finalized epoch accounting, and withdrawn through locked CLAW streams.
+                After the receipt finalizes, provider-share Test USDC releases from the pending vault to your wallet. Provider-side epoch rewards are weighted by actual protocol-fee contribution, claimed from finalized epoch accounting, and withdrawn through locked CLAF streams.
               </p>
             </article>
           </div>

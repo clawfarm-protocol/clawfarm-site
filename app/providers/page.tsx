@@ -18,9 +18,9 @@ const mechanismBlocks = [
     body: 'Wallet-paid Test USDC is split at record time by the provider-selected fee tier. Treasury receives 0.5% to 3.0% in 0.5% steps; the remainder moves into the provider-pending vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
   },
   {
-    label: 'CLAW CHALLENGE',
-    title: 'Challenges use CLAW bonds.',
-    body: 'A challenger posts the configured CLAW bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
+    label: 'CLAF CHALLENGE',
+    title: 'Challenges use CLAF bonds.',
+    body: 'A challenger posts the configured CLAF bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
   },
 ]
 

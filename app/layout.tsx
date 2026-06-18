@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   applicationName: 'ClawFarm',
   keywords: [
     'ClawFarm',
-    'CLAW',
+    'CLAF',
     'receipt-settled inference',
     'AI inference protocol',
     'permissionless AI',

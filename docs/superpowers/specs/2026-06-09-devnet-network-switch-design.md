@@ -11,7 +11,7 @@ The latest contract implementation is Phase 1 receipt-driven economics:
 
 - `clawfarm-masterpool` is the protocol economic authority.
 - `clawfarm-attestation` owns receipt and challenge lifecycle state and invokes masterpool through CPI.
-- Receipts record epoch weight instead of issuing direct per-receipt CLAW rewards.
+- Receipts record epoch weight instead of issuing direct per-receipt CLAF rewards.
 - User-paid USDC is split immediately at receipt record time.
 - Provider revenue remains pending until the receipt survives the challenge window and is finalized.
 - Epoch rewards are finalized and claimed through epoch-level weight accounting.
@@ -54,7 +54,7 @@ This approach fits the current static website, avoids frontend secret exposure, 
 
 ### Devnet Mints
 
-- CLAW mint: `EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui`
+- CLAF mint: `EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui`
 - Test USDC mint: `Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553`
 
 ### Devnet Core Accounts
@@ -77,13 +77,13 @@ This approach fits the current static website, avoids frontend secret exposure, 
 - Treasury USDC share: `30` bps using contract scale `1000`, shown as `3%`
 - Provider epoch pool share: `700` bps using contract scale `1000`, shown as `70%`
 - Buyer epoch pool share: `300` bps using contract scale `1000`, shown as `30%`
-- CLAW challenge bond: `2.000000`
-- Provider slash amount: `30.000000` CLAW
+- CLAF challenge bond: `2.000000`
+- Provider slash amount: `30.000000` CLAF
 - Reward lock: `180` days
 - Epoch duration: `3600` seconds
 - Devnet challenge window: `30` seconds
 - Attestation challenge resolution timeout: `30` seconds
-- Emission total: `1,000,000,000.000000` CLAW
+- Emission total: `1,000,000,000.000000` CLAF
 - Halving period: `31,536,000` seconds
 - Emission duration: `157,680,000` seconds
 - Genesis minted: `true`
@@ -94,14 +94,14 @@ This approach fits the current static website, avoids frontend secret exposure, 
 
 ### Devnet Balance Snapshot
 
-- Reward vault: `999,899,885.946700` CLAW
-- Challenge bond vault: `0.000000` CLAW
+- Reward vault: `999,899,885.946700` CLAF
+- Challenge bond vault: `0.000000` CLAF
 - Treasury USDC vault: `41.387849` Test USDC
 - Provider stake USDC vault: `300.000000` Test USDC
 - Provider pending USDC vault: `98.994182` Test USDC
 - Latest known epoch: `522`
 - Latest finalized epoch: `521`
-- Carry-forward CLAW: `0.000000`
+- Carry-forward CLAF: `0.000000`
 
 ## Architecture
 
@@ -165,7 +165,7 @@ Populate overview metrics from the selected network profile. For Devnet, show:
 
 - Network status.
 - Program IDs.
-- CLAW and Test USDC mints.
+- CLAF and Test USDC mints.
 - Latest known and finalized epoch.
 - Treasury, provider stake, provider pending, reward, and challenge vault balances.
 - Pause flags.
@@ -196,8 +196,8 @@ Align protocol documentation with Phase 1:
 - Receipt finalization activates epoch weight after the challenge window.
 - Epoch finalization is permissionless.
 - Claiming epoch rewards creates locked reward streams.
-- Only the reward owner withdraws vested CLAW.
-- Challenges are bond-backed in CLAW.
+- Only the reward owner withdraws vested CLAF.
+- Challenges are bond-backed in CLAF.
 
 Remove or rewrite unsupported claims about automated Jupiter buyback, old direct reward materialization, and unverified mainnet immutability.
 
@@ -209,7 +209,7 @@ Update copy to match Phase 1:
 - Providers earn pending USDC on receipt record and receive it after finalization.
 - Buyers and providers earn epoch reward weight from finalized usage.
 - Devnet challenge window is 30 seconds; mainnet policy can be described as deployment-dependent until mainnet config exists.
-- Use `CLAW` for the token name if contract-facing, and avoid mixing with stale `CLAF` copy unless product naming rules explicitly require both.
+- Use `CLAF` for the token name if contract-facing, and avoid mixing with stale token-symbol copy unless product naming rules explicitly require both.
 
 ## Error Handling And Empty States
 

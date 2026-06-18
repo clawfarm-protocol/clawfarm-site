@@ -97,7 +97,7 @@ export default function Home() {
                 <tr>
                   <th>Wallet</th>
                   <th>Role</th>
-                  <th className="num-col">CLAW amount</th>
+                  <th className="num-col">CLAF amount</th>
                   <th className="num-col">Timestamp</th>
                 </tr>
               </thead>
@@ -238,7 +238,7 @@ export default function Home() {
           <div className="economics-stack">
             <article>
               <h3>Emission</h3>
-              <p>CLAW emission inventory is minted at Genesis. Epoch rewards are allocated by finalized buyer and provider usage weight.</p>
+              <p>CLAF emission inventory is minted at Genesis. Epoch rewards are allocated by finalized buyer and provider usage weight.</p>
             </article>
             <article>
               <h3>Settlement</h3>
@@ -246,7 +246,7 @@ export default function Home() {
             </article>
             <article>
               <h3>Distribution</h3>
-              <p>Reward claims create locked streams. Owners withdraw vested CLAW over the configured lock period.</p>
+              <p>Reward claims create locked streams. Owners withdraw vested CLAF over the configured lock period.</p>
             </article>
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function Home() {
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAW rewards accrue through finalized epoch weight.
+                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAF rewards accrue through finalized epoch weight.
               </p>
               <a href="/providers">Register a provider account →</a>
             </article>

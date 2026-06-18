@@ -30,11 +30,10 @@ In `scripts/verify-site-content.mjs`, replace the `publicCopyChecks` array with 
 
 ```js
 const publicCopyChecks = [
-  { name: 'stale token symbol', pattern: /\bCLAF\b/ },
   { name: 'unsupported buyback language', pattern: /\b(Jupiter|buyback|execute_buyback|swap aggregator|incinerator)\b/i },
   { name: 'unverified mainnet immutability', pattern: /\b(Genesis-immutable|renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
-  { name: 'old direct mining wording', pattern: /\b(mines CLAW to your wallet|mines CLAF to your wallet|CLAW mined|CLAF mined)\b/i },
+  { name: 'old direct mining wording', pattern: /\b(mines CLAF to your wallet|CLAF mined)\b/i },
   { name: 'unsupported routing or registry wording', pattern: /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|dual-signed|user and provider sign|request hash|response hash|declared offerings)\b/i },
   { name: 'contract-native HTTP API example', pattern: /curl https:\/\/api\.clawfarm\.network\/v1\/devnet\/receipts/i },
   { name: 'endpoint-first provider registration', pattern: /\b(Register an endpoint|Register a wallet-backed endpoint|wallet-controlled endpoint|wallet-backed endpoint)\b/i },
@@ -362,7 +361,7 @@ ATTESTATION LAYER
   ProviderSigner records · Compact receipts · Challenge lifecycle · Finalization authority
 
 MASTERPOOL LAYER
-  ProviderAccount · Test USDC split · Epoch weight · Locked CLAW streams · Vault accounting`}</code></pre>
+  ProviderAccount · Test USDC split · Epoch weight · Locked CLAF streams · Vault accounting`}</code></pre>
 ```
 
 - [x] **Step 4: Replace receipt lifecycle copy**
@@ -377,7 +376,7 @@ Replace the receipt lifecycle `<pre className="code-block">` block with this exa
 5. Masterpool splits Test USDC into provider-pending and treasury vaults.
 6. Receipt survives or fails the challenge window.
 7. Finalized receipts activate buyer/provider epoch weight and release provider pending USDC.
-8. Finalized epochs create locked CLAW streams for claimable rewards.`}</code></pre>
+8. Finalized epochs create locked CLAF streams for claimable rewards.`}</code></pre>
 ```
 
 - [x] **Step 5: Replace devnet timing copy**
@@ -424,13 +423,13 @@ git commit -m "docs: explain current devnet contract shape"
 In `app/install/page.tsx`, make these exact text replacements:
 
 ```txt
-Register a provider wallet with the protocol. Publish endpoint and pricing metadata through the gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
+Register a provider wallet with the protocol. Publish endpoint and pricing metadata through the gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAF rewards.
 ```
 
 becomes:
 
 ```txt
-Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAW rewards.
+Register a provider wallet with the protocol. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider-share USDC after receipt finalization. Finalized usage contributes provider-side epoch weight for CLAF rewards.
 ```
 
 ```txt
@@ -566,13 +565,13 @@ Register a wallet-backed ProviderAccount. Receipt payments create pending provid
 ```
 
 ```txt
-Register an endpoint. The protocol does not ask where capacity comes from. 97% of every settlement is paid to the provider in USDC. CLAW rewards accrue through finalized epoch weight.
+Register an endpoint. The protocol does not ask where capacity comes from. 97% of every settlement is paid to the provider in USDC. CLAF rewards accrue through finalized epoch weight.
 ```
 
 becomes:
 
 ```txt
-Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAW rewards accrue through finalized epoch weight.
+Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAF rewards accrue through finalized epoch weight.
 ```
 
 - [x] **Step 2: Update README copy**
@@ -695,4 +694,3 @@ Implementation notes:
 - Docs now include the current devnet contract shape for `SubmitReceiptArgs`, compact receipt hashing, ed25519 proof instruction, payment delegate, and masterpool account categories.
 - Provider setup now distinguishes on-chain `masterpool.register_provider` wrapper behavior from off-chain directory metadata.
 - Home and README provider registration copy now uses provider-account language instead of endpoint-first language.
-
