@@ -36,7 +36,7 @@ export default function StatePage() {
             <div>Submit</div>
             <div>Attestation validates a compact receipt and CPIs into masterpool to record payment.</div>
             <div>Record</div>
-            <div>Masterpool books the base charge to provider pending revenue, books receipt tax to treasury, and snapshots buyer/provider epoch weight.</div>
+            <div>Masterpool splits USDC and snapshots buyer/provider epoch weight.</div>
             <div>Finalize</div>
             <div>After the challenge window, receipt finalization activates the stored epoch weight and releases provider pending USDC.</div>
             <div>Claim</div>

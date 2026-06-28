@@ -80,7 +80,7 @@ export function ProtocolStatusStrip() {
     <div className="live-status-strip" aria-label="Protocol status">
       <span className="status-dot" aria-hidden="true" />
       <span>{profile.statusText}</span>
-      <span>Snapshot epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
+      <span>Epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
       <span>Genesis minted: <data>{config ? formatBoolean(config.genesisMinted) : '-'}</data></span>
     </div>
   )
@@ -92,8 +92,8 @@ export function ProtocolNumberWall() {
   const items: Metric[] = config
     ? [
         { label: `${profile.tokenSymbol} total supply`, value: formatTotalSupply(config.emissionTotalClaw) },
-        { label: 'Provider base charge', value: '100% of base' },
-        { label: 'Receipt tax rate', value: formatBps(config.receiptTaxRateBps) },
+        { label: 'Provider USDC share', value: formatBps(config.providerUsdcShareBps) },
+        { label: 'Treasury USDC share', value: formatBps(config.treasuryUsdcShareBps) },
         { label: 'Epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
       ]
     : [
@@ -125,8 +125,8 @@ export function HomeProtocolState() {
   ]
 
   const activityRows: Metric[] = [
-    { label: 'Snapshot epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
-    { label: 'Snapshot finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
+    { label: 'Latest known epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
+    { label: 'Latest finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
     { label: 'Treasury vault', value: profile.balances ? `${profile.balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: profile.balances ? `${profile.balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
   ]
@@ -164,7 +164,7 @@ export function TreasurySnapshot() {
   const config = profile.config
   const balances = profile.balances
   const items: Metric[] = [
-    { label: 'Receipt tax rate', value: config ? formatBps(config.receiptTaxRateBps) : '-' },
+    { label: 'Treasury share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: balances ? `${balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Challenge bond vault', value: balances ? `${balances.challengeBondVaultClaw} ${profile.tokenSymbol}` : '-' },
@@ -184,8 +184,8 @@ export function StateDashboard() {
     { label: 'Deployment', value: profile.statusText },
     { label: 'Masterpool', value: profile.programs.masterpool ? shortAddress(profile.programs.masterpool) : '-' },
     { label: 'Attestation', value: profile.programs.attestation ? shortAddress(profile.programs.attestation) : '-' },
-    { label: 'Snapshot epoch', value: formatPending(epoch?.latestKnownEpoch) },
-    { label: 'Snapshot finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
+    { label: 'Latest known epoch', value: formatPending(epoch?.latestKnownEpoch) },
+    { label: 'Latest finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
     { label: 'Reward vault', value: balances ? `${balances.rewardVaultClaw} ${profile.tokenSymbol}` : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider stake vault', value: balances ? `${balances.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
@@ -196,9 +196,8 @@ export function StateDashboard() {
 
   const economics: Metric[] = [
     { label: 'Provider stake', value: config ? `${config.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Provider pending', value: config ? 'Base charge' : '-' },
-    { label: 'Receipt tax rate', value: config ? formatBps(config.receiptTaxRateBps) : '-' },
-    { label: 'Supported tax rates', value: config ? config.supportedReceiptTaxRateBps.map(formatBps).join(', ') : '-' },
+    { label: 'Provider USDC share', value: config ? formatBps(config.providerUsdcShareBps) : '-' },
+    { label: 'Treasury USDC share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
     { label: 'Provider reward pool', value: config ? formatBps(config.providerEpochPoolShareBps) : '-' },
     { label: 'Buyer reward pool', value: config ? formatBps(config.buyerEpochPoolShareBps) : '-' },
     { label: 'Challenge bond', value: config ? `${config.challengeBondClaw} ${profile.tokenSymbol}` : '-' },

@@ -2,12 +2,11 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Documentation — ClawFarm',
-  description: 'Mining inference overview, devnet SDK wrapper targets, receipt lifecycle, and protocol economics for ClawFarm.',
+  description: 'Devnet SDK, receipt lifecycle, and Phase 1 protocol economics for ClawFarm.',
   alternates: { canonical: '/docs' },
 }
 
 const toc = [
-  ['Protocol objective', '#protocol-objective'],
   ['Quickstart', '#quickstart'],
   ['Install', '#install'],
   ['Configure devnet', '#configure-devnet'],
@@ -27,53 +26,27 @@ const toc = [
   ['Resources', '#resources'],
 ]
 
-const tocSubLabels = new Set([
-  'Install',
-  'Configure devnet',
-  'SDK wrapper target',
-  'Current contract shape',
-  'Gateway wrapper target',
-])
-
 export default function DocsPage() {
   return (
     <main>
       <section className="hero-section">
         <div className="container">
           <h1 className="page-title">Documentation</h1>
-          <p className="page-copy">Mining inference overview, current devnet integration guides, and receipt-settlement implementation notes.</p>
+          <p className="page-copy">Devnet integration guides and Phase 1 receipt-settlement specification.</p>
         </div>
       </section>
 
       <section className="section">
         <div className="container docs-layout">
           <nav className="docs-toc" aria-label="Documentation sections">
-            {toc.map(([label, href]) => (
-              <a className={tocSubLabels.has(label) ? 'toc-sub' : undefined} href={href} key={href}>
+            {toc.map(([label, href], index) => (
+              <a className={index > 0 && index < 7 ? 'toc-sub' : undefined} href={href} key={href}>
                 {label}
               </a>
             ))}
           </nav>
 
           <article className="docs-content">
-            <section id="protocol-objective">
-              <h2>Protocol objective</h2>
-              <p>
-                ClawFarm is mining inference: providers contribute capacity, buyers pay for inference in USDC, and CLAF rewards follow finalized contribution. Receipt settlement is the current mechanism shorthand, not the whole protocol story.
-              </p>
-              <p>
-                On the current devnet deployment, payment, stake, pending provider revenue, and treasury accounting use Test USDC while the protocol-level settlement model remains USDC-denominated.
-              </p>
-              <div className="key-list">
-                <div>Mining inference</div>
-                <div>Paid usage becomes buyer-side and provider-side mining weight.</div>
-                <div>Genesis mainnet target</div>
-                <div>Fixed CLAF cap, Provider Pool 70%, Buyer Pool 30%, Genesis immutable launch target, and automated buyback-and-burn target.</div>
-                <div>Current devnet subset</div>
-                <div>Receipt settlement, provider pending USDC, epoch weight, challenge window, and locked reward streams.</div>
-              </div>
-            </section>
-
             <section id="quickstart">
               <h2>Quickstart</h2>
               <p>
@@ -107,7 +80,6 @@ const cf = new ClawFarm({
   promptTokens: 420,
   completionTokens: 180,
   chargeUsdc: '0.025000',
-  taxRateBps: 30,
 })
 
 const receipt = await cf.receipts.submit(prepared, {
@@ -127,7 +99,6 @@ console.log(receipt.economicRecordPda)`}</code></pre>
     prompt_tokens=420,
     completion_tokens=180,
     charge_usdc="0.025000",
-    tax_rate_bps=30,
 )
 
 receipt = cf.receipts.submit(
@@ -146,7 +117,6 @@ receipt = cf.receipts.submit(
     .prompt_tokens(420)
     .completion_tokens(180)
     .charge_usdc("0.025000")
-    .tax_rate_bps(30)
     .build()
     .await?;
 
@@ -165,9 +135,9 @@ let receipt = cf.receipts()
               </p>
               <div className="key-list">
                 <div>SubmitReceiptArgs</div>
-                <div>request_nonce_hash, metadata_hash, prompt_tokens, completion_tokens, charge_atomic, tax_rate_bps, receipt_hash.</div>
+                <div>request_nonce_hash, metadata_hash, prompt_tokens, completion_tokens, charge_atomic, receipt_hash.</div>
                 <div>Receipt hash</div>
-                <div>Built with the clawfarm:receipt:v2 domain, provider wallet, payer, Test USDC mint, token counts, base charge amount, and tax rate.</div>
+                <div>Built with the clawfarm:receipt:v2 domain, provider wallet, payer, Test USDC mint, token counts, and charge amount.</div>
                 <div>Proof instruction</div>
                 <div>The transaction includes an immediately preceding ed25519 verification instruction for the configured gateway-capable signer over receipt_hash.</div>
                 <div>Payment delegate</div>
@@ -194,8 +164,7 @@ let receipt = cf.receipts()
   },
   "promptTokens": 420,
   "completionTokens": 180,
-  "chargeUsdc": "0.025000",
-  "taxRateBps": 30
+  "chargeUsdc": "0.025000"
 }`}</code></pre>
               <p>
                 The gateway wrapper response should contain a transaction or signing payload that includes the ed25519 proof instruction and `attestation.submit_receipt` accounts.
@@ -258,7 +227,7 @@ ATTESTATION LAYER
   ProviderSigner records · Compact receipts · Challenge lifecycle · Finalization authority
 
 MASTERPOOL LAYER
-  ProviderAccount · Test USDC tax accounting · Epoch weight · Locked CLAF streams · Vault accounting`}</code></pre>
+  ProviderAccount · Test USDC split · Epoch weight · Locked CLAF streams · Vault accounting`}</code></pre>
               <h3 id="contracts">Smart contracts</h3>
               <div className="key-list">
                 <div>clawfarm-attestation</div>
@@ -268,25 +237,25 @@ MASTERPOOL LAYER
                 <div>ProviderAccount</div>
                 <div>Stores provider wallet, stake state, pending revenue counters, challenge counters, and registration status.</div>
                 <div>ReceiptEconomicRecord</div>
-                <div>Stores immutable receipt-time base charge, tax snapshots, epoch weight, challenge deadline, and economic status.</div>
+                <div>Stores immutable receipt-time payment split, epoch weight, challenge deadline, and economic status.</div>
               </div>
               <h3 id="receipt-lifecycle">Receipt lifecycle</h3>
               <pre className="code-block"><code>{`1. Wallet authorizes bounded Test USDC settlement through a payer token delegate.
-2. App or gateway prepares request_nonce_hash, metadata_hash, charge_atomic, tax_rate_bps, and receipt_hash.
+2. App or gateway prepares request_nonce_hash, metadata_hash, charge_atomic, and receipt_hash.
 3. A configured gateway-capable signer signs receipt_hash, and the transaction includes the ed25519 proof instruction.
 4. Attestation submits the compact receipt and records payment through masterpool CPI.
-5. Masterpool transfers the receipt tax to treasury and the base charge to provider-pending.
+5. Masterpool splits Test USDC into provider-pending and treasury vaults.
 6. Receipt survives or fails the challenge window.
 7. Finalized receipts activate buyer/provider epoch weight and release provider pending USDC.
 8. Finalized epochs create locked CLAF streams for claimable rewards.`}</code></pre>
               <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
-                <div>Receipt tax</div>
-                <div><span className="mono">charge_atomic</span> / <span className="mono">total_usdc_paid</span> is the base provider charge. <span className="mono">tax_rate_bps</span> is one of 5, 10, 15, 20, 25, or 30; 30 means a 3% treasury tax on the base charge.</div>
+                <div>USDC split</div>
+                <div>Provider-selected protocol-fee tier: 0.5% to 3.0% in 0.5% increments. Treasury receives charge_atomic multiplied by the selected tier; provider-pending receives the remainder.</div>
                 <div>Provider release</div>
-                <div>The base charge remains pending until attestation marks the receipt finalized. Payer delegated allowance must cover base charge plus tax.</div>
+                <div>Provider-share USDC remains pending until attestation marks the receipt finalized.</div>
                 <div>Epoch reward</div>
-                <div>Receipts record buyer and provider epoch weight; rewards are not paid directly per call.</div>
+                <div>Receipts record buyer and provider epoch weight from actual protocol-fee contribution; rewards are not paid directly per call.</div>
                 <div>Pool split</div>
                 <div>30% buyer-side CLAF pool and 70% provider-side CLAF pool by finalized epoch weight.</div>
                 <div>Reward lock</div>
@@ -299,29 +268,18 @@ MASTERPOOL LAYER
                 <div>Rejected challenge</div>
                 <div>The challenger bond is burned and the receipt remains economically valid.</div>
                 <div>Accepted challenge</div>
-                <div>The bond is returned, provider base-charge USDC is refunded to the payer, reward-vault transfer and burn economics apply, and activated receipt weight is removed when applicable.</div>
+                <div>The bond is returned, provider-share USDC is refunded to the payer, reward-vault transfer and burn economics apply, and activated receipt weight is removed when applicable.</div>
                 <div>Timeout stance</div>
                 <div>Receipt economics finalize only through the attestation lifecycle after the configured challenge window.</div>
               </div>
               <h3 id="devnet-parameters">Devnet parameters</h3>
               <div className="key-list">
                 <div>Cluster</div><div>Solana devnet</div>
-                <div>Deployment record</div><div>Devnet Phase 1 deployment created 2026-06-10T12:07:31.160Z.</div>
-                <div>Masterpool program</div><div className="mono">3gaSkyvgHJQxYpHJNxTBqSNrPMvu9fcCpoQkBsMKo3fg</div>
-                <div>Attestation program</div><div className="mono">En7rhJSk1VXq7YaNRszGqWos8tz6f9GbpF6qRU83ZeFC</div>
-                <div>CLAF mint</div><div className="mono">Ez9N4FXcGPB5VpUTPY71dAjSEMbigUosBkaksVQyg1Rk</div>
-                <div>Test USDC mint</div><div className="mono">DuAQqzKYxmxb2XHyMCHwSigSbpowMvhXxjfnU4vkjHrE</div>
-                <div>Pool authority</div><div className="mono">2bBrzVKaz2L2LZmx1yceKRfxbtn4RKv4SmWbBKW1nE3K</div>
-                <div>Masterpool config</div><div className="mono">Gg1Aos3GXR7bWEgUi3eVoAhW9kcWQiA4D643CgvoqRnx</div>
-                <div>Attestation config</div><div className="mono">9Wmkya3gEzX8eAqgYJqTjEaGJYdwEw7QB78DE87JuGRk</div>
-                <div>Reward vault</div><div className="mono">vZ4knPgRo2aYK3k3Tc9h3VVvKeQN1syGetPuUdeZr6e</div>
-                <div>Challenge bond vault</div><div className="mono">34Yf2fXtBHiRY3CsE8Zowr66NbktHvgYeLZwwCHdiDg3</div>
-                <div>Treasury USDC vault</div><div className="mono">3VBogLjhkfDv2oLU9YSuDAN8F2oSCY9jamyiSGAxFsJX</div>
-                <div>Provider stake USDC vault</div><div className="mono">CzcWMHyA78nAo8nN5Qosi7XfH4xJTMQNybSE7t2JFWYj</div>
-                <div>Provider pending USDC vault</div><div className="mono">1f6F21ivF3DYivHRz5Zv17E83o98FkWpdAHMdeEduJk</div>
-                <div>Epoch cursor</div><div className="mono">C7Fe9jXNUSPGdCaFJatU54ZKu8xPvNePswu4K3UVGX5j</div>
+                <div>Masterpool program</div><div className="mono">DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q</div>
+                <div>Attestation program</div><div className="mono">BwRMqumgiHbeMhG9xs1a76vUjmprrokr6WsPCzhz3pKK</div>
+                <div>CLAF mint</div><div className="mono">EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui</div>
+                <div>Test USDC mint</div><div className="mono">Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553</div>
                 <div>Provider stake</div><div>100 Test USDC</div>
-                <div>Receipt tax rates</div><div>Supported <span className="mono">tax_rate_bps</span> values: 5, 10, 15, 20, 25, 30. Current wrapper examples use 30, a 3% tax on the base charge.</div>
                 <div>Challenge bond</div><div>Configured CLAF bond on devnet.</div>
                 <div>Challenge window</div><div>Short devnet window for rollout testing; mainnet timing remains pending until mainnet config is deployed.</div>
                 <div>Reward lock</div><div>Configured lock-days snapshot; current Phase 1 default is 180 days.</div>

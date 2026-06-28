@@ -14,9 +14,9 @@ export default function BuildersPage() {
       <section className="hero-section">
         <div className="container paper-column">
           <p className="hero-status">Developers</p>
-          <h1 className="hero-title">Create demand. Mine by usage.</h1>
+          <h1 className="hero-title">Consume inference.</h1>
           <p className="hero-copy">
-            Buyers contribute paid demand to the network. Finalized receipt-backed usage contributes to Buyer Pool mining weight for CLAF rewards.
+            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAF rewards.
           </p>
         </div>
       </section>
@@ -34,7 +34,7 @@ export default function BuildersPage() {
             </article>
             <article className="border-panel">
               <h3>Economic record</h3>
-              <p>Each submitted receipt creates an economic record with base-charge and tax snapshots, challenge timing, and buyer/provider weight. Provider base-charge USDC remains pending until finalization.</p>
+              <p>Each submitted receipt creates an economic record with Test USDC split snapshots, challenge timing, and buyer/provider weight. Provider-share USDC remains pending until finalization.</p>
             </article>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function BuildersPage() {
         <div className="container">
           <SectionTitle eyebrow="SDK" title="Start with the SDK." />
           <CodeTabs />
-          <p className="interface-note">SDK reference: <a href="/docs#sdk-wrapper-target">/docs#sdk-wrapper-target →</a></p>
+          <p className="interface-note">SDK reference: <a href="/docs#sdk">/docs#sdk →</a></p>
         </div>
       </section>
 

@@ -28,8 +28,8 @@ type CoreAccounts = {
 export type ProtocolConfigSnapshot = {
   masterpoolConfigVersion: string
   providerStakeUsdc: string
-  receiptTaxRateBps: number
-  supportedReceiptTaxRateBps: number[]
+  providerUsdcShareBps: number
+  treasuryUsdcShareBps: number
   providerEpochPoolShareBps: number
   buyerEpochPoolShareBps: number
   challengeBondClaw: string
@@ -108,37 +108,37 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
   devnet: {
     id: 'devnet',
     label: 'Devnet',
-    clusterLabel: 'Solana Devnet',
+    clusterLabel: 'Solana devnet',
     explorerCluster: 'devnet',
     status: 'active',
-    statusText: 'Default public devnet profile',
-    snapshotLabel: 'Devnet snapshot read on 2026-06-13 15:21:35 UTC',
+    statusText: 'Devnet active',
+    snapshotLabel: 'Devnet snapshot read on 2026-06-09',
     tokenSymbol: 'CLAF',
     paymentMintLabel: 'Test USDC',
     programs: {
-      masterpool: '3gaSkyvgHJQxYpHJNxTBqSNrPMvu9fcCpoQkBsMKo3fg',
-      attestation: 'En7rhJSk1VXq7YaNRszGqWos8tz6f9GbpF6qRU83ZeFC',
+      masterpool: 'DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q',
+      attestation: 'BwRMqumgiHbeMhG9xs1a76vUjmprrokr6WsPCzhz3pKK',
     },
     mints: {
-      claw: 'Ez9N4FXcGPB5VpUTPY71dAjSEMbigUosBkaksVQyg1Rk',
-      usdc: 'DuAQqzKYxmxb2XHyMCHwSigSbpowMvhXxjfnU4vkjHrE',
+      claw: 'EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui',
+      usdc: 'Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553',
     },
     accounts: {
-      poolAuthority: '2bBrzVKaz2L2LZmx1yceKRfxbtn4RKv4SmWbBKW1nE3K',
-      masterpoolConfig: 'Gg1Aos3GXR7bWEgUi3eVoAhW9kcWQiA4D643CgvoqRnx',
-      attestationConfig: '9Wmkya3gEzX8eAqgYJqTjEaGJYdwEw7QB78DE87JuGRk',
-      rewardVault: 'vZ4knPgRo2aYK3k3Tc9h3VVvKeQN1syGetPuUdeZr6e',
-      challengeBondVault: '34Yf2fXtBHiRY3CsE8Zowr66NbktHvgYeLZwwCHdiDg3',
-      treasuryUsdcVault: '3VBogLjhkfDv2oLU9YSuDAN8F2oSCY9jamyiSGAxFsJX',
-      providerStakeUsdcVault: 'CzcWMHyA78nAo8nN5Qosi7XfH4xJTMQNybSE7t2JFWYj',
-      providerPendingUsdcVault: '1f6F21ivF3DYivHRz5Zv17E83o98FkWpdAHMdeEduJk',
-      epochCursor: 'C7Fe9jXNUSPGdCaFJatU54ZKu8xPvNePswu4K3UVGX5j',
+      poolAuthority: '5C1XsgA6SX9vfii55138q7yxwFuEssmxcMfWw6FEBYN5',
+      masterpoolConfig: 'B7kijN5oMvrEXc4ihsebG7fWi1DwTPPv3zL2u6WuxMDA',
+      attestationConfig: '5Rta1Vgp68Yr8HQqwFFzC6TZkUqCotqgvjTqF5ZgtEiD',
+      rewardVault: 'FLwt8ouUSaxfEhTEwNZbAP8yYSBy5sbYqV7Lvwz9xh3M',
+      challengeBondVault: '2JTopbYhBeLRzDHXSX5HRLvimURhiQs8n7a2HJoGoh3M',
+      treasuryUsdcVault: '3GCM4JwxDZDDa4wUDAGJ3vUkapAQU6EjSFougXnKjtQn',
+      providerStakeUsdcVault: 'BDGJQXiStxnWgZAXp2jXGvKekQghCY3nWynqMqsxwQzp',
+      providerPendingUsdcVault: 'E4bjKdR1n9n3cqYamgHUcvTGn8tpEoBmAvqb9X2qpcv4',
+      epochCursor: 'A9nrM4fm1T8pLwNaGRixPkmAg1FmKADJk7rPPQeA6d1a',
     },
     config: {
       masterpoolConfigVersion: '2',
       providerStakeUsdc: '100.000000',
-      receiptTaxRateBps: 30,
-      supportedReceiptTaxRateBps: [5, 10, 15, 20, 25, 30],
+      providerUsdcShareBps: 970,
+      treasuryUsdcShareBps: 30,
       providerEpochPoolShareBps: 700,
       buyerEpochPoolShareBps: 300,
       challengeBondClaw: '2.000000',
@@ -157,15 +157,15 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
       claimsPaused: false,
     },
     balances: {
-      rewardVaultClaw: '999999679.002750',
+      rewardVaultClaw: '999899885.946700',
       challengeBondVaultClaw: '0.000000',
-      treasuryUsdc: '1.729261',
-      providerStakeUsdc: '200.000000',
-      providerPendingUsdc: '0.142197',
+      treasuryUsdc: '41.387849',
+      providerStakeUsdc: '300.000000',
+      providerPendingUsdc: '98.994182',
     },
     epochCursor: {
-      latestKnownEpoch: '75',
-      latestFinalizedEpoch: '74',
+      latestKnownEpoch: '522',
+      latestFinalizedEpoch: '521',
       carryForwardClaw: '0.000000',
     },
   },

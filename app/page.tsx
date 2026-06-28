@@ -29,23 +29,23 @@ export default function Home() {
     <main>
       <section className="hero-section">
         <div className="container paper-column">
-          <p className="hero-status">Devnet active . Mainnet Genesis pending . Solana</p>
-          <h1 className="hero-title">Mining inference.</h1>
+          <p className="hero-status">Devnet active . Mainnet pending . Solana</p>
+          <h1 className="hero-title">Receipt settlement for inference.</h1>
           <ProtocolStatusStrip />
           <NetworkBadge />
           <p className="hero-copy">
-            ClawFarm turns paid AI inference into mining weight. Providers contribute capacity, buyers pay in USDC, and CLAF rewards follow finalized contribution.
+            ClawFarm records wallet-paid inference receipts, splits USDC at record time, and turns finalized usage into epoch reward weight.
           </p>
           <div className="hero-role-grid" aria-label="Protocol entry paths">
             <a className="role-entry" href="/providers">
               <span>Providers</span>
               <strong>Register a provider account →</strong>
-              <small>Register a wallet-backed ProviderAccount. Finalized provider usage contributes to Provider Pool mining weight.</small>
+              <small>Register a wallet-backed ProviderAccount. Receipt payments create pending provider USDC until finalization.</small>
             </a>
             <a className="role-entry" href="/builders">
               <span>Developers</span>
               <strong>Start with the SDK →</strong>
-              <small>Prepare compact receipts through wrapper tools. Finalized paid usage contributes to Buyer Pool mining weight.</small>
+              <small>Submit compact receipts through the attestation program. Finalized usage earns buyer-side epoch weight.</small>
             </a>
           </div>
           <p className="tertiary-link">
@@ -56,42 +56,42 @@ export default function Home() {
 
       <section className="section" id="settlement-feed">
         <div className="container">
-          <SectionHeader eyebrow="Settlement" title="Settlement by receipt." />
+          <SectionHeader eyebrow="Settlement" title="Settlement, live." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
-            Receipt tax is booked when a payment is recorded. With taxRateBps: 30, treasury receives 3% of the base charge while the base charge stays pending for the provider until finalization.
+            The provider-selected protocol-fee tier is booked when a receipt payment is recorded. Provider USDC stays pending until the receipt is finalized.
           </p>
         </div>
       </section>
 
       <section className="section" id="mining">
         <div className="container">
-          <SectionHeader eyebrow="Mining" title="Inference becomes mining weight." />
+          <SectionHeader eyebrow="Mining" title="Mining." />
           <p className="section-intro">
-            Paid inference is the contribution event. Current devnet records that contribution through finalized receipt settlement; Genesis mainnet targets the full mining economy around a fixed CLAF cap.
+            Receipts do not pay direct per-call rewards. Finalized receipts activate buyer and provider epoch weight from actual protocol-fee contribution, then permissionless epoch finalization makes rewards claimable into locked streams.
           </p>
           <div className="stat-strip mining-strip">
             <div className="treasury-stat">
-              <span>Provider Pool</span>
+              <span>Provider epoch pool</span>
               <p>70%</p>
             </div>
             <div className="treasury-stat">
-              <span>Buyer Pool</span>
+              <span>Buyer epoch pool</span>
               <p>30%</p>
             </div>
             <div className="treasury-stat">
-              <span>CLAF cap</span>
-              <p>1B</p>
+              <span>Reward lock</span>
+              <p>180 days</p>
             </div>
             <div className="treasury-stat">
-              <span>Current devnet lock</span>
-              <p>180 days</p>
+              <span>Devnet challenge window</span>
+              <p>30 sec</p>
             </div>
           </div>
           <p className="section-footnote wide-footnote">
-            Current devnet realizes mining weight through finalized receipt settlement rather than direct per-call token payouts. Mainnet Genesis timing and full target mechanics remain pending until mainnet config is deployed.
+            The devnet challenge window is intentionally short for testing. Mainnet timing remains pending until mainnet config is deployed.
           </p>
-          <div className="protocol-table-shell burn-table-shell" data-surface-state={miningEventsState}>
+          <div className="protocol-table-shell burn-table-shell" data-live-state={miningEventsState}>
             <table className="protocol-table">
               <thead>
                 <tr>
@@ -159,10 +159,10 @@ export default function Home() {
                   <tr key={model}>
                     <td>{model}</td>
                     <td className="right">
-                      <a className="count-link" href="/state#overview" data-surface-field={`${model}-provider-count`}>{providers}</a>
+                      <a className="count-link" href="/state#overview" data-live-field={`${model}-provider-count`}>{providers}</a>
                     </td>
-                    <td className="right" data-surface-field={`${model}-price`}>{price}</td>
-                    <td className="right" data-surface-field={`${model}-volume`}>{volume}</td>
+                    <td className="right" data-live-field={`${model}-price`}>{price}</td>
+                    <td className="right" data-live-field={`${model}-volume`}>{volume}</td>
                   </tr>
                 ))}
               </tbody>
@@ -205,14 +205,14 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Genesis mainnet target: automated buyback-and-burn closes the cost-subsidy loop. Current devnet records a receipt tax on the base charge when payment is recorded; automated buyback-and-burn is not enabled on devnet.
+            Every recorded receipt applies the provider-selected protocol-fee tier: 0.5% to 3.0%, stepped by 0.5%. Treasury receives the selected fee; provider pending revenue receives the remainder. CLAF reward weight follows the actual USDC fee contributed. The current contract does not expose an automated swap-and-retirement path.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
             <div>Snapshot scope</div>
             <div>Treasury and pending provider vault balances are exposed through the selected network profile.</div>
             <div>Event stream</div>
-            <div>Current devnet exposes no automated buyback-and-burn event stream.</div>
+            <div>No automated swap-and-retirement event stream is exposed by the current contract.</div>
           </div>
           <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the static devnet snapshot. Mainnet remains pending until deployment records exist.</p>
           <p className="table-action">
@@ -238,11 +238,11 @@ export default function Home() {
           <div className="economics-stack">
             <article>
               <h3>Emission</h3>
-              <p>CLAF has a fixed 1B cap. Genesis mainnet targets the complete mining-inference economy; current devnet uses the deployed reward vault and epoch accounting for testing.</p>
+              <p>CLAF emission inventory is minted at Genesis. Epoch rewards are allocated by finalized buyer and provider usage weight.</p>
             </article>
             <article>
               <h3>Settlement</h3>
-              <p>USDC settlement is receipt-based. The base provider charge is held in pending revenue until receipt finalization, while receipt tax is booked to treasury at record time.</p>
+              <p>USDC settlement is receipt-based. The provider-selected fee tier routes a portion to treasury and holds the remainder in pending provider revenue until receipt finalization.</p>
             </article>
             <article>
               <h3>Distribution</h3>
@@ -265,7 +265,7 @@ export default function Home() {
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register a provider account. The protocol does not ask where capacity comes from. Base-charge USDC releases after receipt finalization, and finalized usage contributes to Provider Pool mining weight for CLAF rewards.
+                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAF rewards accrue through finalized epoch weight.
               </p>
               <a href="/providers">Register a provider account →</a>
             </article>
