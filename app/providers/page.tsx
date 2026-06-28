@@ -2,25 +2,25 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Providers — ClawFarm',
-  description: 'Provider registration surface for ClawFarm inference endpoints, compact receipt settlement, pending USDC revenue, and challenger-driven enforcement.',
+  description: 'Provider registration surface for ClawFarm payment recording, epoch settlement roots, pending USDC revenue, and settlement challenge review.',
   alternates: { canonical: '/providers' },
 }
 
-const mechanismBlocks = [
+const mechanismItems = [
   {
-    label: 'COMPACT RECEIPT',
-    title: 'Settlement starts with signed receipt facts.',
-    body: 'Phase 1 records compact receipts that bind payer, provider wallet, metadata hash, token usage, total Test USDC paid, selected protocol-fee tier, and the service epoch. The receipt is the economic source of truth for payment split, challenge timing, and buyer/provider epoch weight.',
+    label: 'PAYMENT RECORD',
+    title: 'Settlement starts with masterpool v3 payment state.',
+    body: 'Masterpool v3 accepts a payment nonce hash and records payment state for payer, provider wallet, base Test USDC charge, configured tax rate, and epoch accounting. Epoch roots become the source of truth for provider and buyer claims.',
   },
   {
     label: 'PENDING USDC',
     title: 'Provider revenue waits for finalization.',
-    body: 'Wallet-paid Test USDC is split at record time by the provider-selected fee tier. Treasury receives 0.5% to 3.0% in 0.5% steps; the remainder moves into the provider-pending vault. Provider-share USDC releases only after the receipt survives the challenge window and finalizes.',
+    body: 'Wallet-paid Test USDC moves in two transfers at record time: tax moves into the treasury vault and base charge moves into the provider-pending vault. Provider USDC releases through provider Merkle claims after epoch settlement finalizes.',
   },
   {
-    label: 'CLAF CHALLENGE',
-    title: 'Challenges use CLAF bonds.',
-    body: 'A challenger posts the configured CLAF bond against a receipt during the challenge window. Rejected challenges burn the bond. Accepted challenges return the bond, refund provider-share USDC to the payer, apply reward-vault transfer and burn economics, and invalidate activated weight when applicable.',
+    label: 'EPOCH CHALLENGE',
+    title: 'Challenges review pending epoch batches.',
+    body: 'Settlement challenges apply to pending epoch batches. Accepted challenges close invalid batches; rejected challenges restore batches so they can finalize after the challenge deadline.',
   },
 ]
 
@@ -32,7 +32,7 @@ export default function ProvidersPage() {
           <p className="hero-status">Providers</p>
           <h1 className="hero-title">Supply inference.</h1>
           <p className="hero-copy">
-            The protocol does not ask who you are or where inference comes from. It asks that each finalized receipt carries auditable economic state.
+            The protocol does not ask who you are or where inference comes from. It asks that wallet-paid usage settles through auditable payment records and finalized epoch roots.
           </p>
         </div>
       </section>
@@ -40,7 +40,7 @@ export default function ProvidersPage() {
       <section className="section">
         <div className="container">
           <div className="supply-grid">
-            {mechanismBlocks.map((block) => (
+            {mechanismItems.map((block) => (
               <article className="supply-layer" key={block.label}>
                 <h3><span>{block.label}</span></h3>
                 <p className="mechanism-title">{block.title}</p>
@@ -55,10 +55,10 @@ export default function ProvidersPage() {
         <div className="container">
           <SectionTitle eyebrow="Register" title="Register a provider wallet." />
           <p className="section-intro">
-            One on-chain record. A wallet, a stake, a status.
+            One on-chain record. A wallet, pending revenue, status, and timestamps.
           </p>
           <p className="section-intro">
-            On-chain registration records the provider wallet, 100 Test USDC stake, and active status. Endpoint, model, pricing, and protocol-fee tier metadata belong to the off-chain gateway or operator directory layer.
+            ProviderAccountV3 records provider wallet, pending provider USDC, status, and timestamps. Current v3 registration has no upfront USDC collateral transfer. Endpoint, model, pricing, and tax metadata belong to the off-chain gateway or operator directory layer.
           </p>
           <div className="dapp-card">
             <div className="field">
@@ -80,8 +80,8 @@ export default function ProvidersPage() {
               </div>
             </div>
             <div className="field">
-              <label htmlFor="fee-tier">Protocol-fee tier</label>
-              <input id="fee-tier" placeholder="0.5% · 1.0% · 1.5% · 2.0% · 2.5% · 3.0%" type="text" />
+              <label htmlFor="tax-rate">Configured tax rate</label>
+              <input id="tax-rate" placeholder="GlobalConfigV3.tax_rate_bps" type="text" />
             </div>
             <div className="field">
               <label htmlFor="wallet">Payout wallet</label>

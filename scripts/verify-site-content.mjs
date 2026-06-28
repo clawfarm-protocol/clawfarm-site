@@ -40,6 +40,13 @@ const publicCopyChecks = [
   { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
   { name: 'old chained SDK receipt submit hides wrapper target', pattern: /\.receipts\(\)[\s\S]{0,400}\.model\(/ },
   { name: 'unframed provider CLI example', pattern: /npx clawfarm provider register/i },
+  { name: 'v2 SubmitReceiptArgs in current public copy', pattern: /\bSubmitReceiptArgs\b/ },
+  { name: 'v2 ReceiptEconomicRecord in current public copy', pattern: /\bReceiptEconomicRecord\b/ },
+  { name: 'v2 attestation submit receipt in current public copy', pattern: /attestation\.submit_receipt/i },
+  { name: 'v2 epoch cursor label in current public copy', pattern: /\bepoch cursor\b/i },
+  { name: 'hard-coded v2 provider stake in current public copy', pattern: /\b100 Test USDC\b/i },
+  { name: 'v2 challenge bond vault in current public copy', pattern: /\bchallenge[- ]bond vault\b/i },
+  { name: 'v2 provider stake vault in current public copy', pattern: /\bprovider[- ]stake vault\b/i },
 ]
 
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')

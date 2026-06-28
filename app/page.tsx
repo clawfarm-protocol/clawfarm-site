@@ -40,12 +40,12 @@ export default function Home() {
             <a className="role-entry" href="/providers">
               <span>Providers</span>
               <strong>Register a provider account →</strong>
-              <small>Register a wallet-backed ProviderAccount. Receipt payments create pending provider USDC until finalization.</small>
+              <small>Register a wallet-backed ProviderAccount. Provider USDC releases after epoch settlement finalizes and the provider claim verifies against the finalized root.</small>
             </a>
             <a className="role-entry" href="/builders">
               <span>Developers</span>
               <strong>Start with the SDK →</strong>
-              <small>Submit compact receipts through the attestation program. Finalized usage earns buyer-side epoch weight.</small>
+              <small>Record payments through masterpool v3. Finalized epoch roots carry buyer-side reward allocations.</small>
             </a>
           </div>
           <p className="tertiary-link">
@@ -59,7 +59,7 @@ export default function Home() {
           <SectionHeader eyebrow="Settlement" title="Settlement, live." />
           <SettlementFeed state="loading" />
           <p className="section-footnote wide-footnote">
-            The provider-selected protocol-fee tier is booked when a receipt payment is recorded. Provider USDC stays pending until the receipt is finalized.
+            Current technical implementation records payments through masterpool v3 and settles ended epochs through aggregate roots and Merkle claims.
           </p>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Mining" title="Mining." />
           <p className="section-intro">
-            Receipts do not pay direct per-call rewards. Finalized receipts activate buyer and provider epoch weight from actual protocol-fee contribution, then permissionless epoch finalization makes rewards claimable into locked streams.
+            Receipts do not pay direct per-call rewards. Finalized epoch roots carry buyer and provider allocations, and Merkle claims transfer CLAF directly from the reward vault.
           </p>
           <div className="stat-strip mining-strip">
             <div className="treasury-stat">
@@ -80,12 +80,12 @@ export default function Home() {
               <p>30%</p>
             </div>
             <div className="treasury-stat">
-              <span>Reward lock</span>
-              <p>180 days</p>
+              <span>Reward claims</span>
+              <p>Direct</p>
             </div>
             <div className="treasury-stat">
               <span>Devnet challenge window</span>
-              <p>30 sec</p>
+              <p>60 sec</p>
             </div>
           </div>
           <p className="section-footnote wide-footnote">
@@ -179,13 +179,13 @@ export default function Home() {
           <SectionHeader eyebrow="Supply" title="Identity-blind supply." />
           <div className="supply-grid">
             <SupplyLayer label="Wallet" title="Provider account">
-              Registration is address-based. The ProviderAccount records wallet, stake, pending revenue, counters, and status.
+              Registration is address-based. ProviderAccountV3 records provider wallet, pending provider USDC, status, and timestamps. Current v3 registration has no upfront USDC collateral transfer.
             </SupplyLayer>
             <SupplyLayer label="Directory" title="Off-chain metadata">
               Endpoint, model, price, quality, and limits belong to app, gateway, or operator-directory metadata.
             </SupplyLayer>
-            <SupplyLayer label="Proof" title="Compact receipt">
-              Settlement requires a configured signer over the compact receipt hash plus delegated payer USDC authority.
+            <SupplyLayer label="Proof" title="Settlement proofs">
+              Payment recording uses delegated payer USDC authority; finalized settlement roots verify provider and buyer Merkle proofs.
             </SupplyLayer>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Every recorded receipt applies the provider-selected protocol-fee tier: 0.5% to 3.0%, stepped by 0.5%. Treasury receives the selected fee; provider pending revenue receives the remainder. CLAF reward weight follows the actual USDC fee contributed. The current contract does not expose an automated swap-and-retirement path.
+            Every recorded payment uses the configured GlobalConfigV3 tax rate. Treasury receives the computed tax; provider pending revenue receives the base charge. CLAF reward allocations are settled through finalized epoch roots. The current contract does not expose an automated swap-and-retirement path.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
@@ -242,11 +242,11 @@ export default function Home() {
             </article>
             <article>
               <h3>Settlement</h3>
-              <p>USDC settlement is receipt-based. The provider-selected fee tier routes a portion to treasury and holds the remainder in pending provider revenue until receipt finalization.</p>
+              <p>USDC settlement is epoch-root based. The configured tax rate routes tax to treasury, records base charge as pending provider revenue, and releases provider USDC through finalized root claims.</p>
             </article>
             <article>
               <h3>Distribution</h3>
-              <p>Reward claims create locked streams. Owners withdraw vested CLAF over the configured lock period.</p>
+              <p>Reward claims transfer CLAF directly from the reward vault to provider or buyer token accounts.</p>
             </article>
           </div>
         </div>
@@ -258,14 +258,14 @@ export default function Home() {
             <article className="action-column">
               <h2>For developers.</h2>
               <p>
-                Add settlement to your AI app or agent. Same compatible interface, three lines to switch in. Settlement is metered per request — no minimums, no setup fees, no SDK lock-in.
+                Add settlement to your AI app or agent. Same compatible interface, three lines to switch in. Settlement is metered per request — no minimums, no setup fees, and portable SDK wrappers.
               </p>
               <a href="/builders">Start with the SDK →</a>
             </article>
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register a provider account. The protocol does not ask where capacity comes from. Provider-share USDC releases after receipt finalization, and CLAF rewards accrue through finalized epoch weight.
+                Register a provider account. The protocol does not ask where capacity comes from. Provider USDC releases after epoch settlement finalizes and the provider claim verifies against the finalized root. CLAF rewards accrue through finalized epoch weight.
               </p>
               <a href="/providers">Register a provider account →</a>
             </article>

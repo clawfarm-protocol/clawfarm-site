@@ -30,11 +30,11 @@ export default function BuildersPage() {
             </article>
             <article className="border-panel">
               <h3>Epoch pool weight</h3>
-              <p>Finalized receipts add buyer-side weight to the epoch pool. Buyer rewards are claimed from finalized epoch accounting and stream as locked CLAF.</p>
+              <p>Finalized epoch roots carry buyer-side CLAF allocations. Buyer rewards are claimed through Merkle proofs against the finalized root.</p>
             </article>
             <article className="border-panel">
               <h3>Economic record</h3>
-              <p>Each submitted receipt creates an economic record with Test USDC split snapshots, challenge timing, and buyer/provider weight. Provider-share USDC remains pending until finalization.</p>
+              <p>Each recorded payment updates epoch totals and a payment bitmap. Provider base-charge USDC remains pending until epoch settlement finalizes and provider claims verify against the root.</p>
             </article>
           </div>
         </div>
@@ -74,7 +74,7 @@ export default function BuildersPage() {
           <div className="dapp-card narrow">
             <span className="card-label">Payment allowance</span>
             <p className="balance-value">Not connected</p>
-            <p className="card-meta">Receipt payment uses configured payer token accounts and delegated transfer authority in the attestation flow.</p>
+            <p className="card-meta">Payment recording uses configured payer token accounts and delegated transfer authority in masterpool v3.</p>
             <div className="dapp-actions">
               <button className="btn primary" disabled type="button">Connect wallet</button>
               <a className="btn ghost" href="/docs#receipt-lifecycle">Read receipt docs</a>

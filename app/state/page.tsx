@@ -16,7 +16,7 @@ export default function StatePage() {
           <p className="hero-status">State</p>
           <h1 className="hero-title">Protocol dashboard.</h1>
           <p className="hero-copy">
-            Program addresses, vault balances, pause flags, epoch cursor, and Phase 1 economic parameters from the selected network profile.
+            Program addresses, vault balances, pause flags, epoch settlement state, and current economic parameters from the selected network profile.
           </p>
           <NetworkBadge />
         </div>
@@ -33,14 +33,14 @@ export default function StatePage() {
         <div className="container">
           <SectionTitle eyebrow="Receipts" title="Receipt lifecycle." />
           <div className="key-list">
-            <div>Submit</div>
-            <div>Attestation validates a compact receipt and CPIs into masterpool to record payment.</div>
             <div>Record</div>
-            <div>Masterpool splits USDC and snapshots buyer/provider epoch weight.</div>
-            <div>Finalize</div>
-            <div>After the challenge window, receipt finalization activates the stored epoch weight and releases provider pending USDC.</div>
+            <div>Masterpool v3 records base charge, tax, payer delegate authority, provider account, epoch totals, and payment bitmap state.</div>
+            <div>Commit</div>
+            <div>After an epoch ends, aggregate totals and usage/provider/buyer roots are committed into an EpochSettlementBatch.</div>
+            <div>Challenge</div>
+            <div>Pending settlement batches can be challenged before finalization; accepted challenges close invalid batches and rejected challenges restore pending status.</div>
             <div>Claim</div>
-            <div>After epoch finalization, participants claim locked reward streams and withdraw vested CLAF.</div>
+            <div>Finalized EpochSettlementRoot accounts release provider USDC and provider or buyer CLAF through Merkle proof claims.</div>
           </div>
         </div>
       </section>
