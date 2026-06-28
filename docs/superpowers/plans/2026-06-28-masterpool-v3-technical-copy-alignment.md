@@ -743,7 +743,7 @@ python3 - <<'PY'
 from pathlib import Path
 home_markers = ['/' + 'Users' + '/', '/' + 'home' + '/', '/' + 'root' + '/']
 rpc_markers = ['api' + '-key=', 'helius' + '-rpc']
-signing_markers = ['PRIVATE' + ' KEY', 'seed' + ' phrase', 'mnemonic']
+signing_markers = ['private' + ' ' + 'key', 'seed' + ' ' + 'phrase', 'mne' + 'monic']
 patterns = [
     ('Chinese text', lambda text: any('\u4e00' <= char <= '\u9fff' for char in text)),
     ('local home path', lambda text: any(marker in text for marker in home_markers)),
