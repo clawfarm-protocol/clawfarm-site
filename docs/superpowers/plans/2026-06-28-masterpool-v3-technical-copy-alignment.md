@@ -47,7 +47,7 @@
 - Read: `../clawfarm-masterpool/programs/clawfarm-masterpool-v3/src/instructions/provider.rs`
 - Read: `../clawfarm-masterpool/programs/clawfarm-masterpool-v3/src/instructions/config.rs`
 
-- [ ] **Step 1: Confirm worktree state**
+- [x] **Step 1: Confirm worktree state**
 
 Run:
 
@@ -56,9 +56,9 @@ git status --short --branch
 git -C ../clawfarm-masterpool status --short --branch
 ```
 
-Expected: site branch is `develop` with no uncommitted site changes except this plan if executing immediately after plan creation. Contract branch may be ahead of its remote, but it must not have uncommitted files that make source inspection ambiguous.
+Expected: site branch is an isolated implementation branch such as `codex/masterpool-v3-technical-copy`, with no uncommitted site changes. Contract branch may be ahead of its remote, but it must not have uncommitted files that make source inspection ambiguous.
 
-- [ ] **Step 2: Inspect v3 instruction and account names**
+- [x] **Step 2: Inspect v3 instruction and account names**
 
 Run:
 
@@ -77,7 +77,7 @@ Accounts: GlobalConfigV3, ProviderAccountV3, EpochPaymentAccumulator, EpochPayme
 Args: RecordPaymentV3Args, CommitEpochSettlementV3Args, OpenEpochSettlementChallengeV3Args, ClaimProviderEpochV3Args, ClaimBuyerEpochRewardV3Args.
 ```
 
-- [ ] **Step 3: Inspect v3 payment, settlement, and claim semantics**
+- [x] **Step 3: Inspect v3 payment, settlement, and claim semantics**
 
 Run:
 
@@ -100,7 +100,7 @@ finalize_epoch_settlement_v3 creates EpochSettlementRoot after the challenge dea
 claim_provider_epoch_v3 and claim_buyer_epoch_reward_v3 verify Merkle proofs and mark EpochClaimBitmap entries.
 ```
 
-- [ ] **Step 4: Run baseline verification**
+- [x] **Step 4: Run baseline verification**
 
 Run:
 
@@ -116,7 +116,7 @@ Expected: both pass before implementation begins. If they fail, record the exact
 **Files:**
 - Modify: `scripts/verify-site-content.mjs`
 
-- [ ] **Step 1: Add v3 guard patterns**
+- [x] **Step 1: Add v3 guard patterns**
 
 In `scripts/verify-site-content.mjs`, add these checks to `publicCopyChecks` after the existing provider CLI guard and before any broad stale-language guards:
 
@@ -132,7 +132,7 @@ In `scripts/verify-site-content.mjs`, add these checks to `publicCopyChecks` aft
 
 Do not add `scripts/generate-whitepaper-v1.py` or `docs/superpowers/plans` to `sourceRoots`.
 
-- [ ] **Step 2: Run guard to confirm it fails before copy alignment**
+- [x] **Step 2: Run guard to confirm it fails before copy alignment**
 
 Run:
 
@@ -160,7 +160,7 @@ This failure is expected and proves the guard catches current stale public copy.
 - Modify: `app/docs/page.tsx`
 - Test: `scripts/verify-site-content.mjs`
 
-- [ ] **Step 1: Replace the quickstart paragraph**
+- [x] **Step 1: Replace the quickstart paragraph**
 
 In `app/docs/page.tsx`, replace the first paragraph under `<section id="quickstart">` with:
 
@@ -170,7 +170,7 @@ In `app/docs/page.tsx`, replace the first paragraph under `<section id="quicksta
 </p>
 ```
 
-- [ ] **Step 2: Replace the SDK wrapper target intro**
+- [x] **Step 2: Replace the SDK wrapper target intro**
 
 Replace the paragraph under `<section id="sdk-wrapper-target">` with:
 
@@ -180,7 +180,7 @@ Replace the paragraph under `<section id="sdk-wrapper-target">` with:
 </p>
 ```
 
-- [ ] **Step 3: Replace TypeScript SDK example**
+- [x] **Step 3: Replace TypeScript SDK example**
 
 Replace the TypeScript code block in `app/docs/page.tsx` with:
 
@@ -217,7 +217,7 @@ const claim = await cf.epochs.claimBuyerReward({
 })`}</code></pre>
 ```
 
-- [ ] **Step 4: Replace Python SDK example**
+- [x] **Step 4: Replace Python SDK example**
 
 Replace the Python code block in `app/docs/page.tsx` with:
 
@@ -254,7 +254,7 @@ claim = cf.epochs.claim_buyer_reward(
 )`}</code></pre>
 ```
 
-- [ ] **Step 5: Replace Rust SDK example**
+- [x] **Step 5: Replace Rust SDK example**
 
 Replace the Rust code block in `app/docs/page.tsx` with:
 
@@ -294,7 +294,7 @@ let claim = cf.epochs().claim_buyer_reward()
     .await?;`}</code></pre>
 ```
 
-- [ ] **Step 6: Replace current contract shape section**
+- [x] **Step 6: Replace current contract shape section**
 
 Replace the body of `<section id="current-contract-shape">` with this content:
 
@@ -317,7 +317,7 @@ Replace the body of `<section id="current-contract-shape">` with this content:
 </div>
 ```
 
-- [ ] **Step 7: Replace gateway wrapper example**
+- [x] **Step 7: Replace gateway wrapper example**
 
 In `<section id="gateway-wrapper-target">`, replace the paragraph and JSON code block with:
 
@@ -344,7 +344,7 @@ In `<section id="gateway-wrapper-target">`, replace the paragraph and JSON code 
 </p>
 ```
 
-- [ ] **Step 8: Replace protocol architecture and smart contract text**
+- [x] **Step 8: Replace protocol architecture and smart contract text**
 
 Replace the architecture code block in `<section id="protocol">` with:
 
@@ -377,7 +377,7 @@ Replace the smart contracts key-list entries with:
 </div>
 ```
 
-- [ ] **Step 9: Replace lifecycle code block**
+- [x] **Step 9: Replace lifecycle code block**
 
 Replace the receipt lifecycle code block with:
 
@@ -392,7 +392,7 @@ Replace the receipt lifecycle code block with:
 8. Providers and buyers claim USDC or CLAF with Merkle proofs against the finalized root.`}</code></pre>
 ```
 
-- [ ] **Step 10: Replace economics and challenge technical text**
+- [x] **Step 10: Replace economics and challenge technical text**
 
 In the Phase 1 economics key-list, replace the entries with:
 
@@ -426,7 +426,7 @@ In the challenges key-list, replace the entries with:
 </div>
 ```
 
-- [ ] **Step 11: Replace devnet parameters technical list**
+- [x] **Step 11: Replace devnet parameters technical list**
 
 In the Devnet parameters key-list, remove hard-coded v2 program IDs and account names from the docs page and replace that list with:
 
@@ -441,7 +441,7 @@ In the Devnet parameters key-list, remove hard-coded v2 program IDs and account 
 </div>
 ```
 
-- [ ] **Step 12: Replace reproducibility command**
+- [x] **Step 12: Replace reproducibility command**
 
 Replace the devnet state check command with:
 
@@ -451,7 +451,7 @@ Replace the devnet state check command with:
 
 Keep the contract build code block unchanged.
 
-- [ ] **Step 13: Run docs-focused stale term scan**
+- [x] **Step 13: Run docs-focused stale term scan**
 
 Run:
 
@@ -471,7 +471,7 @@ Expected: no output.
 - Modify: `app/state/page.tsx`
 - Modify: `README.md`
 
-- [ ] **Step 1: Update builder page stale technical copy**
+- [x] **Step 1: Update builder page stale technical copy**
 
 In `app/builders/page.tsx`, replace these paragraphs exactly where they appear:
 
@@ -509,7 +509,7 @@ with:
 <p className="card-meta">Payment recording uses configured payer token accounts and delegated transfer authority in masterpool v3.</p>
 ```
 
-- [ ] **Step 2: Update providers page technical cards**
+- [x] **Step 2: Update providers page technical cards**
 
 In `app/providers/page.tsx`, update the `providerCards` bodies to:
 
@@ -525,7 +525,7 @@ body: 'Wallet-paid Test USDC moves in two transfers at record time: tax moves in
 body: 'Settlement challenges apply to pending epoch batches. Accepted challenges close invalid batches; rejected challenges restore batches so they can finalize after the challenge deadline.',
 ```
 
-- [ ] **Step 3: Update install page v3 wording**
+- [x] **Step 3: Update install page v3 wording**
 
 In `app/install/page.tsx`, replace the hero copy paragraph with:
 
@@ -550,7 +550,7 @@ Replace the receive step paragraph with:
 </p>
 ```
 
-- [ ] **Step 4: Update home page technical sentences**
+- [x] **Step 4: Update home page technical sentences**
 
 In `app/page.tsx`, replace any sentence that says provider USDC releases directly after receipt finalization with:
 
@@ -566,7 +566,7 @@ Current technical implementation records payments through masterpool v3 and sett
 
 Do not change high-level Mining inference, Genesis target, buyback-and-burn target, or CLAF cap language.
 
-- [ ] **Step 5: Update state page lifecycle wording**
+- [x] **Step 5: Update state page lifecycle wording**
 
 In `app/state/page.tsx`, replace the `key-list` under receipt lifecycle with:
 
@@ -583,7 +583,7 @@ In `app/state/page.tsx`, replace the `key-list` under receipt lifecycle with:
 </div>
 ```
 
-- [ ] **Step 6: Update README implementation summary**
+- [x] **Step 6: Update README implementation summary**
 
 In `README.md`, replace the current devnet model bullet list with:
 
@@ -599,7 +599,7 @@ In `README.md`, replace the current devnet model bullet list with:
 
 Keep the README title, high-level description, site structure, development, verification, deploy, and community sections unchanged.
 
-- [ ] **Step 7: Run public copy stale term scan**
+- [x] **Step 7: Run public copy stale term scan**
 
 Run:
 
@@ -615,7 +615,7 @@ Expected: no output.
 - Modify: `app/components/ProtocolNetworkPanels.tsx`
 - Modify: `app/components/SettlementFeed.tsx`
 
-- [ ] **Step 1: Rename current status strip epoch label**
+- [x] **Step 1: Rename current status strip epoch label**
 
 In `app/components/ProtocolNetworkPanels.tsx`, replace:
 
@@ -629,7 +629,7 @@ with:
 <span>Snapshot epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
 ```
 
-- [ ] **Step 2: Rename activity row labels**
+- [x] **Step 2: Rename activity row labels**
 
 In `app/components/ProtocolNetworkPanels.tsx`, replace:
 
@@ -647,7 +647,7 @@ with:
 
 Also replace the same `Latest known epoch` and `Latest finalized epoch` labels in the `overview` metric list with `Snapshot epoch` and `Snapshot finalized epoch`.
 
-- [ ] **Step 3: Rename v2-only vault labels**
+- [x] **Step 3: Rename v2-only vault labels**
 
 In `app/components/ProtocolNetworkPanels.tsx`, replace the address row labels:
 
@@ -665,7 +665,7 @@ with:
 { label: 'Legacy epoch account', address: profile.accounts.epochCursor },
 ```
 
-- [ ] **Step 4: Rename treasury snapshot challenge label**
+- [x] **Step 4: Rename treasury snapshot challenge label**
 
 In `TreasurySnapshot`, replace:
 
@@ -679,7 +679,7 @@ with:
 { label: 'Legacy challenge balance', value: balances ? `${balances.challengeBondVaultClaw} ${profile.tokenSymbol}` : '-' },
 ```
 
-- [ ] **Step 5: Ensure settlement table uses v3-neutral labels**
+- [x] **Step 5: Ensure settlement table uses v3-neutral labels**
 
 In `app/components/SettlementFeed.tsx`, if the row type still uses `providerSplit` and `protocolSplit`, rename fields to `baseCharge` and `protocolTax`, and replace table headers with:
 
@@ -690,7 +690,7 @@ In `app/components/SettlementFeed.tsx`, if the row type still uses `providerSpli
 
 If the component already uses equivalent base-charge and receipt-tax labels, keep its behavior unchanged.
 
-- [ ] **Step 6: Confirm protocol data file is unchanged**
+- [x] **Step 6: Confirm protocol data file is unchanged**
 
 Run:
 
@@ -714,7 +714,7 @@ Expected: no output.
 - Modify: `app/components/SettlementFeed.tsx` if needed
 - Modify: `README.md`
 
-- [ ] **Step 1: Run required content guard**
+- [x] **Step 1: Run required content guard**
 
 Run:
 
@@ -724,7 +724,7 @@ npm run verify:site
 
 Expected: PASS.
 
-- [ ] **Step 2: Run stale v2 public-copy scan**
+- [x] **Step 2: Run stale v2 public-copy scan**
 
 Run:
 
@@ -734,7 +734,7 @@ rg -n "SubmitReceiptArgs|ReceiptEconomicRecord|attestation\.submit_receipt|epoch
 
 Expected: no output.
 
-- [ ] **Step 3: Run safety scan**
+- [x] **Step 3: Run safety scan**
 
 Run:
 
@@ -772,7 +772,7 @@ Expected:
 safety scan passed
 ```
 
-- [ ] **Step 4: Run TypeScript and production build**
+- [x] **Step 4: Run TypeScript and production build**
 
 Run:
 
@@ -783,7 +783,7 @@ npm run build
 
 Expected: both commands exit 0.
 
-- [ ] **Step 5: Confirm excluded files are untouched**
+- [x] **Step 5: Confirm excluded files are untouched**
 
 Run:
 
@@ -793,7 +793,7 @@ git diff --name-only -- app/lib/protocol.ts app/whitepaper/page.tsx scripts/gene
 
 Expected: no output.
 
-- [ ] **Step 6: Review final diff**
+- [x] **Step 6: Review final diff**
 
 Run:
 
@@ -804,7 +804,7 @@ git diff -- app README.md scripts/verify-site-content.mjs
 
 Expected: diff only contains technical copy, neutral snapshot labels, and verification guard changes. It must not include whitepaper edits, network data edits, RPC URLs, private operator data, or faucet instructions.
 
-- [ ] **Step 7: Commit implementation**
+- [x] **Step 7: Commit implementation**
 
 Run:
 

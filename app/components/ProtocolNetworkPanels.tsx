@@ -80,7 +80,7 @@ export function ProtocolStatusStrip() {
     <div className="live-status-strip" aria-label="Protocol status">
       <span className="status-dot" aria-hidden="true" />
       <span>{profile.statusText}</span>
-      <span>Epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
+      <span>Snapshot epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
       <span>Genesis minted: <data>{config ? formatBoolean(config.genesisMinted) : '-'}</data></span>
     </div>
   )
@@ -125,8 +125,8 @@ export function HomeProtocolState() {
   ]
 
   const activityRows: Metric[] = [
-    { label: 'Latest known epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
-    { label: 'Latest finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
+    { label: 'Snapshot epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
+    { label: 'Snapshot finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
     { label: 'Treasury vault', value: profile.balances ? `${profile.balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: profile.balances ? `${profile.balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
   ]
@@ -167,7 +167,7 @@ export function TreasurySnapshot() {
     { label: 'Treasury share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: balances ? `${balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Challenge bond vault', value: balances ? `${balances.challengeBondVaultClaw} ${profile.tokenSymbol}` : '-' },
+    { label: 'Legacy challenge balance', value: balances ? `${balances.challengeBondVaultClaw} ${profile.tokenSymbol}` : '-' },
   ]
 
   return <MetricGrid items={items} />
@@ -184,11 +184,11 @@ export function StateDashboard() {
     { label: 'Deployment', value: profile.statusText },
     { label: 'Masterpool', value: profile.programs.masterpool ? shortAddress(profile.programs.masterpool) : '-' },
     { label: 'Attestation', value: profile.programs.attestation ? shortAddress(profile.programs.attestation) : '-' },
-    { label: 'Latest known epoch', value: formatPending(epoch?.latestKnownEpoch) },
-    { label: 'Latest finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
+    { label: 'Snapshot epoch', value: formatPending(epoch?.latestKnownEpoch) },
+    { label: 'Snapshot finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
     { label: 'Reward vault', value: balances ? `${balances.rewardVaultClaw} ${profile.tokenSymbol}` : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Provider stake vault', value: balances ? `${balances.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
+    { label: 'Legacy stake balance', value: balances ? `${balances.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: balances ? `${balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Receipt recording paused', value: config ? formatBoolean(config.receiptRecordingPaused) : '-' },
     { label: 'Claims paused', value: config ? formatBoolean(config.claimsPaused) : '-' },
@@ -226,11 +226,11 @@ export function NetworkAddressSurface() {
     { label: 'Masterpool config', address: profile.accounts.masterpoolConfig },
     { label: 'Attestation config', address: profile.accounts.attestationConfig },
     { label: 'Reward vault', address: profile.accounts.rewardVault },
-    { label: 'Challenge bond vault', address: profile.accounts.challengeBondVault },
+    { label: 'Legacy challenge account', address: profile.accounts.challengeBondVault },
     { label: 'Treasury USDC vault', address: profile.accounts.treasuryUsdcVault },
-    { label: 'Provider stake USDC vault', address: profile.accounts.providerStakeUsdcVault },
+    { label: 'Legacy stake account', address: profile.accounts.providerStakeUsdcVault },
     { label: 'Provider pending USDC vault', address: profile.accounts.providerPendingUsdcVault },
-    { label: 'Epoch cursor', address: profile.accounts.epochCursor },
+    { label: 'Legacy epoch account', address: profile.accounts.epochCursor },
   ]
 
   return (
