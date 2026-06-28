@@ -56,7 +56,7 @@ git status --short --branch
 git -C ../clawfarm-masterpool status --short --branch
 ```
 
-Expected: site branch is `develop` with no uncommitted site changes except this plan if executing immediately after plan creation. Contract branch may be ahead of its remote, but it must not have uncommitted files that make source inspection ambiguous.
+Expected: site branch is an isolated implementation branch such as `codex/masterpool-v3-technical-copy`, with no uncommitted site changes. Contract branch may be ahead of its remote, but it must not have uncommitted files that make source inspection ambiguous.
 
 - [ ] **Step 2: Inspect v3 instruction and account names**
 
