@@ -58,7 +58,7 @@ export default function ProvidersPage() {
             One on-chain record. A wallet, pending revenue, status, and timestamps.
           </p>
           <p className="section-intro">
-            ProviderAccountV3 records provider wallet, pending provider USDC, status, and timestamps. Current v3 registration has no upfront USDC collateral transfer. Endpoint, model, pricing, and tax metadata belong to the off-chain gateway or operator directory layer.
+            Current devnet v3 registration creates a ProviderAccountV3 without transferring upfront provider stake. The mainnet target may reintroduce provider bond economics as part of the launch policy, but devnet v3 should be read as a zero-stake testing deployment. Endpoint, model, pricing, and tax metadata belong to the off-chain gateway or operator directory layer.
           </p>
           <div className="dapp-card">
             <div className="field">

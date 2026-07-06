@@ -4,7 +4,6 @@ import {
   explorerAddressUrl,
   formatBoolean,
   formatBps,
-  formatPending,
   shortAddress,
   type NetworkProfile,
 } from '../lib/protocol'
@@ -74,14 +73,13 @@ export function NetworkBadge() {
 export function ProtocolStatusStrip() {
   const { profile } = useNetwork()
   const config = profile.config
-  const epoch = profile.epochCursor
 
   return (
     <div className="live-status-strip" aria-label="Protocol status">
       <span className="status-dot" aria-hidden="true" />
       <span>{profile.statusText}</span>
-      <span>Snapshot epoch: <data>{epoch?.latestKnownEpoch ?? '-'}</data></span>
-      <span>Genesis minted: <data>{config ? formatBoolean(config.genesisMinted) : '-'}</data></span>
+      <span>Devnet epoch: <data>{config ? formatDurationSeconds(config.epochDurationSeconds) : '-'}</data></span>
+      <span>Target epoch: <data>{config ? formatDurationSeconds(config.mainnetTargetEpochSeconds) : '-'}</data></span>
     </div>
   )
 }
@@ -91,14 +89,14 @@ export function ProtocolNumberWall() {
   const config = profile.config
   const items: Metric[] = config
     ? [
-        { label: `${profile.tokenSymbol} total supply`, value: formatTotalSupply(config.emissionTotalClaw) },
-        { label: 'Provider USDC share', value: formatBps(config.providerUsdcShareBps) },
-        { label: 'Treasury USDC share', value: formatBps(config.treasuryUsdcShareBps) },
-        { label: 'Epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
+        { label: `${profile.tokenSymbol} total supply`, value: formatTotalSupply(config.emissionTotalClaf) },
+        { label: 'Payment tax cap', value: formatBps(config.taxRateBps) },
+        { label: 'Provider reward pool', value: formatBps(config.providerEpochPoolShareBps) },
+        { label: 'Devnet epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
       ]
     : [
         { label: 'Deployment status', value: 'Pending' },
-        { label: 'Program IDs', value: '-' },
+        { label: 'Program ID', value: '-' },
         { label: 'Config', value: '-' },
         { label: 'Snapshot', value: '-' },
       ]
@@ -117,16 +115,17 @@ export function ProtocolNumberWall() {
 
 export function HomeProtocolState() {
   const { profile } = useNetwork()
+  const config = profile.config
   const networkRows: AddressRow[] = [
-    { label: 'Masterpool program', address: profile.programs.masterpool },
-    { label: 'Attestation program', address: profile.programs.attestation },
-    { label: `${profile.tokenSymbol} mint`, address: profile.mints.claw },
+    { label: 'Masterpool v3 program', address: profile.programs.masterpoolV3 },
+    { label: `${profile.tokenSymbol} mint`, address: profile.mints.claf },
     { label: profile.paymentMintLabel, address: profile.mints.usdc },
+    { label: 'Masterpool v3 config', address: profile.accounts.masterpoolConfig },
   ]
 
   const activityRows: Metric[] = [
-    { label: 'Snapshot epoch', value: formatPending(profile.epochCursor?.latestKnownEpoch) },
-    { label: 'Snapshot finalized epoch', value: formatPending(profile.epochCursor?.latestFinalizedEpoch) },
+    { label: 'Devnet epoch duration', value: config ? formatDurationSeconds(config.epochDurationSeconds) : '-' },
+    { label: 'Target epoch duration', value: config ? formatDurationSeconds(config.mainnetTargetEpochSeconds) : '-' },
     { label: 'Treasury vault', value: profile.balances ? `${profile.balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: profile.balances ? `${profile.balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
   ]
@@ -164,10 +163,10 @@ export function TreasurySnapshot() {
   const config = profile.config
   const balances = profile.balances
   const items: Metric[] = [
-    { label: 'Treasury share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
+    { label: 'Payment tax cap', value: config ? formatBps(config.taxRateBps) : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: balances ? `${balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Legacy challenge balance', value: balances ? `${balances.challengeBondVaultClaw} ${profile.tokenSymbol}` : '-' },
+    { label: 'Target treasury policy', value: 'Whitepaper' },
   ]
 
   return <MetricGrid items={items} />
@@ -177,32 +176,29 @@ export function StateDashboard() {
   const { profile } = useNetwork()
   const config = profile.config
   const balances = profile.balances
-  const epoch = profile.epochCursor
 
   const overview: Metric[] = [
     { label: 'Network', value: profile.clusterLabel },
     { label: 'Deployment', value: profile.statusText },
-    { label: 'Masterpool', value: profile.programs.masterpool ? shortAddress(profile.programs.masterpool) : '-' },
-    { label: 'Attestation', value: profile.programs.attestation ? shortAddress(profile.programs.attestation) : '-' },
-    { label: 'Snapshot epoch', value: formatPending(epoch?.latestKnownEpoch) },
-    { label: 'Snapshot finalized epoch', value: formatPending(epoch?.latestFinalizedEpoch) },
-    { label: 'Reward vault', value: balances ? `${balances.rewardVaultClaw} ${profile.tokenSymbol}` : '-' },
+    { label: 'Masterpool v3', value: profile.programs.masterpoolV3 ? shortAddress(profile.programs.masterpoolV3) : '-' },
+    { label: 'Config', value: profile.accounts.masterpoolConfig ? shortAddress(profile.accounts.masterpoolConfig) : '-' },
+    { label: 'Reward vault', value: balances ? `${balances.rewardVaultClaf} ${profile.tokenSymbol}` : '-' },
     { label: 'Treasury vault', value: balances ? `${balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Legacy stake balance', value: balances ? `${balances.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: balances ? `${balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Receipt recording paused', value: config ? formatBoolean(config.receiptRecordingPaused) : '-' },
+    { label: 'Payment recording paused', value: config ? formatBoolean(config.paymentRecordingPaused) : '-' },
+    { label: 'Settlement paused', value: config ? formatBoolean(config.settlementPaused) : '-' },
     { label: 'Claims paused', value: config ? formatBoolean(config.claimsPaused) : '-' },
   ]
 
   const economics: Metric[] = [
-    { label: 'Provider stake', value: config ? `${config.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
-    { label: 'Provider USDC share', value: config ? formatBps(config.providerUsdcShareBps) : '-' },
-    { label: 'Treasury USDC share', value: config ? formatBps(config.treasuryUsdcShareBps) : '-' },
+    { label: 'Provider stake transfer', value: config ? `${config.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
+    { label: 'Payment tax cap', value: config ? formatBps(config.taxRateBps) : '-' },
     { label: 'Provider reward pool', value: config ? formatBps(config.providerEpochPoolShareBps) : '-' },
     { label: 'Buyer reward pool', value: config ? formatBps(config.buyerEpochPoolShareBps) : '-' },
-    { label: 'Challenge bond', value: config ? `${config.challengeBondClaw} ${profile.tokenSymbol}` : '-' },
-    { label: 'Provider slash', value: config ? `${config.providerSlashClaw} ${profile.tokenSymbol}` : '-' },
-    { label: 'Reward lock', value: config ? `${config.lockDays} days` : '-' },
+    { label: 'Devnet epoch duration', value: config ? formatDurationSeconds(config.epochDurationSeconds) : '-' },
+    { label: 'Target epoch duration', value: config ? formatDurationSeconds(config.mainnetTargetEpochSeconds) : '-' },
+    { label: 'Challenge window', value: config ? formatDurationSeconds(config.challengeWindowSeconds) : '-' },
+    { label: 'Emission duration', value: config ? formatDurationSeconds(config.emissionDurationSeconds) : '-' },
   ]
 
   return (
@@ -218,19 +214,14 @@ export function StateDashboard() {
 export function NetworkAddressSurface() {
   const { profile } = useNetwork()
   const addressRows: AddressRow[] = [
-    { label: 'Masterpool program', address: profile.programs.masterpool },
-    { label: 'Attestation program', address: profile.programs.attestation },
-    { label: `${profile.tokenSymbol} mint`, address: profile.mints.claw },
+    { label: 'Masterpool v3 program', address: profile.programs.masterpoolV3 },
+    { label: `${profile.tokenSymbol} mint`, address: profile.mints.claf },
     { label: profile.paymentMintLabel, address: profile.mints.usdc },
     { label: 'Pool authority', address: profile.accounts.poolAuthority },
-    { label: 'Masterpool config', address: profile.accounts.masterpoolConfig },
-    { label: 'Attestation config', address: profile.accounts.attestationConfig },
+    { label: 'Masterpool v3 config', address: profile.accounts.masterpoolConfig },
     { label: 'Reward vault', address: profile.accounts.rewardVault },
-    { label: 'Legacy challenge account', address: profile.accounts.challengeBondVault },
     { label: 'Treasury USDC vault', address: profile.accounts.treasuryUsdcVault },
-    { label: 'Legacy stake account', address: profile.accounts.providerStakeUsdcVault },
     { label: 'Provider pending USDC vault', address: profile.accounts.providerPendingUsdcVault },
-    { label: 'Legacy epoch account', address: profile.accounts.epochCursor },
   ]
 
   return (

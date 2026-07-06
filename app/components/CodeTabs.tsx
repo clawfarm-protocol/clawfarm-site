@@ -11,27 +11,47 @@ const examples: Record<Lang, { label: string; code: string }> = {
 
 const cf = new ClawFarm({ cluster: 'devnet' })
 
-const prepared = await cf.receipts.prepare({
+const payment = await cf.payments.record({
   providerWallet,
   payer: connectedWallet.publicKey,
   payerUsdcToken,
-  requestNonce,
-  metadata: {
-    model: 'model-l-001',
-    unit: 'tokens',
-  },
-  promptTokens: 420,
-  completionTokens: 180,
-  chargeUsdc: '0.025000',
-  taxRateBps: 30,
-})
-
-const receipt = await cf.receipts.submit(prepared, {
-  gatewaySigner,
   paymentDelegate,
+  paymentIndex: 42n,
+  paymentNonceHash,
+  baseChargeUsdc: '0.025000',
+  taxRateBps: 300,
+  taxSweepThresholdAmount: 0n,
 })
 
-console.log(receipt.receiptPda)`,
+const settlement = await cf.epochs.commitSettlement({
+  epochId: payment.epochId,
+  usageRoot,
+  providerRoot,
+  buyerRoot,
+  artifactHash,
+  artifactUriHash,
+  totals: payment.epochTotals,
+  providerPoolClaf,
+  buyerPoolClaf,
+})
+
+await cf.epochs.finalizeSettlement({ epochId: settlement.epochId })
+
+await cf.epochs.claimBuyerReward({
+  epochId: settlement.epochId,
+  leafIndex,
+  buyerWeight,
+  buyerClafReward,
+  proof,
+})
+
+await cf.epochs.claimProviderEpoch({
+  epochId: settlement.epochId,
+  leafIndex,
+  providerBaseUsdc,
+  providerClafReward,
+  proof,
+})`,
   },
   py: {
     label: 'Python',
@@ -39,25 +59,47 @@ console.log(receipt.receiptPda)`,
 
 cf = ClawFarm(cluster="devnet")
 
-prepared = cf.receipts.prepare(
+payment = cf.payments.record(
     provider_wallet=provider_wallet,
     payer=connected_wallet.public_key,
     payer_usdc_token=payer_usdc_token,
-    request_nonce=request_nonce,
-    metadata={"model": "model-l-001", "unit": "tokens"},
-    prompt_tokens=420,
-    completion_tokens=180,
-    charge_usdc="0.025000",
-    tax_rate_bps=30,
-)
-
-receipt = cf.receipts.submit(
-    prepared,
-    gateway_signer=gateway_signer,
     payment_delegate=payment_delegate,
+    payment_index=42,
+    payment_nonce_hash=payment_nonce_hash,
+    base_charge_usdc="0.025000",
+    tax_rate_bps=300,
+    tax_sweep_threshold_amount=0,
 )
 
-print(receipt.receipt_pda)`,
+settlement = cf.epochs.commit_settlement(
+    epoch_id=payment.epoch_id,
+    usage_root=usage_root,
+    provider_root=provider_root,
+    buyer_root=buyer_root,
+    artifact_hash=artifact_hash,
+    artifact_uri_hash=artifact_uri_hash,
+    totals=payment.epoch_totals,
+    provider_pool_claf=provider_pool_claf,
+    buyer_pool_claf=buyer_pool_claf,
+)
+
+cf.epochs.finalize_settlement(epoch_id=settlement.epoch_id)
+
+cf.epochs.claim_buyer_reward(
+    epoch_id=settlement.epoch_id,
+    leaf_index=leaf_index,
+    buyer_weight=buyer_weight,
+    buyer_claf_reward=buyer_claf_reward,
+    proof=proof,
+)
+
+cf.epochs.claim_provider_epoch(
+    epoch_id=settlement.epoch_id,
+    leaf_index=leaf_index,
+    provider_base_usdc=provider_base_usdc,
+    provider_claf_reward=provider_claf_reward,
+    proof=proof,
+)`,
   },
   rs: {
     label: 'Rust',
@@ -65,28 +107,51 @@ print(receipt.receipt_pda)`,
 
 let cf = Client::new("devnet");
 
-let prepared = cf.receipts().prepare()
+let payment = cf.payments().record()
     .provider_wallet(provider_wallet)
     .payer(connected_wallet.pubkey())
     .payer_usdc_token(payer_usdc_token)
-    .request_nonce(request_nonce)
-    .metadata_model("model-l-001")
-    .metadata_unit("tokens")
-    .prompt_tokens(420)
-    .completion_tokens(180)
-    .charge_usdc("0.025000")
-    .tax_rate_bps(30)
-    .build()
-    .await?;
-
-let receipt = cf.receipts()
-    .submit(prepared)
-    .gateway_signer(gateway_signer)
     .payment_delegate(payment_delegate)
+    .payment_index(42)
+    .payment_nonce_hash(payment_nonce_hash)
+    .base_charge_usdc("0.025000")
+    .tax_rate_bps(300)
+    .tax_sweep_threshold_amount(0)
     .send()
     .await?;
 
-println!("{}", receipt.receipt_pda);`,
+let settlement = cf.epochs().commit_settlement()
+    .epoch_id(payment.epoch_id)
+    .usage_root(usage_root)
+    .provider_root(provider_root)
+    .buyer_root(buyer_root)
+    .artifact_hash(artifact_hash)
+    .artifact_uri_hash(artifact_uri_hash)
+    .totals(payment.epoch_totals)
+    .provider_pool_claf(provider_pool_claf)
+    .buyer_pool_claf(buyer_pool_claf)
+    .send()
+    .await?;
+
+cf.epochs().finalize_settlement(settlement.epoch_id).send().await?;
+
+cf.epochs().claim_buyer_reward()
+    .epoch_id(settlement.epoch_id)
+    .leaf_index(leaf_index)
+    .buyer_weight(buyer_weight)
+    .buyer_claf_reward(buyer_claf_reward)
+    .proof(proof)
+    .send()
+    .await?;
+
+cf.epochs().claim_provider_epoch()
+    .epoch_id(settlement.epoch_id)
+    .leaf_index(leaf_index)
+    .provider_base_usdc(provider_base_usdc)
+    .provider_claf_reward(provider_claf_reward)
+    .proof(proof)
+    .send()
+    .await?;`,
   },
 }
 

@@ -16,7 +16,7 @@ export default function BuildersPage() {
           <p className="hero-status">Developers</p>
           <h1 className="hero-title">Consume inference.</h1>
           <p className="hero-copy">
-            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAF rewards.
+            Any wallet can pay for a payment-record-backed inference request. Finalized devnet v3 roots carry buyer-side CLAF allocations, and the mainnet target keeps the same settlement shape with a 1-hour epoch cadence.
           </p>
         </div>
       </section>
@@ -26,7 +26,7 @@ export default function BuildersPage() {
           <div className="two-column">
             <article className="border-panel">
               <h3>Open consumption</h3>
-              <p>Applications, builders, and wallets submit receipt-backed requests after choosing a provider from off-chain directory metadata. No named consumer application is required.</p>
+              <p>Applications, builders, and wallets submit payment-record-backed requests after choosing a provider from off-chain directory metadata. No named consumer application is required.</p>
             </article>
             <article className="border-panel">
               <h3>Epoch pool weight</h3>
@@ -44,7 +44,7 @@ export default function BuildersPage() {
         <div className="container">
           <SectionTitle eyebrow="SDK" title="Start with the SDK." />
           <CodeTabs />
-          <p className="interface-note">SDK reference: <a href="/docs#sdk">/docs#sdk →</a></p>
+          <p className="interface-note">SDK reference: <a href="/docs#sdk-wrapper-target">/docs#sdk-wrapper-target →</a></p>
         </div>
       </section>
 
@@ -64,7 +64,7 @@ export default function BuildersPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="empty-row" colSpan={5}>Connect a wallet to view receipt-backed usage.</td>
+                  <td className="empty-row" colSpan={5}>Connect a wallet to view payment-record-backed usage.</td>
                 </tr>
               </tbody>
             </table>
@@ -77,7 +77,7 @@ export default function BuildersPage() {
             <p className="card-meta">Payment recording uses configured payer token accounts and delegated transfer authority in masterpool v3.</p>
             <div className="dapp-actions">
               <button className="btn primary" disabled type="button">Connect wallet</button>
-              <a className="btn ghost" href="/docs#receipt-lifecycle">Read receipt docs</a>
+              <a className="btn ghost" href="/docs#payment-lifecycle">Read payment docs</a>
             </div>
           </div>
         </div>

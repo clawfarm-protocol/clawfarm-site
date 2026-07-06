@@ -17,6 +17,9 @@ facts disagree, update the website to match the contract.
 - Finalized roots contribute buyer-side and provider-side mining weight for CLAF rewards.
 - Provider USDC and CLAF rewards are claimed from finalized epoch settlement roots.
 - Settlement challenges operate on pending epoch batches before finalization.
+- Current devnet v3 uses 300-second epochs for accelerated settlement testing; the mainnet target epoch is 1 hour.
+- Masterpool v3 stores settlement roots and claim caps, while wrapper or indexer artifacts compute per-epoch CLAF pools.
+- Whitepaper treasury and governance language describes mainnet target policy, not extra devnet masterpool instructions.
 
 ## Site Structure
 
