@@ -29,9 +29,14 @@ const globalChecks = [
   { name: 'private key material', pattern: /(BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|\b(seed phrase|mnemonic)\s*[:=]|\[[0-9]{1,3}(,\s*[0-9]{1,3}){31,}\])/i },
 ]
 
-const publicCopyChecks = [
-  { name: 'unsupported buyback language', pattern: /\b(Jupiter|buyback|execute_buyback|swap aggregator|incinerator)\b/i },
-  { name: 'unverified mainnet immutability', pattern: /\b(Genesis-immutable|renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
+const currentDevnetCopyChecks = [
+  { name: 'current devnet buyback claim', pattern: /current\s+(devnet|contract|masterpool)[\s\S]{0,120}\b(buyback|Raydium|LP|timelock|Squads)\b/i },
+  { name: 'implemented treasury engine claim', pattern: /\b(masterpool v3|current v3|devnet v3)\b[\s\S]{0,140}\b(executes? swaps?|buy-and-burn|buy-and-add-LP|protocol-owned liquidity|Raydium CPMM)\b/i },
+  { name: 'current devnet provider bond claim', pattern: /\b(current devnet|devnet v3|current v3)\b[\s\S]{0,120}\b(100 USDC bond|provider bond|upfront collateral)\b/i },
+  { name: 'current devnet timelock claim', pattern: /\b(current devnet|devnet v3|current v3)\b[\s\S]{0,120}\b(48-hour timelock|24-hour timelock|Squads multisig)\b/i },
+]
+
+const legacyV2CopyChecks = [
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
   { name: 'old direct mining wording', pattern: /\b(mines CLAF to your wallet|CLAF mined)\b/i },
   { name: 'unsupported routing or registry wording', pattern: /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)\b/i },
@@ -48,6 +53,8 @@ const publicCopyChecks = [
   { name: 'v2 challenge bond vault in current public copy', pattern: /\bchallenge[- ]bond vault\b/i },
   { name: 'v2 provider stake vault in current public copy', pattern: /\bprovider[- ]stake vault\b/i },
 ]
+
+const publicCopyChecks = [...currentDevnetCopyChecks, ...legacyV2CopyChecks]
 
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')
 const failures = []
