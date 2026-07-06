@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
-const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs']
+const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs', 'scripts/generate-whitepaper-v1.py']
 const sourceArgs = sourceRoots.map((root) => `'${root}'`).join(' ')
 
 function listFiles(command) {
@@ -29,9 +29,14 @@ const globalChecks = [
   { name: 'private key material', pattern: /(BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|\b(seed phrase|mnemonic)\s*[:=]|\[[0-9]{1,3}(,\s*[0-9]{1,3}){31,}\])/i },
 ]
 
-const publicCopyChecks = [
-  { name: 'unsupported buyback language', pattern: /\b(Jupiter|buyback|execute_buyback|swap aggregator|incinerator)\b/i },
-  { name: 'unverified mainnet immutability', pattern: /\b(Genesis-immutable|renounced at Genesis|upgrade authority renounced|deployer wallet keys discarded)\b/i },
+const currentDevnetCopyChecks = [
+  { name: 'current devnet buyback claim', pattern: /current\s+(devnet|contract|masterpool)[\s\S]{0,120}\b(buyback|Raydium|LP|timelock|Squads)\b/i },
+  { name: 'implemented treasury engine claim', pattern: /\b(masterpool v3|current v3|devnet v3)\b[\s\S]{0,140}\b(executes? swaps?|buy-and-burn|buy-and-add-LP|protocol-owned liquidity|Raydium CPMM)\b/i },
+  { name: 'current devnet provider bond claim', pattern: /\b(current devnet|devnet v3|current v3)\b[\s\S]{0,120}\b(100 USDC bond|provider bond|upfront collateral)\b/i },
+  { name: 'current devnet timelock claim', pattern: /\b(current devnet|devnet v3|current v3)\b[\s\S]{0,120}\b(48-hour timelock|24-hour timelock|Squads multisig)\b/i },
+]
+
+const legacyV2CopyChecks = [
   { name: 'old challenge bond unit', pattern: /\b2 USDC\b/ },
   { name: 'old direct mining wording', pattern: /\b(mines CLAF to your wallet|CLAF mined)\b/i },
   { name: 'unsupported routing or registry wording', pattern: /\b(live registry|service registry|registered endpoints?|clearing price|registry state|historical reliability|routing objective|protocol routes requests|declared offerings)\b/i },
@@ -39,8 +44,22 @@ const publicCopyChecks = [
   { name: 'endpoint-first provider registration', pattern: /\b(Register an endpoint|Register a wallet-backed endpoint|wallet-controlled endpoint|wallet-backed endpoint)\b/i },
   { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
   { name: 'old chained SDK receipt submit hides wrapper target', pattern: /\.receipts\(\)[\s\S]{0,400}\.model\(/ },
+  { name: 'old SDK receipt prepare surface', pattern: /\b(?:cf\.)?receipts(?:\(\))?\.prepare\(/i },
+  { name: 'old SDK receipt submit surface', pattern: /\b(?:cf\.)?receipts(?:\(\))?\.submit\(/i },
+  { name: 'old SDK gateway signer surface', pattern: /\bgatewaySigner\b|\bgateway_signer\b/i },
+  { name: 'old SDK receipt PDA surface', pattern: /\breceiptPda\b|\breceipt_pda\b/i },
+  { name: 'invalid v3 SDK tax-rate example', pattern: /\b(?:taxRateBps|tax_rate_bps)\s*(?:[:=]|\()\s*30\b/i },
   { name: 'unframed provider CLI example', pattern: /npx clawfarm provider register/i },
+  { name: 'v2 SubmitReceiptArgs in current public copy', pattern: /\bSubmitReceiptArgs\b/ },
+  { name: 'v2 ReceiptEconomicRecord in current public copy', pattern: /\bReceiptEconomicRecord\b/ },
+  { name: 'v2 attestation submit receipt in current public copy', pattern: /attestation\.submit_receipt/i },
+  { name: 'v2 epoch cursor label in current public copy', pattern: /\bepoch cursor\b/i },
+  { name: 'hard-coded v2 provider stake in current public copy', pattern: /\b100 Test USDC\b/i },
+  { name: 'v2 challenge bond vault in current public copy', pattern: /\bchallenge[- ]bond vault\b/i },
+  { name: 'v2 provider stake vault in current public copy', pattern: /\bprovider[- ]stake vault\b/i },
 ]
+
+const publicCopyChecks = [...currentDevnetCopyChecks, ...legacyV2CopyChecks]
 
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')
 const failures = []

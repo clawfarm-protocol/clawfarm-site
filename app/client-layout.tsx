@@ -43,7 +43,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
                   <span>.</span>
                   <a href="/whitepaper">Whitepaper</a>
                 </nav>
-                <p>Receipt settlement on Solana</p>
+                <p>Mining inference on Solana</p>
               </div>
             </div>
           </div>
