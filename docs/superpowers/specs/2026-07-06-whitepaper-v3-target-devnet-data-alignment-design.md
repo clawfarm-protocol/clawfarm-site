@@ -11,7 +11,7 @@ The work must keep public website output English-only, avoid local paths and sec
 
 ## Confirmed Inputs
 
-- Whitepaper correction source: `/Users/lijing/Downloads/whitepaper-corrections.md`, treated as the target narrative unless it contains a material error.
+- Whitepaper correction source: owner-provided correction file, treated as the target narrative unless it contains a material error.
 - Contract source of truth: `../clawfarm-masterpool/programs/clawfarm-masterpool-v3`.
 - Devnet deployment source: `../clawfarm-masterpool/deployments/devnet-masterpool-v3.json`.
 - Current devnet v3 program id: `263WhUfCxwVGnsmEdABR2pT3iKnEfSREbm8GT6P3rVGF`.
@@ -99,7 +99,7 @@ Before delivery, run:
 - `npx tsc --noEmit`.
 - `npm run build`.
 - A scan for Chinese text in public website output and shipped source files.
-- A scan for local machine paths and RPC/API key strings, especially `api-key=`, `helius-rpc.com`, `/Users/`, wallet JSON paths, and private key material.
+- A scan for local machine paths and RPC credential strings, including user-home absolute paths, RPC provider hostnames, API-key query parameters, wallet JSON paths, and private key material.
 - A scan ensuring whitepaper target terms are allowed only in whitepaper or explicitly mainnet-target contexts, not in current-devnet technical facts.
 
 ## Out Of Scope
