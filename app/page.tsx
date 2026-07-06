@@ -214,7 +214,7 @@ export default function Home() {
             <div>Event stream</div>
             <div>No automated swap-and-retirement event stream is exposed by the current contract.</div>
           </div>
-          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the refreshed devnet v3 snapshot. Mainnet target policy remains pending until deployment records exist.</p>
+          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from a refreshed point-in-time devnet v3 snapshot. Mainnet target policy remains pending until deployment records exist.</p>
           <p className="table-action">
             <a href="/network#config">Full state view →</a>
           </p>
@@ -228,7 +228,7 @@ export default function Home() {
             One SDK. Identical surface across off-chain provider choices and wallet-settled calls.
           </p>
           <CodeTabs />
-          <p className="interface-note">SDK in TypeScript, Python, Rust. <a href="/docs#sdk">→ SDK reference</a></p>
+          <p className="interface-note">SDK in TypeScript, Python, Rust. <a href="/docs#sdk-wrapper-target">→ SDK reference</a></p>
         </div>
       </section>
 

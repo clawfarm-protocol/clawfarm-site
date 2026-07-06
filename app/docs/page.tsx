@@ -224,7 +224,7 @@ cf.epochs().claim_buyer_reward()
                 <div>Current versus target epoch</div>
                 <div>Current devnet v3 uses 300-second epochs for accelerated testing; the mainnet target is a 1-hour epoch.</div>
                 <div>Reserved payment field</div>
-                <div>record_payment_v3 accepts a payment nonce hash and tax_sweep_threshold_amount; current v3 stores payment identity through the bitmap and accumulator, while the sweep threshold is reserved for wrapper or future treasury handling.</div>
+                <div>record_payment_v3 accepts a payment nonce hash and tax_sweep_threshold_amount; current v3 deduplicates payment_index through the epoch bitmap and stores aggregate totals in the accumulator. Wrappers and indexers preserve per-payment identity and nonce metadata off-chain.</div>
                 <div>Payment tax range</div>
                 <div>Payment tax rate must be at least 50 bps and at or below GlobalConfigV3.tax_rate_bps.</div>
                 <div>CLAF pool calculation</div>

@@ -44,7 +44,7 @@ export default function BuildersPage() {
         <div className="container">
           <SectionTitle eyebrow="SDK" title="Start with the SDK." />
           <CodeTabs />
-          <p className="interface-note">SDK reference: <a href="/docs#sdk">/docs#sdk →</a></p>
+          <p className="interface-note">SDK reference: <a href="/docs#sdk-wrapper-target">/docs#sdk-wrapper-target →</a></p>
         </div>
       </section>
 
@@ -77,7 +77,7 @@ export default function BuildersPage() {
             <p className="card-meta">Payment recording uses configured payer token accounts and delegated transfer authority in masterpool v3.</p>
             <div className="dapp-actions">
               <button className="btn primary" disabled type="button">Connect wallet</button>
-              <a className="btn ghost" href="/docs#receipt-lifecycle">Read receipt docs</a>
+              <a className="btn ghost" href="/docs#payment-lifecycle">Read payment docs</a>
             </div>
           </div>
         </div>

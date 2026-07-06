@@ -42,12 +42,6 @@ export type VaultBalanceSnapshot = {
   providerPendingUsdc: string
 }
 
-export type EpochCursorSnapshot = {
-  latestKnownEpoch: string
-  latestFinalizedEpoch: string
-  carryForwardClaf: string
-}
-
 export type NetworkProfile = {
   id: NetworkId
   label: string
@@ -63,7 +57,6 @@ export type NetworkProfile = {
   accounts: CoreAccounts
   config: ProtocolConfigSnapshot | null
   balances: VaultBalanceSnapshot | null
-  epochCursor: EpochCursorSnapshot | null
 }
 
 const emptyPrograms: ProgramAddresses = {
@@ -93,7 +86,7 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     explorerCluster: 'devnet',
     status: 'active',
     statusText: 'Devnet v3 active',
-    snapshotLabel: 'Devnet v3 snapshot read on 2026-07-06',
+    snapshotLabel: 'Devnet v3 point-in-time snapshot read on 2026-07-06',
     tokenSymbol: 'CLAF',
     paymentMintLabel: 'Test USDC',
     programs: {
@@ -126,11 +119,10 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
       mainnetTargetEpochSeconds: '3600',
     },
     balances: {
-      rewardVaultClaf: '998377000',
-      treasuryUsdc: '19.723726',
-      providerPendingUsdc: '2.686825',
+      rewardVaultClaf: '998371000',
+      treasuryUsdc: '19.768488',
+      providerPendingUsdc: '2.53232',
     },
-    epochCursor: null,
   },
   mainnet: {
     id: 'mainnet',
@@ -147,7 +139,6 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     accounts: emptyAccounts,
     config: null,
     balances: null,
-    epochCursor: null,
   },
 }
 

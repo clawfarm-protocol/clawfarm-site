@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
-const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs']
+const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs', 'scripts/generate-whitepaper-v1.py']
 const sourceArgs = sourceRoots.map((root) => `'${root}'`).join(' ')
 
 function listFiles(command) {
@@ -44,6 +44,11 @@ const legacyV2CopyChecks = [
   { name: 'endpoint-first provider registration', pattern: /\b(Register an endpoint|Register a wallet-backed endpoint|wallet-controlled endpoint|wallet-backed endpoint)\b/i },
   { name: 'one-step SDK receipt submit hides wrapper target', pattern: /receipts\.submit\(\{[\s\S]{0,600}\b(model|totalUsdc|total_usdc)\b/ },
   { name: 'old chained SDK receipt submit hides wrapper target', pattern: /\.receipts\(\)[\s\S]{0,400}\.model\(/ },
+  { name: 'old SDK receipt prepare surface', pattern: /\b(?:cf\.)?receipts(?:\(\))?\.prepare\(/i },
+  { name: 'old SDK receipt submit surface', pattern: /\b(?:cf\.)?receipts(?:\(\))?\.submit\(/i },
+  { name: 'old SDK gateway signer surface', pattern: /\bgatewaySigner\b|\bgateway_signer\b/i },
+  { name: 'old SDK receipt PDA surface', pattern: /\breceiptPda\b|\breceipt_pda\b/i },
+  { name: 'invalid v3 SDK tax-rate example', pattern: /\b(?:taxRateBps|tax_rate_bps)\s*(?:[:=]|\()\s*30\b/i },
   { name: 'unframed provider CLI example', pattern: /npx clawfarm provider register/i },
   { name: 'v2 SubmitReceiptArgs in current public copy', pattern: /\bSubmitReceiptArgs\b/ },
   { name: 'v2 ReceiptEconomicRecord in current public copy', pattern: /\bReceiptEconomicRecord\b/ },

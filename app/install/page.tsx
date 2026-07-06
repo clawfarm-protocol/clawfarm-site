@@ -99,7 +99,7 @@ export default function InstallPage() {
               </p>
             </article>
             <article className="border-panel">
-              <h3>Sign receipt</h3>
+              <h3>Record payment</h3>
               <p>
                 A wrapper prepares the payment nonce hash and payment record. Masterpool v3 records the payment, then updates the epoch accumulator and payment bitmap.
               </p>
@@ -160,9 +160,9 @@ clawfarm directory configure \
           </div>
           <div className="key-list">
             <div>clawfarm-protocol/contracts</div>
-            <div>Solana programs for receipt settlement and reward accounting.</div>
+            <div>Solana programs for payment settlement and reward accounting.</div>
             <div>clawfarm-protocol/provider-sdk</div>
-            <div>Provider registration and receipt tools.</div>
+            <div>Provider registration and payment-record tools.</div>
             <div>clawfarm-protocol/sdk</div>
             <div>Builder SDK.</div>
           </div>
