@@ -16,7 +16,7 @@ export default function BuildersPage() {
           <p className="hero-status">Developers</p>
           <h1 className="hero-title">Consume inference.</h1>
           <p className="hero-copy">
-            Any wallet can pay for a receipt-backed inference request. Finalized usage contributes buyer-side epoch weight for CLAF rewards.
+            Any wallet can pay for a payment-record-backed inference request. Finalized devnet v3 roots carry buyer-side CLAF allocations, and the mainnet target keeps the same settlement shape with a 1-hour epoch cadence.
           </p>
         </div>
       </section>
@@ -26,7 +26,7 @@ export default function BuildersPage() {
           <div className="two-column">
             <article className="border-panel">
               <h3>Open consumption</h3>
-              <p>Applications, builders, and wallets submit receipt-backed requests after choosing a provider from off-chain directory metadata. No named consumer application is required.</p>
+              <p>Applications, builders, and wallets submit payment-record-backed requests after choosing a provider from off-chain directory metadata. No named consumer application is required.</p>
             </article>
             <article className="border-panel">
               <h3>Epoch pool weight</h3>
@@ -64,7 +64,7 @@ export default function BuildersPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="empty-row" colSpan={5}>Connect a wallet to view receipt-backed usage.</td>
+                  <td className="empty-row" colSpan={5}>Connect a wallet to view payment-record-backed usage.</td>
                 </tr>
               </tbody>
             </table>

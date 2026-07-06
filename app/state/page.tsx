@@ -16,7 +16,7 @@ export default function StatePage() {
           <p className="hero-status">State</p>
           <h1 className="hero-title">Protocol dashboard.</h1>
           <p className="hero-copy">
-            Program addresses, vault balances, pause flags, epoch settlement state, and current economic parameters from the selected network profile.
+            The network dashboard shows current devnet v3 addresses, vault balances, pause flags, and accelerated testing parameters. Mainnet target policy is intentionally separate from these live devnet fields.
           </p>
           <NetworkBadge />
         </div>

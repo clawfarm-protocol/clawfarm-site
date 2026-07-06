@@ -14,8 +14,8 @@ export default function WhitepaperPage() {
           <p className="hero-status">Whitepaper</p>
           <h1 className="hero-title">Whitepaper v1.0.</h1>
           <p className="hero-copy">
-            A compact Genesis draft for the protocol: supply neutrality, dual-signed proof, settlement,
-            mining emission, treasury burn, and immutable parameters.
+            A compact target draft for the protocol: supply neutrality, dual-signed proof, settlement,
+            mining emission, treasury policy, governance scope, and launch commitments.
           </p>
           <p className="tertiary-link">
             <a href="/whitepaper.pdf">Open PDF →</a>

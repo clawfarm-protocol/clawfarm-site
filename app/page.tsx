@@ -34,7 +34,7 @@ export default function Home() {
           <ProtocolStatusStrip />
           <NetworkBadge />
           <p className="hero-copy">
-            ClawFarm records wallet-paid inference receipts, splits USDC at record time, and turns finalized usage into epoch reward weight.
+            ClawFarm records wallet-paid inference payments, routes base Test USDC to provider pending revenue, and turns finalized epoch roots into CLAF reward claims.
           </p>
           <div className="hero-role-grid" aria-label="Protocol entry paths">
             <a className="role-entry" href="/providers">
@@ -68,7 +68,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Mining" title="Mining." />
           <p className="section-intro">
-            Receipts do not pay direct per-call rewards. Finalized epoch roots carry buyer and provider allocations, and Merkle claims transfer CLAF directly from the reward vault.
+            Payment records do not pay direct per-call rewards. Finalized epoch roots carry buyer and provider allocations, and Merkle claims transfer CLAF directly from the reward vault. Devnet v3 uses 300-second epochs for testing cadence; the mainnet target keeps 1-hour epochs without changing the total scheduled CLAF emission.
           </p>
           <div className="stat-strip mining-strip">
             <div className="treasury-stat">
@@ -89,7 +89,7 @@ export default function Home() {
             </div>
           </div>
           <p className="section-footnote wide-footnote">
-            The devnet challenge window is intentionally short for testing. Mainnet timing remains pending until mainnet config is deployed.
+            The devnet challenge window is intentionally short for testing. Mainnet target timing is 1 hour per epoch and remains pending until mainnet config is deployed.
           </p>
           <div className="protocol-table-shell burn-table-shell" data-live-state={miningEventsState}>
             <table className="protocol-table">
@@ -140,7 +140,7 @@ export default function Home() {
 
       <section className="section" id="directory">
         <div className="container">
-          <SectionHeader eyebrow="Directory" title="Model labels for receipts." />
+          <SectionHeader eyebrow="Directory" title="Model labels for payment records." />
           <p className="section-intro">
             Any wallet can choose a provider. Directory data remains off-chain.
           </p>
@@ -205,7 +205,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            Every recorded payment uses the configured GlobalConfigV3 tax rate. Treasury receives the computed tax; provider pending revenue receives the base charge. CLAF reward allocations are settled through finalized epoch roots. The current contract does not expose an automated swap-and-retirement path.
+            In devnet v3, every payment uses a bounded payment tax rate. The tax moves to the treasury vault, while the base charge moves to provider pending revenue. The whitepaper target adds treasury split, buyback, burn, and protocol-owned-liquidity policy for mainnet. The live masterpool settlement program exposes payment, settlement-root, and claim instructions only.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
@@ -214,7 +214,7 @@ export default function Home() {
             <div>Event stream</div>
             <div>No automated swap-and-retirement event stream is exposed by the current contract.</div>
           </div>
-          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the static devnet snapshot. Mainnet remains pending until deployment records exist.</p>
+          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the refreshed devnet v3 snapshot. Mainnet target policy remains pending until deployment records exist.</p>
           <p className="table-action">
             <a href="/network#config">Full state view →</a>
           </p>

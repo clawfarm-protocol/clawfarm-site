@@ -15,7 +15,7 @@ export default function InstallPage() {
           <p className="eyebrow">Providers</p>
           <h1 className="page-title">Register a compute provider.</h1>
           <p className="page-copy">
-            Register a provider wallet with masterpool v3. Publish endpoint and pricing metadata through an off-chain gateway or operator directory, serve requests, and receive provider USDC through finalized epoch Merkle claims. Finalized usage contributes provider-side mining weight for CLAF rewards.
+            Use the devnet v3 wrapper for current testing: register_provider_v3 creates the account, record_payment_v3 records wallet-paid usage, and finalized roots release provider USDC and CLAF. Mainnet target treasury and governance commitments are documented in the whitepaper and are not extra setup steps for the devnet provider wrapper.
           </p>
           <p className="page-copy">
             The protocol does not ask where your capacity comes from, and would not
@@ -46,7 +46,7 @@ export default function InstallPage() {
               </p>
             </article>
             <article className="border-panel">
-              <h3>Carry receipts, not identity.</h3>
+              <h3>Carry payment records, not identity.</h3>
               <p>
                 The protocol does not inspect where capacity comes from. It asks for a
                 wallet, off-chain directory metadata, and recorded payment facts for
@@ -89,7 +89,7 @@ export default function InstallPage() {
             <article className="border-panel">
               <h3>Register</h3>
               <p>
-                A provider wrapper can call <span className="mono">register_provider_v3</span> to create the on-chain ProviderAccountV3 with wallet, pending provider USDC, status, and timestamps. Current v3 registration has no upfront USDC collateral transfer. Configure endpoint, models, and pricing in an off-chain gateway or operator directory.
+                A provider wrapper can call <span className="mono">register_provider_v3</span> to create the on-chain ProviderAccountV3 with wallet, pending provider USDC, status, and timestamps. Current devnet v3 registration has no upfront provider-stake transfer. Configure endpoint, models, and pricing in an off-chain gateway or operator directory.
               </p>
             </article>
             <article className="border-panel">
@@ -131,7 +131,7 @@ clawfarm directory configure \
   --endpoint https://endpoint.invalid/v1 \
   --models model-l-001,model-l-002`}</code></pre>
           <p className="section-footnote wide-footnote">
-            The provider wrapper signs with the provider wallet and supplies the ProviderAccountV3 accounts required by current registration. Provider USDC and CLAF claims are handled later through finalized settlement roots.
+            The provider wrapper signs with the provider wallet and supplies the ProviderAccountV3 accounts required by current devnet registration. Provider USDC and CLAF claims are handled later through finalized settlement roots; target treasury and governance policy does not add devnet provider setup steps.
           </p>
 
           <div style={{ height: 32 }} />
