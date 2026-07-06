@@ -36,7 +36,7 @@
 - Modify: `docs/superpowers/specs/2026-07-06-whitepaper-v3-target-devnet-data-alignment-design.md`
 - Modify: `scripts/verify-site-content.mjs`
 
-- [ ] **Step 1: Confirm clean branch state**
+- [x] **Step 1: Confirm clean branch state**
 
 Run:
 
@@ -46,7 +46,7 @@ git status --short --branch
 
 Expected: branch is `codex/whitepaper-v3-target-devnet-data` with only the approved spec correction and plan work in progress.
 
-- [ ] **Step 2: Commit the spec path sanitization if not already committed**
+- [x] **Step 2: Commit the spec path sanitization if not already committed**
 
 Run:
 
@@ -65,7 +65,7 @@ git commit -m "docs: sanitize whitepaper v3 alignment spec"
 
 Expected: commit succeeds or there is nothing to commit.
 
-- [ ] **Step 3: Split public-copy checks by context**
+- [x] **Step 3: Split public-copy checks by context**
 
 Edit `scripts/verify-site-content.mjs` so `publicCopyChecks` no longer treats every target whitepaper word as an error. Keep global checks unchanged. Replace the current broad unsupported buyback and immutability checks with two arrays:
 
@@ -100,7 +100,7 @@ const publicCopyChecks = [...currentDevnetCopyChecks, ...legacyV2CopyChecks]
 
 Keep `sourceRoots` as `['app', 'README.md', 'docs/superpowers/specs']`.
 
-- [ ] **Step 4: Run the guard before content changes**
+- [x] **Step 4: Run the guard before content changes**
 
 Run:
 
@@ -110,7 +110,7 @@ npm run verify:site
 
 Expected: it may fail before all page copy is aligned. Record the failure names in the task notes and continue only if the failures are stale-copy failures, not global secret or path failures.
 
-- [ ] **Step 5: Commit the guard update**
+- [x] **Step 5: Commit the guard update**
 
 Run:
 
@@ -127,7 +127,7 @@ Expected: commit succeeds.
 - Modify: `app/lib/protocol.ts`
 - Modify: `app/components/ProtocolNetworkPanels.tsx`
 
-- [ ] **Step 1: Re-read current devnet data without persisting RPC credentials**
+- [x] **Step 1: Re-read current devnet data without persisting RPC credentials**
 
 Run this one-time script from the site repo. It reads the contract deployment JSON at runtime and prints only public addresses, config fields, and balances:
 
@@ -200,7 +200,7 @@ NODE
 
 Expected: JSON output with no RPC URL and no API key.
 
-- [ ] **Step 2: Update protocol types**
+- [x] **Step 2: Update protocol types**
 
 In `app/lib/protocol.ts`, replace the legacy `ProgramAddresses`, `CoreAccounts`, `ProtocolConfigSnapshot`, and `VaultBalanceSnapshot` definitions with v3-oriented fields:
 
@@ -242,7 +242,7 @@ export type VaultBalanceSnapshot = {
 
 Update every reference in the file from `claw` to `claf` in type field names while keeping public token symbol `CLAF`.
 
-- [ ] **Step 3: Update empty profiles**
+- [x] **Step 3: Update empty profiles**
 
 In `app/lib/protocol.ts`, replace `emptyPrograms` and `emptyAccounts` with:
 
@@ -260,7 +260,7 @@ const emptyAccounts: CoreAccounts = {
 }
 ```
 
-- [ ] **Step 4: Replace devnet profile data**
+- [x] **Step 4: Replace devnet profile data**
 
 In `app/lib/protocol.ts`, replace the `devnet` profile object with current v3 data from the refreshed read. Use this structure and update balance values if the Step 1 read returned newer values:
 
@@ -313,7 +313,7 @@ In `app/lib/protocol.ts`, replace the `devnet` profile object with current v3 da
   },
 ```
 
-- [ ] **Step 5: Update mainnet pending profile**
+- [x] **Step 5: Update mainnet pending profile**
 
 In the `mainnet` profile, keep `status: 'pending'`, but update text fields:
 
@@ -325,7 +325,7 @@ paymentMintLabel: 'USDC',
 
 Keep programs, mints, accounts, config, balances, and epochCursor empty or null.
 
-- [ ] **Step 6: Update protocol component references**
+- [x] **Step 6: Update protocol component references**
 
 In `app/components/ProtocolNetworkPanels.tsx`, replace references to removed fields:
 
@@ -367,7 +367,7 @@ config.claimsPaused
 balances.rewardVaultClaf
 ```
 
-- [ ] **Step 7: Replace component row labels**
+- [x] **Step 7: Replace component row labels**
 
 Use these labels in network surfaces:
 
@@ -396,7 +396,7 @@ Use these metrics:
 { label: 'Claims paused', value: config ? formatBoolean(config.claimsPaused) : '-' }
 ```
 
-- [ ] **Step 8: Run TypeScript check for data update**
+- [x] **Step 8: Run TypeScript check for data update**
 
 Run:
 
@@ -406,7 +406,7 @@ npx tsc --noEmit
 
 Expected: PASS. If it fails, fix remaining renamed-field references and rerun until PASS.
 
-- [ ] **Step 9: Commit devnet data refresh**
+- [x] **Step 9: Commit devnet data refresh**
 
 Run:
 
@@ -423,7 +423,7 @@ Expected: commit succeeds.
 - Modify: `app/docs/page.tsx`
 - Modify: `README.md`
 
-- [ ] **Step 1: Add current-versus-target docs intro**
+- [x] **Step 1: Add current-versus-target docs intro**
 
 In `app/docs/page.tsx`, update the quickstart copy near the top to include this paragraph after the existing Solana-native wrapper paragraph:
 
@@ -433,7 +433,7 @@ In `app/docs/page.tsx`, update the quickstart copy near the top to include this 
 </p>
 ```
 
-- [ ] **Step 2: Update TypeScript SDK snippet**
+- [x] **Step 2: Update TypeScript SDK snippet**
 
 Replace the TypeScript SDK code block with:
 
@@ -482,7 +482,7 @@ await cf.epochs.claimBuyerReward({
 })`}</code></pre>
 ```
 
-- [ ] **Step 3: Update Python SDK snippet**
+- [x] **Step 3: Update Python SDK snippet**
 
 Replace the Python SDK code block with:
 
@@ -531,7 +531,7 @@ cf.epochs.claim_buyer_reward(
 )`}</code></pre>
 ```
 
-- [ ] **Step 4: Update Rust SDK snippet**
+- [x] **Step 4: Update Rust SDK snippet**
 
 Replace the Rust SDK code block with:
 
@@ -584,7 +584,7 @@ cf.epochs().claim_buyer_reward()
     .await?;`}</code></pre>
 ```
 
-- [ ] **Step 5: Update contract shape bullets**
+- [x] **Step 5: Update contract shape bullets**
 
 In the contract shape / lifecycle section of `app/docs/page.tsx`, ensure these exact facts are present in English:
 
@@ -596,7 +596,7 @@ In the contract shape / lifecycle section of `app/docs/page.tsx`, ensure these e
 <div>Mainnet target treasury policy belongs to the whitepaper target layer, not the current devnet v3 masterpool settlement instruction set.</div>
 ```
 
-- [ ] **Step 6: Update README summary**
+- [x] **Step 6: Update README summary**
 
 In `README.md`, update the Phase 1 model bullets to include:
 
@@ -606,7 +606,7 @@ In `README.md`, update the Phase 1 model bullets to include:
 - Whitepaper treasury and governance language describes mainnet target policy, not extra devnet masterpool instructions.
 ```
 
-- [ ] **Step 7: Verify docs copy**
+- [x] **Step 7: Verify docs copy**
 
 Run:
 
@@ -617,7 +617,7 @@ npx tsc --noEmit
 
 Expected: both PASS or only failures already assigned to later whitepaper target updates.
 
-- [ ] **Step 8: Commit technical docs alignment**
+- [x] **Step 8: Commit technical docs alignment**
 
 Run:
 
@@ -638,7 +638,7 @@ Expected: commit succeeds.
 - Modify: `app/state/page.tsx`
 - Modify: `app/whitepaper/page.tsx`
 
-- [ ] **Step 1: Update home hero technical line**
+- [x] **Step 1: Update home hero technical line**
 
 In `app/page.tsx`, replace any line saying `receipts` are recorded by the current implementation with:
 
@@ -646,7 +646,7 @@ In `app/page.tsx`, replace any line saying `receipts` are recorded by the curren
 ClawFarm records wallet-paid inference payments, routes base Test USDC to provider pending revenue, and turns finalized epoch roots into CLAF reward claims.
 ```
 
-- [ ] **Step 2: Update home treasury section**
+- [x] **Step 2: Update home treasury section**
 
 In `app/page.tsx`, replace the treasury paragraph with:
 
@@ -654,7 +654,7 @@ In `app/page.tsx`, replace the treasury paragraph with:
 Every current devnet v3 payment uses a bounded payment tax rate. The tax moves to the treasury vault, while the base charge moves to provider pending revenue. The whitepaper target adds treasury split, buyback, burn, and protocol-owned-liquidity policy for mainnet; current devnet v3 does not execute swaps or LP actions from masterpool.
 ```
 
-- [ ] **Step 3: Update home mining explanation**
+- [x] **Step 3: Update home mining explanation**
 
 In `app/page.tsx`, add this sentence to the mining or epoch reward section:
 
@@ -662,7 +662,7 @@ In `app/page.tsx`, add this sentence to the mining or epoch reward section:
 Devnet v3 uses 300-second epochs for testing cadence; the mainnet target keeps 1-hour epochs without changing the total scheduled CLAF emission.
 ```
 
-- [ ] **Step 4: Update builders page**
+- [x] **Step 4: Update builders page**
 
 In `app/builders/page.tsx`, ensure the top copy includes:
 
@@ -672,7 +672,7 @@ Any wallet can pay for a payment-record-backed inference request. Finalized devn
 
 Replace any `receipt-backed` wording with `payment-record-backed`.
 
-- [ ] **Step 5: Update providers page**
+- [x] **Step 5: Update providers page**
 
 In `app/providers/page.tsx`, ensure provider registration copy includes:
 
@@ -680,7 +680,7 @@ In `app/providers/page.tsx`, ensure provider registration copy includes:
 Current devnet v3 registration creates a ProviderAccountV3 without transferring upfront provider stake. The mainnet target may reintroduce provider bond economics as part of the launch policy, but current devnet v3 should be read as a zero-stake testing deployment.
 ```
 
-- [ ] **Step 6: Update install page**
+- [x] **Step 6: Update install page**
 
 In `app/install/page.tsx`, update onboarding copy to include:
 
@@ -688,7 +688,7 @@ In `app/install/page.tsx`, update onboarding copy to include:
 Use the devnet v3 wrapper for current testing: register_provider_v3 creates the account, record_payment_v3 records wallet-paid usage, and finalized roots release provider USDC and CLAF. Mainnet target treasury and governance commitments are documented in the whitepaper and are not extra setup steps for the devnet provider wrapper.
 ```
 
-- [ ] **Step 7: Update state page**
+- [x] **Step 7: Update state page**
 
 In `app/state/page.tsx`, update state dashboard intro copy to include:
 
@@ -696,7 +696,7 @@ In `app/state/page.tsx`, update state dashboard intro copy to include:
 The network dashboard shows current devnet v3 addresses, vault balances, pause flags, and accelerated testing parameters. Mainnet target policy is intentionally separate from these live devnet fields.
 ```
 
-- [ ] **Step 8: Update whitepaper page summary**
+- [x] **Step 8: Update whitepaper page summary**
 
 In `app/whitepaper/page.tsx`, replace the hero description with:
 
@@ -704,7 +704,7 @@ In `app/whitepaper/page.tsx`, replace the hero description with:
 A compact target draft for the protocol: supply neutrality, dual-signed proof, settlement, mining emission, treasury policy, governance scope, and launch commitments.
 ```
 
-- [ ] **Step 9: Scan stale public page terms**
+- [x] **Step 9: Scan stale public page terms**
 
 Run:
 
@@ -714,7 +714,7 @@ rg -n "receipt-backed|current devnet[\s\S]{0,120}(Raydium|buyback|LP|Squads|time
 
 Expected: no output, except whitepaper target text may contain buyback if it is clearly not current devnet copy.
 
-- [ ] **Step 10: Verify and commit public page copy**
+- [x] **Step 10: Verify and commit public page copy**
 
 Run:
 
@@ -733,7 +733,7 @@ Expected: verification commands pass and commit succeeds.
 - Modify: `scripts/generate-whitepaper-v1.py`
 - Generate: `public/whitepaper.pdf`
 
-- [ ] **Step 1: Update section 2 protocol records sentence**
+- [x] **Step 1: Update section 2 protocol records sentence**
 
 In `scripts/generate-whitepaper-v1.py`, replace the first paragraph of section `2. What the protocol is` with:
 
@@ -741,7 +741,7 @@ In `scripts/generate-whitepaper-v1.py`, replace the first paragraph of section `
 "ClawFarm is not a model lab, a cloud provider, an inference reseller, or a hosted application. It is a settlement protocol for inference calls. The protocol records provider registration, escrowed user funds, dual-signed usage proofs, settlement events, treasury inflows, treasury split events, mining rewards, burn events, and protocol-owned liquidity additions."
 ```
 
-- [ ] **Step 2: Update section 3 optional treasury neutrality paragraph**
+- [x] **Step 2: Update section 3 optional treasury neutrality paragraph**
 
 Append this paragraph to section `3. Supply neutrality`:
 
@@ -749,7 +749,7 @@ Append this paragraph to section `3. Supply neutrality`:
 "The treasury operates with the same neutrality. Buyback and add-LP slices are submitted by any wallet that pays gas; the program enforces the bounds, not the identity of the caller. Maintenance and infrastructure withdrawals can only flow to addresses declared at Genesis and have no power over the buyback engine."
 ```
 
-- [ ] **Step 3: Update section 7 settlement treasury paragraph**
+- [x] **Step 3: Update section 7 settlement treasury paragraph**
 
 Replace the third paragraph of section `7. Settlement` with:
 
@@ -759,7 +759,7 @@ Replace the third paragraph of section `7. Settlement` with:
 
 Keep the first two settlement paragraphs unless a later review decides to rewrite provider-selected fee tiers in the target whitepaper. The target whitepaper can keep provider-selected tiers as target economics even though current devnet v3 uses a bounded payment tax rate.
 
-- [ ] **Step 4: Update section 8 mining no-allocation paragraph**
+- [x] **Step 4: Update section 8 mining no-allocation paragraph**
 
 Append this sentence to the second paragraph of section `8. Mining and emission`:
 
@@ -767,7 +767,7 @@ Append this sentence to the second paragraph of section `8. Mining and emission`
 " No portion of the schedule is pre-allocated to any party. The team participates in mining only as a settling consumer or provider, on the same terms as any other wallet. Where team-mined CLAF is used for initial pool seeding in Appendix A, it is surrendered to the pool and the resulting LP is burned, ensuring the team retains no claim to that liquidity."
 ```
 
-- [ ] **Step 5: Replace section 9 treasury paragraphs**
+- [x] **Step 5: Replace section 9 treasury paragraphs**
 
 Replace all paragraphs under `9. Treasury and burn` with this target text, using `Each epoch` rather than `Each daily epoch`:
 
@@ -780,7 +780,7 @@ Replace all paragraphs under `9. Treasury and burn` with this target text, using
 "No human trigger initiates a buyback. An epoch is opened by anyone; slices are executed by anyone; the split crank is called by anyone. The maintenance and infrastructure vaults are the only paths where an authorized address moves funds out of the treasury, and those addresses can withdraw only to themselves.",
 ```
 
-- [ ] **Step 6: Insert section 9a Anti-MEV**
+- [x] **Step 6: Insert section 9a Anti-MEV**
 
 Insert a new `SECTIONS` item immediately after section `9. Treasury and burn`:
 
@@ -797,7 +797,7 @@ Insert a new `SECTIONS` item immediately after section `9. Treasury and burn`:
 ),
 ```
 
-- [ ] **Step 7: Replace section 12 governance**
+- [x] **Step 7: Replace section 12 governance**
 
 Change the section title from `12. Immutability` to `12. Governance scope`. Replace its paragraphs with:
 
@@ -811,7 +811,7 @@ Change the section title from `12. Immutability` to `12. Governance scope`. Repl
 "The protocol has no team allocation in the emission schedule and no investor allocation. Rewards follow settled contribution. A separate cold-start commitment describes how initial pool liquidity is provided by team-mined CLAF and immediately surrendered.",
 ```
 
-- [ ] **Step 8: Add section 15 cold-start commitment**
+- [x] **Step 8: Add section 15 cold-start commitment**
 
 Insert this section before `14. Conclusion`, then renumber conclusion to `15. Conclusion` if keeping cold start as section `14`, or keep conclusion as `14` and add `15. Cold-start commitment` before it only if table of contents order remains correct. Use this final order: `13. Security limits`, `14. Cold-start commitment`, `15. Conclusion`.
 
@@ -835,7 +835,7 @@ Update the existing conclusion title to:
 "15. Conclusion"
 ```
 
-- [ ] **Step 9: Update parameters table**
+- [x] **Step 9: Update parameters table**
 
 Replace the affected `PARAMETERS` rows with:
 
@@ -865,7 +865,7 @@ Replace the affected `PARAMETERS` rows with:
 
 Remove old rows for `Treasury disposition`, `Treasury threshold`, `Swap slippage cap`, `Swap volume cap`, `Upgrade authority` old value, and `Admin / governance` old value.
 
-- [ ] **Step 10: Update references**
+- [x] **Step 10: Update references**
 
 Replace the Jupiter reference with:
 
@@ -873,7 +873,7 @@ Replace the Jupiter reference with:
 "Raydium. Constant Product AMM program documentation.",
 ```
 
-- [ ] **Step 11: Update abstract if needed**
+- [x] **Step 11: Update abstract if needed**
 
 In `abstract_text`, keep settlement and emission concise, but add this sentence before the final source-blind sentence:
 
@@ -881,7 +881,7 @@ In `abstract_text`, keep settlement and emission concise, but add this sentence 
 "The target treasury policy routes protocol fees through predetermined buyback, maintenance, and infrastructure paths."
 ```
 
-- [ ] **Step 12: Generate the whitepaper PDF**
+- [x] **Step 12: Generate the whitepaper PDF**
 
 Run:
 
@@ -891,7 +891,7 @@ python3 scripts/generate-whitepaper-v1.py
 
 Expected: `public/whitepaper.pdf` is regenerated successfully.
 
-- [ ] **Step 13: Verify generated PDF exists and changed**
+- [x] **Step 13: Verify generated PDF exists and changed**
 
 Run:
 
@@ -902,7 +902,7 @@ git diff --stat -- scripts/generate-whitepaper-v1.py public/whitepaper.pdf
 
 Expected: PDF exists and both generator and PDF are changed.
 
-- [ ] **Step 14: Commit whitepaper target update**
+- [x] **Step 14: Commit whitepaper target update**
 
 Run:
 
@@ -918,7 +918,7 @@ Expected: commit succeeds.
 **Files:**
 - All changed files.
 
-- [ ] **Step 1: Run site verification**
+- [x] **Step 1: Run site verification**
 
 Run:
 
@@ -928,7 +928,7 @@ npm run verify:site
 
 Expected: PASS.
 
-- [ ] **Step 2: Run TypeScript verification**
+- [x] **Step 2: Run TypeScript verification**
 
 Run:
 
@@ -938,7 +938,7 @@ npx tsc --noEmit
 
 Expected: PASS.
 
-- [ ] **Step 3: Run production build**
+- [x] **Step 3: Run production build**
 
 Run:
 
@@ -948,7 +948,7 @@ npm run build
 
 Expected: PASS. If a remote font fetch fails, capture the exact error and verify it is unrelated to content or TypeScript.
 
-- [ ] **Step 4: Run stale-copy scan**
+- [x] **Step 4: Run stale-copy scan**
 
 Run:
 
@@ -958,7 +958,7 @@ rg -n "SubmitReceiptArgs|ReceiptEconomicRecord|attestation\.submit_receipt|100 T
 
 Expected: no output except no `Jupiter` at all.
 
-- [ ] **Step 5: Run safety scan without embedding sensitive literals in files**
+- [x] **Step 5: Run safety scan without embedding sensitive literals in files**
 
 Run:
 
@@ -968,7 +968,7 @@ rg -n "[\u4e00-\u9fff]|$(printf '/%s/' Users)|$(printf '/%s/' home)|$(printf '/%
 
 Expected: no output.
 
-- [ ] **Step 6: Review changed file list**
+- [x] **Step 6: Review changed file list**
 
 Run:
 
@@ -980,7 +980,7 @@ git diff --stat
 
 Expected: changed files are limited to planned site, docs, script, and generated PDF files.
 
-- [ ] **Step 7: Run whitespace check**
+- [x] **Step 7: Run whitespace check**
 
 Run:
 
@@ -990,7 +990,7 @@ git diff --check
 
 Expected: no output.
 
-- [ ] **Step 8: Final commit if needed**
+- [x] **Step 8: Final commit if needed**
 
 If any verification-only fixes were made after the task commits, run:
 
@@ -1001,7 +1001,7 @@ git commit -m "chore: finalize whitepaper v3 alignment"
 
 Expected: commit succeeds or there is nothing to commit.
 
-- [ ] **Step 9: Report completion**
+- [x] **Step 9: Report completion**
 
 Final response must include:
 
