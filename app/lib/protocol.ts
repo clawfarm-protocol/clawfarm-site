@@ -4,62 +4,48 @@ export type DeploymentStatus = 'active' | 'pending'
 type NullableAddress = string | null
 
 type ProgramAddresses = {
-  masterpool: NullableAddress
-  attestation: NullableAddress
+  masterpoolV3: NullableAddress
 }
 
 type MintAddresses = {
-  claw: NullableAddress
+  claf: NullableAddress
   usdc: NullableAddress
 }
 
 type CoreAccounts = {
   poolAuthority: NullableAddress
   masterpoolConfig: NullableAddress
-  attestationConfig: NullableAddress
   rewardVault: NullableAddress
-  challengeBondVault: NullableAddress
   treasuryUsdcVault: NullableAddress
-  providerStakeUsdcVault: NullableAddress
   providerPendingUsdcVault: NullableAddress
-  epochCursor: NullableAddress
 }
 
 export type ProtocolConfigSnapshot = {
   masterpoolConfigVersion: string
   providerStakeUsdc: string
-  providerUsdcShareBps: number
-  treasuryUsdcShareBps: number
+  taxRateBps: number
   providerEpochPoolShareBps: number
   buyerEpochPoolShareBps: number
-  challengeBondClaw: string
-  providerSlashClaw: string
-  lockDays: string
   epochDurationSeconds: string
   challengeWindowSeconds: string
-  challengeResolutionTimeoutSeconds: string
-  emissionTotalClaw: string
-  halvingPeriodSeconds: string
+  emissionTotalClaf: string
   emissionDurationSeconds: string
-  genesisMinted: boolean
-  receiptRecordingPaused: boolean
-  challengeProcessingPaused: boolean
-  finalizationPaused: boolean
+  paymentRecordingPaused: boolean
+  settlementPaused: boolean
   claimsPaused: boolean
+  mainnetTargetEpochSeconds: string
 }
 
 export type VaultBalanceSnapshot = {
-  rewardVaultClaw: string
-  challengeBondVaultClaw: string
+  rewardVaultClaf: string
   treasuryUsdc: string
-  providerStakeUsdc: string
   providerPendingUsdc: string
 }
 
 export type EpochCursorSnapshot = {
   latestKnownEpoch: string
   latestFinalizedEpoch: string
-  carryForwardClaw: string
+  carryForwardClaf: string
 }
 
 export type NetworkProfile = {
@@ -81,25 +67,20 @@ export type NetworkProfile = {
 }
 
 const emptyPrograms: ProgramAddresses = {
-  masterpool: null,
-  attestation: null,
+  masterpoolV3: null,
 }
 
 const emptyMints: MintAddresses = {
-  claw: null,
+  claf: null,
   usdc: null,
 }
 
 const emptyAccounts: CoreAccounts = {
   poolAuthority: null,
   masterpoolConfig: null,
-  attestationConfig: null,
   rewardVault: null,
-  challengeBondVault: null,
   treasuryUsdcVault: null,
-  providerStakeUsdcVault: null,
   providerPendingUsdcVault: null,
-  epochCursor: null,
 }
 
 export const defaultNetworkId: NetworkId = 'devnet'
@@ -111,63 +92,45 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     clusterLabel: 'Solana devnet',
     explorerCluster: 'devnet',
     status: 'active',
-    statusText: 'Devnet active',
-    snapshotLabel: 'Devnet snapshot read on 2026-06-09',
+    statusText: 'Devnet v3 active',
+    snapshotLabel: 'Devnet v3 snapshot read on 2026-07-06',
     tokenSymbol: 'CLAF',
     paymentMintLabel: 'Test USDC',
     programs: {
-      masterpool: 'DWbzvr2F8hKquw7cXQqhpEc8JnJ1covmP6f28Rwmy15q',
-      attestation: 'BwRMqumgiHbeMhG9xs1a76vUjmprrokr6WsPCzhz3pKK',
+      masterpoolV3: '263WhUfCxwVGnsmEdABR2pT3iKnEfSREbm8GT6P3rVGF',
     },
     mints: {
-      claw: 'EW7npwHnVtTXvimde3Zj6dHX4mWbSAb5zkkHCrvkC8ui',
-      usdc: 'Hpq3GKSHa6rX9pGSRw2Gvoz6AbP16GMtHPVMxLr7P553',
+      claf: 'BstFT1KYuPntAzH6Z6mUBCzBGJXc6b6Ha6zKsG7bASYb',
+      usdc: 'Pn9LRsXqH3Av44nrJGcAv22Js3iuaEhH36VKYfKTZQo',
     },
     accounts: {
-      poolAuthority: '5C1XsgA6SX9vfii55138q7yxwFuEssmxcMfWw6FEBYN5',
-      masterpoolConfig: 'B7kijN5oMvrEXc4ihsebG7fWi1DwTPPv3zL2u6WuxMDA',
-      attestationConfig: '5Rta1Vgp68Yr8HQqwFFzC6TZkUqCotqgvjTqF5ZgtEiD',
-      rewardVault: 'FLwt8ouUSaxfEhTEwNZbAP8yYSBy5sbYqV7Lvwz9xh3M',
-      challengeBondVault: '2JTopbYhBeLRzDHXSX5HRLvimURhiQs8n7a2HJoGoh3M',
-      treasuryUsdcVault: '3GCM4JwxDZDDa4wUDAGJ3vUkapAQU6EjSFougXnKjtQn',
-      providerStakeUsdcVault: 'BDGJQXiStxnWgZAXp2jXGvKekQghCY3nWynqMqsxwQzp',
-      providerPendingUsdcVault: 'E4bjKdR1n9n3cqYamgHUcvTGn8tpEoBmAvqb9X2qpcv4',
-      epochCursor: 'A9nrM4fm1T8pLwNaGRixPkmAg1FmKADJk7rPPQeA6d1a',
+      poolAuthority: '36Q2NicqLeS2a6vPc3G2g9nS7inrTQQL8azsY3suQwJ8',
+      masterpoolConfig: '6CAC3WVozLwCeep4RHvm9GE1xaJYrc8hHtMhL1eZWX1m',
+      rewardVault: 'AVyUyyJJLKw6Zc8P5FvY85rqT9VUJHoxo2AQynUvWEFC',
+      treasuryUsdcVault: 'EzS6EaXyd8LH5VL7QZAZNyeL5ohrs2Wr2LhYFhnj57mS',
+      providerPendingUsdcVault: 'BowY3xmvodiP4wds8dCFREzR3fUr55Nt8ADct4dYzjoQ',
     },
     config: {
-      masterpoolConfigVersion: '2',
-      providerStakeUsdc: '100.000000',
-      providerUsdcShareBps: 970,
-      treasuryUsdcShareBps: 30,
-      providerEpochPoolShareBps: 700,
-      buyerEpochPoolShareBps: 300,
-      challengeBondClaw: '2.000000',
-      providerSlashClaw: '30.000000',
-      lockDays: '180',
-      epochDurationSeconds: '3600',
-      challengeWindowSeconds: '30',
-      challengeResolutionTimeoutSeconds: '30',
-      emissionTotalClaw: '1000000000.000000',
-      halvingPeriodSeconds: '31536000',
+      masterpoolConfigVersion: '3',
+      providerStakeUsdc: '0.000000',
+      taxRateBps: 300,
+      providerEpochPoolShareBps: 7000,
+      buyerEpochPoolShareBps: 3000,
+      epochDurationSeconds: '300',
+      challengeWindowSeconds: '60',
+      emissionTotalClaf: '1000000000.000000',
       emissionDurationSeconds: '157680000',
-      genesisMinted: true,
-      receiptRecordingPaused: false,
-      challengeProcessingPaused: false,
-      finalizationPaused: false,
+      paymentRecordingPaused: false,
+      settlementPaused: false,
       claimsPaused: false,
+      mainnetTargetEpochSeconds: '3600',
     },
     balances: {
-      rewardVaultClaw: '999899885.946700',
-      challengeBondVaultClaw: '0.000000',
-      treasuryUsdc: '41.387849',
-      providerStakeUsdc: '300.000000',
-      providerPendingUsdc: '98.994182',
+      rewardVaultClaf: '998377000',
+      treasuryUsdc: '19.723726',
+      providerPendingUsdc: '2.686825',
     },
-    epochCursor: {
-      latestKnownEpoch: '522',
-      latestFinalizedEpoch: '521',
-      carryForwardClaw: '0.000000',
-    },
+    epochCursor: null,
   },
   mainnet: {
     id: 'mainnet',
@@ -175,8 +138,8 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     clusterLabel: 'Solana mainnet-beta',
     explorerCluster: 'mainnet-beta',
     status: 'pending',
-    statusText: 'Awaiting mainnet deployment',
-    snapshotLabel: 'Mainnet deployment pending',
+    statusText: 'Mainnet target pending',
+    snapshotLabel: 'Mainnet target not deployed',
     tokenSymbol: 'CLAF',
     paymentMintLabel: 'USDC',
     programs: emptyPrograms,
@@ -199,7 +162,7 @@ export function getNetworkProfile(value: string | null | undefined): NetworkProf
 }
 
 export function formatBps(value: number): string {
-  return `${value / 10}%`
+  return `${value / 100}%`
 }
 
 export function formatBoolean(value: boolean): string {
