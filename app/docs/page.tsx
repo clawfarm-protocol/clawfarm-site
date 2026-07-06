@@ -52,6 +52,9 @@ export default function DocsPage() {
               <p>
                 The devnet contract path is Solana-native. SDK examples on this page are wrapper targets: the wrapper must build payment indexes, payment nonce hashes, payer token delegates, epoch PDAs, Merkle settlement artifacts, and masterpool v3 accounts before sending transactions.
               </p>
+              <p>
+                This page separates current devnet v3 behavior from mainnet targets. Devnet v3 is live with 300-second epochs, a 60-second challenge window, a 3 percent payment-tax cap, zero upfront provider-stake transfer, and proof-based claims. The mainnet target keeps a 1-hour epoch, treasury split and buyback policy, bounded governance, and protocol-owned liquidity as whitepaper-level launch commitments.
+              </p>
               <h3 id="install">Install</h3>
               <pre className="code-block"><code>{`npm install @clawfarm/sdk`}</code></pre>
               <h3 id="configure-devnet">Configure devnet</h3>
@@ -74,9 +77,10 @@ const cf = new ClawFarm({
   payerUsdcToken,
   paymentDelegate,
   paymentIndex: 42n,
-  paymentNonce,
+  paymentNonceHash,
   baseChargeUsdc: '0.025000',
   taxRateBps: 300,
+  taxSweepThresholdAmount: 0n,
 })
 
 const settlement = await cf.epochs.commitSettlement({
@@ -87,11 +91,22 @@ const settlement = await cf.epochs.commitSettlement({
   artifactHash,
   artifactUriHash,
   totals: payment.epochTotals,
+  providerPoolClaf,
+  buyerPoolClaf,
 })
 
 await cf.epochs.finalizeSettlement({ epochId: settlement.epochId })
 
-const claim = await cf.epochs.claimBuyerReward({
+await cf.epochs.claimProviderEpoch({
+  epochId: settlement.epochId,
+  leafIndex,
+  totalProviderUsdc,
+  providerWeight,
+  providerClafReward,
+  proof,
+})
+
+await cf.epochs.claimBuyerReward({
   epochId: settlement.epochId,
   leafIndex,
   buyerWeight,
@@ -105,9 +120,10 @@ const claim = await cf.epochs.claimBuyerReward({
     payer_usdc_token=payer_usdc_token,
     payment_delegate=payment_delegate,
     payment_index=42,
-    payment_nonce=payment_nonce,
+    payment_nonce_hash=payment_nonce_hash,
     base_charge_usdc="0.025000",
     tax_rate_bps=300,
+    tax_sweep_threshold_amount=0,
 )
 
 settlement = cf.epochs.commit_settlement(
@@ -118,11 +134,22 @@ settlement = cf.epochs.commit_settlement(
     artifact_hash=artifact_hash,
     artifact_uri_hash=artifact_uri_hash,
     totals=payment.epoch_totals,
+    provider_pool_claf=provider_pool_claf,
+    buyer_pool_claf=buyer_pool_claf,
 )
 
 cf.epochs.finalize_settlement(epoch_id=settlement.epoch_id)
 
-claim = cf.epochs.claim_buyer_reward(
+cf.epochs.claim_provider_epoch(
+    epoch_id=settlement.epoch_id,
+    leaf_index=leaf_index,
+    total_provider_usdc=total_provider_usdc,
+    provider_weight=provider_weight,
+    provider_claf_reward=provider_claf_reward,
+    proof=proof,
+)
+
+cf.epochs.claim_buyer_reward(
     epoch_id=settlement.epoch_id,
     leaf_index=leaf_index,
     buyer_weight=buyer_weight,
@@ -136,9 +163,10 @@ claim = cf.epochs.claim_buyer_reward(
     .payer_usdc_token(payer_usdc_token)
     .payment_delegate(payment_delegate)
     .payment_index(42)
-    .payment_nonce(payment_nonce)
+    .payment_nonce_hash(payment_nonce_hash)
     .base_charge_usdc("0.025000")
     .tax_rate_bps(300)
+    .tax_sweep_threshold_amount(0)
     .send()
     .await?;
 
@@ -150,12 +178,24 @@ let settlement = cf.epochs().commit_settlement()
     .artifact_hash(artifact_hash)
     .artifact_uri_hash(artifact_uri_hash)
     .totals(payment.epoch_totals)
+    .provider_pool_claf(provider_pool_claf)
+    .buyer_pool_claf(buyer_pool_claf)
     .send()
     .await?;
 
 cf.epochs().finalize_settlement(settlement.epoch_id).send().await?;
 
-let claim = cf.epochs().claim_buyer_reward()
+cf.epochs().claim_provider_epoch()
+    .epoch_id(settlement.epoch_id)
+    .leaf_index(leaf_index)
+    .total_provider_usdc(total_provider_usdc)
+    .provider_weight(provider_weight)
+    .provider_claf_reward(provider_claf_reward)
+    .proof(proof.clone())
+    .send()
+    .await?;
+
+cf.epochs().claim_buyer_reward()
     .epoch_id(settlement.epoch_id)
     .leaf_index(leaf_index)
     .buyer_weight(buyer_weight)
@@ -181,6 +221,16 @@ let claim = cf.epochs().claim_buyer_reward()
                 <div>After an epoch ends, the wrapper commits usage, provider, and buyer Merkle roots plus aggregate totals into an EpochSettlementBatch.</div>
                 <div>Claims</div>
                 <div>Finalized EpochSettlementRoot accounts release provider USDC and CLAF rewards through provider and buyer Merkle proofs.</div>
+                <div>Current versus target epoch</div>
+                <div>Current devnet v3 uses 300-second epochs for accelerated testing; the mainnet target is a 1-hour epoch.</div>
+                <div>Reserved payment field</div>
+                <div>record_payment_v3 accepts a payment nonce hash and tax_sweep_threshold_amount; current v3 stores payment identity through the bitmap and accumulator, while the sweep threshold is reserved for wrapper or future treasury handling.</div>
+                <div>Payment tax range</div>
+                <div>Payment tax rate must be at least 50 bps and at or below GlobalConfigV3.tax_rate_bps.</div>
+                <div>CLAF pool calculation</div>
+                <div>commit_epoch_settlement_v3 stores provider_pool_claf and buyer_pool_claf supplied by the settlement artifact; current v3 does not compute emission on-chain.</div>
+                <div>Target treasury layer</div>
+                <div>Mainnet target treasury policy belongs to the whitepaper target layer, not the current devnet v3 masterpool settlement instruction set.</div>
               </div>
             </section>
 
@@ -195,13 +245,14 @@ let claim = cf.epochs().claim_buyer_reward()
   "payer": "<payer-wallet>",
   "payerUsdcToken": "<payer-usdc-token>",
   "paymentIndex": "42",
-  "paymentNonce": "<client-generated-nonce>",
+  "paymentNonceHash": "<client-generated-nonce-hash>",
   "metadata": {
     "model": "model-l-001",
     "unit": "tokens"
   },
   "baseChargeUsdc": "0.025000",
-  "taxRateBps": 300
+  "taxRateBps": 300,
+  "taxSweepThresholdAmount": "0"
 }`}</code></pre>
               <p>
                 The gateway wrapper response should contain a transaction or signing payload for `record_payment_v3`. Epoch settlement wrappers later commit aggregate roots and claim proofs.
@@ -288,13 +339,15 @@ EPOCH SETTLEMENT LAYER
               <h3 id="phase-1-economics">Phase 1 economics</h3>
               <div className="key-list">
                 <div>Payment tax</div>
-                <div>Masterpool v3 computes tax from the configured tax_rate_bps. The current payment must pass that configured rate, and gross payment equals base charge plus tax.</div>
+                <div>Masterpool v3 computes tax from the configured tax_rate_bps. The current payment tax rate must be at least 50 bps and at or below the configured cap; gross payment equals base charge plus tax.</div>
                 <div>Provider pending</div>
                 <div>Base charge moves to the provider pending vault during payment recording and is released through provider Merkle claims after epoch settlement finalizes.</div>
                 <div>Epoch roots</div>
                 <div>Ended epochs settle through usage, provider, and buyer roots plus aggregate base, tax, and gross totals.</div>
                 <div>Pool split</div>
                 <div>Finalized settlement roots carry provider and buyer CLAF pools for Merkle proof claims.</div>
+                <div>Emission artifact</div>
+                <div>Current v3 stores settlement-root CLAF pool caps supplied by the wrapper or indexer artifact; epoch length changes cadence and per-epoch pool size, not the total scheduled CLAF emission.</div>
                 <div>Claim protection</div>
                 <div>EpochClaimBitmap accounts prevent repeated provider or buyer claims for the same epoch leaf.</div>
               </div>
@@ -315,8 +368,11 @@ EPOCH SETTLEMENT LAYER
                 <div>Masterpool implementation</div><div>clawfarm_masterpool_v3</div>
                 <div>Program source</div><div>Latest implementation facts derive from the sibling clawfarm-masterpool repository.</div>
                 <div>Provider collateral</div><div>ProviderAccountV3 includes staked_usdc_amount, but current registration initializes it to zero and does not transfer upfront collateral.</div>
-                <div>Payment tax</div><div>Config-driven in GlobalConfigV3 and validated by record_payment_v3.</div>
+                <div>Payment tax</div><div>Config-capped in GlobalConfigV3; record_payment_v3 accepts payment rates from 50 bps through the configured cap.</div>
+                <div>Current epoch duration</div><div>300 seconds on devnet v3 for accelerated testing; 1 hour is the mainnet target.</div>
+                <div>Current challenge window</div><div>60 seconds on devnet v3.</div>
                 <div>Epoch settlement</div><div>Uses accumulator totals, payment bitmaps, settlement batches, challenges, finalized roots, and claim bitmaps.</div>
+                <div>Treasury target</div><div>Buyback, burn, and protocol-owned-liquidity policy are whitepaper target commitments, not current devnet masterpool instructions.</div>
               </div>
             </section>
 
