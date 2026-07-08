@@ -2,22 +2,24 @@
 
 ## Goal
 
-Align the public ClawFarm website with two distinct truth layers:
+Align the public ClawFarm website with three distinct truth layers:
 
 1. The whitepaper describes the intended mainnet protocol target and launch policy.
-2. Technical documentation and network/state surfaces describe the current `clawfarm_masterpool_v3` devnet implementation and live devnet snapshot.
+2. Treasury / buyback facts come from the owner-provided correction file because that program is developed separately from `clawfarm_masterpool_v3`.
+3. Technical documentation and network/state surfaces describe the current `clawfarm_masterpool_v3` devnet implementation and live devnet snapshot.
 
-The work must keep public website output English-only, avoid local paths and secrets, and derive implementation-facing facts from the latest `../clawfarm-masterpool` code plus `deployments/devnet-masterpool-v3.json` and its devnet RPC state.
+The work must keep public website output English-only, avoid local paths and secrets, derive masterpool implementation-facing facts from the latest `../clawfarm-masterpool` code plus `deployments/devnet-masterpool-v3.json` and its devnet RPC state, and treat the correction file as the trusted source for the separate treasury / buyback program.
 
 ## Confirmed Inputs
 
-- Whitepaper correction source: owner-provided correction file, treated as the target narrative unless it contains a material error.
+- Whitepaper correction source: owner-provided correction file, treated as the trusted source for the separately developed treasury / buyback program and the target narrative unless it conflicts with owner decisions captured here.
 - Contract source of truth: `../clawfarm-masterpool/programs/clawfarm-masterpool-v3`.
 - Devnet deployment source: `../clawfarm-masterpool/deployments/devnet-masterpool-v3.json`.
 - Current devnet v3 program id: `263WhUfCxwVGnsmEdABR2pT3iKnEfSREbm8GT6P3rVGF`.
 - Current devnet v3 config: `6CAC3WVozLwCeep4RHvm9GE1xaJYrc8hHtMhL1eZWX1m`.
 - Current devnet v3 epoch duration: 300 seconds.
-- Mainnet target epoch duration: 1 hour. This overrides the correction file's proposed 24-hour daily epoch.
+- Mainnet target mining epoch duration: 1 hour.
+- Treasury / buyback cycle duration: 24 hours, measured by UTC day, and separate from the mining epoch.
 
 ## Epoch And Mining Output Decision
 
@@ -46,13 +48,13 @@ The current v3 contract does not calculate these epoch emissions on-chain. It st
 
 Update the generated whitepaper source and PDF to reflect the target protocol:
 
-- Rewrite treasury and burn around the correction file's 70/20/10 split, buy-and-burn, buy-and-add-LP, Raydium CPMM, protocol-owned liquidity, operational vaults, and anti-MEV target.
-- Rewrite governance from genesis immutability to bounded governance scope, structural state, operational state, retained upgrade authority, admin scope, pause scope, transparency, and launch-period trust assumptions.
+- Rewrite treasury and burn around a 100 percent buyback pipeline, buy-and-burn, buy-and-add-LP, Raydium CPMM, protocol-owned liquidity, code-locked vaults, and anti-MEV execution in the separate treasury / buyback program.
+- Rewrite governance from genesis immutability to bounded governance scope, structural state, operational state, permanent retained upgrade authority, one Squads multisig with 2-of-3 threshold, 24-hour on-chain timelock for non-pause actions and upgrades, admin scope, pause scope, transparency, and launch-period trust assumptions.
 - Add cold-start commitment language for team-mined CLAF plus team-provided USDC seed liquidity, with LP surrendered or burned as stated by the correction file.
 - Replace Jupiter references with Raydium CPMM references.
 - Keep `CLAF`, not `CLAW`.
-- Correct the correction file's 24-hour epoch proposal to a 1-hour mainnet target.
-- Avoid presenting current devnet v3 as if the treasury engine, Raydium CPI, Squads multisig, timelock, seed LP, or buyback engine are already implemented in masterpool v3.
+- Keep the 24-hour treasury buyback cycle while clearly distinguishing it from the 1-hour mainnet mining epoch.
+- Avoid presenting current devnet v3 as if the treasury engine, Raydium CPI, Squads multisig, timelock, seed LP, or buyback engine are implemented in masterpool v3; those facts belong to the separate treasury / buyback program.
 
 ## Technical Documentation Scope
 
@@ -60,7 +62,7 @@ Update technical pages to explicitly distinguish current devnet v3 from the main
 
 - Current devnet v3: direct `record_payment_v3`, payment bitmap, epoch accumulator, authority-submitted settlement batch, evidence-based challenge, finalized roots, Merkle proof claims.
 - Current devnet v3 parameters: 300-second epochs, 60-second challenge window, 3 percent tax cap, 0 provider stake transfer, 70/30 provider/buyer reward pool split, no current automated swap-and-retirement path.
-- Mainnet target: 1-hour epochs, target treasury split, buyback/add-LP module, Raydium CPMM execution, anti-MEV slicing, operational vaults, bounded governance, timelock/multisig launch policy.
+- Mainnet target: 1-hour mining epochs, 24-hour treasury buyback cycles, 100 percent buyback pipeline, buyback/add-LP module, Raydium CPMM execution, committed-seed CSPRNG anti-MEV slicing, operational vaults, bounded governance, one Squads multisig, 24-hour timelock, and permanent retained upgrade authority.
 
 SDK examples should remain wrapper targets for current v3:
 
