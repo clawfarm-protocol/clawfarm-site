@@ -50,7 +50,7 @@ Update the generated whitepaper source and PDF to reflect the target protocol:
 
 - Rewrite treasury and burn around a 100 percent buyback pipeline, buy-and-burn, buy-and-add-LP, Raydium CPMM, protocol-owned liquidity, code-locked vaults, and anti-MEV execution in the separate treasury / buyback program.
 - Rewrite governance from genesis immutability to bounded governance scope, structural state, operational state, permanent retained upgrade authority, one Squads multisig with 2-of-3 threshold, 24-hour on-chain timelock for non-pause actions and upgrades, admin scope, pause scope, transparency, and launch-period trust assumptions.
-- Add cold-start commitment language for team-mined CLAF plus team-provided USDC seed liquidity, with LP surrendered or burned as stated by the correction file.
+- Add cold-start commitment language for CLAF donated by early community members plus team-provided USDC seed liquidity, with LP surrendered or burned as stated by the owner decision.
 - Replace Jupiter references with Raydium CPMM references.
 - Keep `CLAF`, not `CLAW`.
 - Keep the 24-hour treasury buyback cycle while clearly distinguishing it from the 1-hour mainnet mining epoch.
