@@ -16,7 +16,7 @@ export default function NetworkPage() {
           <p className="hero-status">Network</p>
           <h1 className="hero-title">Deployment surface.</h1>
           <p className="hero-copy">
-            Devnet is populated from the current contract deployment. Mainnet remains selectable but empty until deployment records exist.
+            Mainnet is the primary ClawFarm deployment. Select either network to inspect its dated, point-in-time program, mint, vault, and config snapshot.
           </p>
           <NetworkBadge />
         </div>

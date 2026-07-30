@@ -33,7 +33,6 @@ export type ProtocolConfigSnapshot = {
   paymentRecordingPaused: boolean
   settlementPaused: boolean
   claimsPaused: boolean
-  mainnetTargetEpochSeconds: string
 }
 
 export type VaultBalanceSnapshot = {
@@ -59,24 +58,7 @@ export type NetworkProfile = {
   balances: VaultBalanceSnapshot | null
 }
 
-const emptyPrograms: ProgramAddresses = {
-  masterpoolV3: null,
-}
-
-const emptyMints: MintAddresses = {
-  claf: null,
-  usdc: null,
-}
-
-const emptyAccounts: CoreAccounts = {
-  poolAuthority: null,
-  masterpoolConfig: null,
-  rewardVault: null,
-  treasuryUsdcVault: null,
-  providerPendingUsdcVault: null,
-}
-
-export const defaultNetworkId: NetworkId = 'devnet'
+export const defaultNetworkId: NetworkId = 'mainnet'
 
 export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
   devnet: {
@@ -116,7 +98,6 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
       paymentRecordingPaused: false,
       settlementPaused: false,
       claimsPaused: false,
-      mainnetTargetEpochSeconds: '3600',
     },
     balances: {
       rewardVaultClaf: '998371000',
@@ -129,16 +110,44 @@ export const protocolNetworks: Record<NetworkId, NetworkProfile> = {
     label: 'Mainnet',
     clusterLabel: 'Solana mainnet-beta',
     explorerCluster: 'mainnet-beta',
-    status: 'pending',
-    statusText: 'Mainnet target pending',
-    snapshotLabel: 'Mainnet target not deployed',
+    status: 'active',
+    statusText: 'Mainnet v3 active',
+    snapshotLabel: 'Mainnet v3 point-in-time snapshot read on 2026-07-30 13:20 UTC',
     tokenSymbol: 'CLAF',
     paymentMintLabel: 'USDC',
-    programs: emptyPrograms,
-    mints: emptyMints,
-    accounts: emptyAccounts,
-    config: null,
-    balances: null,
+    programs: {
+      masterpoolV3: '263WhUfCxwVGnsmEdABR2pT3iKnEfSREbm8GT6P3rVGF',
+    },
+    mints: {
+      claf: 'C9C4v7EPpxgYcuJpvBskW6VENA6kL1C1upgfg6jfmCu7',
+      usdc: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    },
+    accounts: {
+      poolAuthority: '36Q2NicqLeS2a6vPc3G2g9nS7inrTQQL8azsY3suQwJ8',
+      masterpoolConfig: '6CAC3WVozLwCeep4RHvm9GE1xaJYrc8hHtMhL1eZWX1m',
+      rewardVault: 'AVyUyyJJLKw6Zc8P5FvY85rqT9VUJHoxo2AQynUvWEFC',
+      treasuryUsdcVault: 'EzS6EaXyd8LH5VL7QZAZNyeL5ohrs2Wr2LhYFhnj57mS',
+      providerPendingUsdcVault: 'BowY3xmvodiP4wds8dCFREzR3fUr55Nt8ADct4dYzjoQ',
+    },
+    config: {
+      masterpoolConfigVersion: '3',
+      providerStakeUsdc: '100.000000',
+      taxRateBps: 300,
+      providerEpochPoolShareBps: 7000,
+      buyerEpochPoolShareBps: 3000,
+      epochDurationSeconds: '3600',
+      challengeWindowSeconds: '30',
+      emissionTotalClaf: '1000000000.000000',
+      emissionDurationSeconds: '315360000',
+      paymentRecordingPaused: false,
+      settlementPaused: false,
+      claimsPaused: false,
+    },
+    balances: {
+      rewardVaultClaf: '997973744.292238',
+      treasuryUsdc: '0.134624',
+      providerPendingUsdc: '8.756996',
+    },
   },
 }
 

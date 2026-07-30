@@ -3,7 +3,7 @@
 import { protocolNetworks, type NetworkId } from '../lib/protocol'
 import { useNetwork } from './NetworkProvider'
 
-const networkIds: NetworkId[] = ['devnet', 'mainnet']
+const networkIds: NetworkId[] = ['mainnet', 'devnet']
 
 export default function NetworkSwitch() {
   const { networkId, setNetworkId } = useNetwork()

@@ -39,7 +39,7 @@ function PendingPanel({ profile }: { profile: NetworkProfile }) {
       <p className="section-kicker">Deployment</p>
       <h2>{profile.statusText}</h2>
       <p>
-        Mainnet is selectable so the site structure is ready, but no mainnet deployment record exists yet. Addresses and balances stay empty until the contract repository publishes mainnet data.
+        This network does not have a published deployment snapshot. Addresses and balances remain empty until a verified deployment record is available.
       </p>
     </div>
   )
@@ -78,8 +78,8 @@ export function ProtocolStatusStrip() {
     <div className="live-status-strip" aria-label="Protocol status">
       <span className="status-dot" aria-hidden="true" />
       <span>{profile.statusText}</span>
-      <span>Devnet epoch: <data>{config ? formatDurationSeconds(config.epochDurationSeconds) : '-'}</data></span>
-      <span>Target epoch: <data>{config ? formatDurationSeconds(config.mainnetTargetEpochSeconds) : '-'}</data></span>
+      <span>Epoch: <data>{config ? formatDurationSeconds(config.epochDurationSeconds) : '-'}</data></span>
+      <span>Snapshot: <data>{profile.snapshotLabel}</data></span>
     </div>
   )
 }
@@ -89,10 +89,10 @@ export function ProtocolNumberWall() {
   const config = profile.config
   const items: Metric[] = config
     ? [
-        { label: `${profile.tokenSymbol} total supply`, value: formatTotalSupply(config.emissionTotalClaf) },
+        { label: `${profile.tokenSymbol} Genesis inventory`, value: formatTotalSupply(config.emissionTotalClaf) },
         { label: 'Payment tax cap', value: formatBps(config.taxRateBps) },
         { label: 'Provider reward pool', value: formatBps(config.providerEpochPoolShareBps) },
-        { label: 'Devnet epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
+        { label: 'Epoch duration', value: formatDurationSeconds(config.epochDurationSeconds) },
       ]
     : [
         { label: 'Deployment status', value: 'Pending' },
@@ -124,8 +124,8 @@ export function HomeProtocolState() {
   ]
 
   const activityRows: Metric[] = [
-    { label: 'Devnet epoch duration', value: config ? formatDurationSeconds(config.epochDurationSeconds) : '-' },
-    { label: 'Target epoch duration', value: config ? formatDurationSeconds(config.mainnetTargetEpochSeconds) : '-' },
+    { label: 'Epoch duration', value: config ? formatDurationSeconds(config.epochDurationSeconds) : '-' },
+    { label: 'Challenge window field', value: config ? formatDurationSeconds(config.challengeWindowSeconds) : '-' },
     { label: 'Treasury vault', value: profile.balances ? `${profile.balances.treasuryUsdc} ${profile.paymentMintLabel}` : '-' },
     { label: 'Provider pending vault', value: profile.balances ? `${profile.balances.providerPendingUsdc} ${profile.paymentMintLabel}` : '-' },
   ]
@@ -191,13 +191,20 @@ export function StateDashboard() {
   ]
 
   const economics: Metric[] = [
-    { label: 'Provider stake transfer', value: config ? `${config.providerStakeUsdc} ${profile.paymentMintLabel}` : '-' },
+    {
+      label: 'Configured provider stake',
+      value: config ? `${config.providerStakeUsdc} ${profile.paymentMintLabel}` : '-',
+      note: 'Current v3 registration does not transfer or lock this amount.',
+    },
     { label: 'Payment tax cap', value: config ? formatBps(config.taxRateBps) : '-' },
     { label: 'Provider reward pool', value: config ? formatBps(config.providerEpochPoolShareBps) : '-' },
     { label: 'Buyer reward pool', value: config ? formatBps(config.buyerEpochPoolShareBps) : '-' },
-    { label: 'Devnet epoch duration', value: config ? formatDurationSeconds(config.epochDurationSeconds) : '-' },
-    { label: 'Target epoch duration', value: config ? formatDurationSeconds(config.mainnetTargetEpochSeconds) : '-' },
-    { label: 'Challenge window', value: config ? formatDurationSeconds(config.challengeWindowSeconds) : '-' },
+    { label: 'Epoch duration', value: config ? formatDurationSeconds(config.epochDurationSeconds) : '-' },
+    {
+      label: 'Challenge window field',
+      value: config ? formatDurationSeconds(config.challengeWindowSeconds) : '-',
+      note: 'Deprecated in the current v3 ledger settlement mode.',
+    },
     { label: 'Emission duration', value: config ? formatDurationSeconds(config.emissionDurationSeconds) : '-' },
   ]
 

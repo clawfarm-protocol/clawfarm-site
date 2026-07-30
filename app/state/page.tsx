@@ -4,7 +4,7 @@ import { NetworkBadge, StateDashboard } from '../components/ProtocolNetworkPanel
 
 export const metadata: Metadata = {
   title: 'State - ClawFarm',
-  description: 'Devnet-first protocol dashboard for ClawFarm programs, mints, vaults, config values, and epoch state.',
+  description: 'Mainnet-first protocol dashboard for ClawFarm programs, mints, vaults, config values, and epoch state.',
   alternates: { canonical: '/state' },
 }
 
@@ -16,7 +16,7 @@ export default function StatePage() {
           <p className="hero-status">State</p>
           <h1 className="hero-title">Protocol dashboard.</h1>
           <p className="hero-copy">
-            The network dashboard shows current devnet v3 addresses, vault balances, pause flags, and accelerated testing parameters. Mainnet target policy is intentionally separate from these live devnet fields.
+            Inspect the selected masterpool v3 deployment, vault balances, pause flags, epoch parameters, and settlement lifecycle. Snapshot values are dated and are not realtime RPC reads.
           </p>
           <NetworkBadge />
         </div>
