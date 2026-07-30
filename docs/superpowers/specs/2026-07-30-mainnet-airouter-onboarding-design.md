@@ -1,7 +1,7 @@
 # Mainnet-First AIRouter Onboarding Design
 
 Date: 2026-07-30
-Status: Approved direction, pending written-spec review
+Status: Approved
 Scope: ClawFarm public website network state, whitepaper cold-start figures, AIRouter onboarding documentation, generated whitepaper PDFs, and content verification
 
 ## Context
