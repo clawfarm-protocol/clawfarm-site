@@ -1,35 +1,32 @@
 # ClawFarm Site
 
-ClawFarm is a Solana devnet website for the Phase 1 masterpool v3 settlement protocol.
-The site explains how wallets, providers, masterpool v3 payment records, epoch settlement roots,
-Test USDC settlement, challenges, and direct CLAF reward claims fit together.
+ClawFarm is the Mainnet-first public website for the Phase 1 masterpool v3 settlement protocol and its AIRouter integration.
+The site documents Provider onboarding, B-side Buyer API access, Mainnet payment records, epoch settlement roots, USDC settlement, and CLAF rewards.
 
-Protocol-facing copy in this repository must follow the current contract source
-in the sibling `clawfarm-masterpool` repository. If the website and contract
-facts disagree, update the website to match the contract.
+Protocol-facing copy in this repository follows the current contract source in the sibling `clawfarm-masterpool` repository. If the website and contract facts disagree, the contract is authoritative.
 
 ## Phase 1 Model
 
-- Providers register wallet-controlled ProviderAccountV3 records.
-- Wallet-paid inference is recorded as masterpool v3 payment records, not direct per-call reward payouts.
-- Payment recording transfers configured tax to treasury and base charge to provider-pending revenue.
-- Ended epochs settle through aggregate totals, settlement roots, and Merkle proof claims.
-- Finalized roots contribute buyer-side and provider-side mining weight for CLAF rewards.
-- Provider USDC and CLAF rewards are claimed from finalized epoch settlement roots.
-- Settlement challenges operate on pending epoch batches before finalization.
-- Current devnet v3 uses 300-second epochs for accelerated settlement testing; the mainnet target epoch is 1 hour.
-- Masterpool v3 stores settlement roots and claim caps, while wrapper or indexer artifacts compute per-epoch CLAF pools.
-- Whitepaper treasury and governance language describes mainnet target policy, not extra devnet masterpool instructions.
+- Solana Mainnet is the default website network; Devnet remains selectable.
+- Mainnet uses native USDC and 3,600-second epochs.
+- AIRouter authenticates wallet-bound Buyer API keys, routes inference requests, persists durable receipts, and queues asynchronous settlement.
+- Masterpool v3 records payments, moving configured tax to treasury and base USDC to the provider-pending vault.
+- Ended epochs settle through aggregate totals, settlement roots, and Merkle-proof claims.
+- Finalized roots allocate CLAF with a 70 percent Provider / 30 percent Buyer split and release Provider USDC claims.
+- Current `register_provider_v3` initializes provider stake to zero and transfers no upfront collateral, even though the Mainnet config stores a provider-stake parameter.
+- Public chain figures are dated static snapshots. The browser does not connect directly to an RPC endpoint.
+- Explicit `?network=` selections and saved user preferences override the first-visit Mainnet default.
 
 ## Site Structure
 
-- `/` - Landing page, protocol framing, model surface, and SDK entry point.
-- `/builders` - Wallet and builder payment-record flow for inference consumption.
-- `/providers` - Provider registration and epoch-settlement mechanism overview.
-- `/install` - Provider onboarding copy and devnet registration configuration.
-- `/docs` - Devnet SDK snippets, payment lifecycle, Phase 1 economics, and parameters.
-- `/network` - Protocol state and network-facing status surfaces.
-- `/whitepaper` - Whitepaper route.
+- `/` - Mainnet-first protocol overview, settlement snapshot, and AIRouter entry paths.
+- `/builders` - B-side Buyer access, wallet funding, direct HTTP quickstart, and settlement headers.
+- `/providers` - Provider requirements and the routed-usage-to-claim settlement path.
+- `/install` - Detailed operator-assisted Provider onboarding checklist.
+- `/docs` - AIRouter authentication, supported HTTP routes, Provider onboarding, and masterpool v3 settlement reference.
+- `/network` - Selected-network program addresses, config parameters, and dated vault balances.
+- `/state` - Selected-network protocol state overview.
+- `/whitepaper` - Whitepaper reader and downloads.
 
 Legacy paths redirect to the nearest current page to preserve external links.
 
@@ -44,7 +41,7 @@ Open the local development URL printed by Next.js.
 
 ## Verification
 
-Run the site audit, TypeScript check, and production build before delivery:
+Run the public-content audit, TypeScript check, and production build before delivery:
 
 ```bash
 npm run verify:site
@@ -52,23 +49,13 @@ npx tsc --noEmit
 npm run build
 ```
 
-The production build can fail if `next/font/google` cannot fetch Google Fonts in
-the local network environment. Record that separately from content or TypeScript
-verification failures.
+The production build can fail if `next/font/google` cannot fetch Google Fonts in the local network environment. Record that separately from content or TypeScript failures.
 
-## Static Export
+The static export is written to `out/` after a successful build.
 
-```bash
-npm run build
-```
+## Deployment
 
-The `out/` directory contains the static export when the build succeeds.
-
-## IPFS Deploy
-
-Deployment credentials are intentionally not documented in public copy. Configure
-Pinata or any other publisher through local environment management, then run the
-repository deployment script from a trusted operator shell.
+Publishing credentials are intentionally absent from public copy. Configure the selected publisher through trusted environment management and run the repository deployment script from an operator shell.
 
 ## Community
 

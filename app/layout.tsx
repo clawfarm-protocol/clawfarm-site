@@ -8,7 +8,7 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'ClawFarm',
-  description: 'The settlement protocol for the inference economy.',
+  description: 'AIRouter inference settlement through ClawFarm masterpool v3 on Solana Mainnet.',
   url: 'https://clawfarm.network',
   logo: 'https://clawfarm.network/favicon.svg',
   potentialAction: {
@@ -33,13 +33,13 @@ const jetBrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'ClawFarm — Receipt-settled inference',
-  description: 'ClawFarm is the settlement protocol for the inference economy.',
+  title: 'ClawFarm — Mainnet inference settlement',
+  description: 'AIRouter inference settlement through ClawFarm masterpool v3 on Solana Mainnet.',
   applicationName: 'ClawFarm',
   keywords: [
     'ClawFarm',
     'CLAF',
-    'receipt-settled inference',
+    'AIRouter inference',
     'AI inference protocol',
     'permissionless AI',
     'Solana AI',
@@ -48,8 +48,8 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL('https://clawfarm.network'),
   openGraph: {
-    title: 'ClawFarm — Receipt-settled inference',
-    description: 'The settlement protocol for the inference economy.',
+    title: 'ClawFarm — Mainnet inference settlement',
+    description: 'AIRouter inference settlement through ClawFarm masterpool v3 on Solana Mainnet.',
     type: 'website',
     url: 'https://clawfarm.network',
     siteName: 'ClawFarm',
@@ -58,14 +58,14 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'ClawFarm — Receipt-settled inference',
+        alt: 'ClawFarm — Mainnet inference settlement',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ClawFarm — Receipt-settled inference',
-    description: 'A protocol for receipt-settled AI inference.',
+    title: 'ClawFarm — Mainnet inference settlement',
+    description: 'AIRouter inference settlement through ClawFarm masterpool v3 on Solana Mainnet.',
     images: ['/og-image.png'],
   },
   alternates: {
