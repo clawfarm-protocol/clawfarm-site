@@ -61,6 +61,52 @@ const legacyV2CopyChecks = [
 
 const publicCopyChecks = [...currentDevnetCopyChecks, ...legacyV2CopyChecks]
 
+const requiredChecks = [
+  {
+    file: 'app/lib/protocol.ts',
+    name: 'Mainnet default network',
+    pattern: /defaultNetworkId:\s*NetworkId\s*=\s*'mainnet'/,
+  },
+  {
+    file: 'app/providers/page.tsx',
+    name: 'Provider contact onboarding',
+    pattern: /Contact the ClawFarm team/,
+  },
+  {
+    file: 'app/builders/page.tsx',
+    name: 'Buyer API-key onboarding',
+    pattern: /cfk_\*/,
+  },
+  {
+    file: 'app/builders/page.tsx',
+    name: 'Buyer contact onboarding',
+    pattern: /Contact the ClawFarm team/,
+  },
+  {
+    file: 'app/docs/page.tsx',
+    name: 'AIRouter chat route',
+    pattern: /\/clawfarm\/chat\/completions/,
+  },
+  {
+    file: 'scripts/generate-whitepaper-v1.py',
+    name: 'Cold-start seed pair',
+    pattern: /500,000 CLAF[\s\S]{0,180}50 USDC/,
+  },
+]
+
+const staleLaunchChecks = [
+  { name: 'Mainnet still pending', pattern: /Mainnet (?:target )?(?:pending|not deployed)|mainnet deployment record exists yet/i },
+  { name: 'public SDK package', pattern: /@clawfarm\/sdk|sdk-wrapper-target|Start with the SDK/i },
+  { name: 'fictional payment wrapper endpoint', pattern: /\/devnet\/payment-transactions/i },
+]
+
+const staleWhitepaperChecks = [
+  { name: 'old seed CLAF amount', pattern: /10,000,000 CLAF/ },
+  { name: 'old seed USDC amount', pattern: /5,000 USDC/ },
+  { name: 'old opening price', pattern: /0\.0005 USDC per CLAF/ },
+  { name: 'old seed FDV', pattern: /500,000 USDC/ },
+]
+
 const publicCopyFiles = uniqueFiles.filter((file) => file.startsWith('app/') || file === 'README.md')
 const failures = []
 
@@ -76,8 +122,20 @@ function scan(filesToScan, checks) {
   }
 }
 
+function scanRequired(checks) {
+  for (const check of checks) {
+    const text = readFileSync(check.file, 'utf8')
+    if (!check.pattern.test(text)) {
+      failures.push(`${check.file}: missing ${check.name}`)
+    }
+  }
+}
+
 scan(uniqueFiles, globalChecks)
 scan(publicCopyFiles, publicCopyChecks)
+scan(publicCopyFiles, staleLaunchChecks)
+scan(['scripts/generate-whitepaper-v1.py'], staleWhitepaperChecks)
+scanRequired(requiredChecks)
 
 if (failures.length > 0) {
   console.error('Site content verification failed:')
