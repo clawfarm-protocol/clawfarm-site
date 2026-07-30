@@ -8,6 +8,7 @@ That keeps paragraph flow, page breaks, headers, and tables deterministic.
 from __future__ import annotations
 
 from pathlib import Path
+from shutil import copyfile
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
@@ -316,9 +317,9 @@ SECTIONS = [
     (
         "14. Cold-start commitment",
         [
-            "CLAF launches with no schedule pre-allocation to the team, investors, foundation, marketing, or maintenance, and with no pre-existing market. The protocol bootstraps initial liquidity with 10,000,000 CLAF, 1.0 percent of total supply, donated by early community members. This portion is publicly verifiable on-chain and is not retained by any donor or team wallet.",
-            "The donated CLAF is paired with 5,000 USDC of team-provided capital, creating a Raydium CPMM pool at an initial fully diluted valuation of 500,000 USDC and an opening price of 0.0005 USDC per CLAF.",
-            "The LP tokens received from pool creation are burned. No donor or team wallet retains any claim on the seed liquidity. The 5,000 USDC and 10,000,000 CLAF become surrendered pool depth that supports subsequent buyback and add-LP activity.",
+            "CLAF launches with no schedule pre-allocation to the team, investors, foundation, marketing, or maintenance, and with no pre-existing market. The protocol bootstraps initial liquidity with 500,000 CLAF, 0.05 percent of total supply, donated by early community members. This portion is publicly verifiable on-chain and is not retained by any donor or team wallet.",
+            "The donated CLAF is paired with 50 USDC of team-provided capital, creating a Raydium CPMM pool at an initial fully diluted valuation of 100,000 USDC and an opening price of 0.0001 USDC per CLAF.",
+            "The LP tokens received from pool creation are burned. No donor or team wallet retains any claim on the seed liquidity. The 50 USDC and 500,000 CLAF become surrendered pool depth that supports subsequent buyback and add-LP activity.",
             "Once revenue begins, treasury buyback can add further protocol-owned liquidity through the code-locked vault described in Section 9. The protocol-owned LP position grows with successful add-LP execution, subject to market conditions and execution success.",
         ],
     ),
@@ -358,9 +359,9 @@ PARAMETERS = [
     ("Max slice size", "5,000 USDC"),
     ("Min slice interval", "30 seconds"),
     ("Slippage tolerance", "0.5 percent, configurable through bounded admin controls"),
-    ("Min pool liquidity", "0 at deploy; raised to 5,000 USDC after pool seeding; intended to ratchet up"),
+    ("Min pool liquidity", "0 at deploy; activated only after pool seeding and subject to the bounded launch policy"),
     ("Protocol-owned liquidity", "LP minted by buy-and-add-LP is sent to a code-locked vault with no withdrawal path"),
-    ("Initial pool seeding", "5,000 USDC + 10,000,000 CLAF, with seed LP burned at pool creation"),
+    ("Initial pool seeding", "50 USDC + 500,000 CLAF, with seed LP burned at pool creation"),
     ("Provider bond", "100 USDC mainnet target"),
     ("Challenge mechanism", "Permissionless bond and slash target"),
     ("Upgrade authority", "Single Squads multisig at Genesis, threshold 2-of-3, team-held, never renounced; all upgrades pass through a 24-hour on-chain timelock"),
@@ -470,7 +471,7 @@ def write_pdf(path: Path):
 def main():
     OUT_MAIN.parent.mkdir(parents=True, exist_ok=True)
     write_pdf(OUT_MAIN)
-    write_pdf(OUT_VERSIONED)
+    copyfile(OUT_MAIN, OUT_VERSIONED)
     print(OUT_MAIN)
     print(OUT_VERSIONED)
 

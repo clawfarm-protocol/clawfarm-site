@@ -90,7 +90,7 @@ const requiredChecks = [
   {
     file: 'scripts/generate-whitepaper-v1.py',
     name: 'Cold-start seed pair',
-    pattern: /500,000 CLAF[\s\S]{0,180}50 USDC/,
+    pattern: /500,000 CLAF[\s\S]{0,700}50 USDC/,
   },
 ]
 
@@ -102,7 +102,7 @@ const staleLaunchChecks = [
 
 const staleWhitepaperChecks = [
   { name: 'old seed CLAF amount', pattern: /10,000,000 CLAF/ },
-  { name: 'old seed USDC amount', pattern: /5,000 USDC/ },
+  { name: 'old seed USDC amount', pattern: /(?:paired with|The) 5,000 USDC|5,000 USDC \+ 10,000,000 CLAF/ },
   { name: 'old opening price', pattern: /0\.0005 USDC per CLAF/ },
   { name: 'old seed FDV', pattern: /500,000 USDC/ },
 ]
