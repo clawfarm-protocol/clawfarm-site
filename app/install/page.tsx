@@ -1,56 +1,88 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Fragment } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Register a Provider — ClawFarm',
-  description: 'Register a provider wallet, configure endpoint metadata off-chain, record payments, and claim provider USDC through ClawFarm.',
+  title: 'Provider Onboarding — ClawFarm',
+  description: 'The production process for connecting an inference provider to AIRouter and ClawFarm masterpool v3 on Solana Mainnet.',
   alternates: { canonical: '/install' },
 }
+
+const preparationRows = [
+  ['API protocol', 'The upstream request and response format AIRouter should translate or forward.'],
+  ['Base URL', 'The upstream service origin and any required path conventions.'],
+  ['Models', 'Canonical model identifiers, capabilities, context limits, and availability.'],
+  ['Commercial limits', 'Per-model pricing, quotas, rate limits, concurrency, and timeouts.'],
+  ['API credential', 'An active upstream key delivered only through the agreed secure channel.'],
+  ['Provider wallet', 'A public Solana Mainnet address for ProviderAccountV3 and settlement claims.'],
+]
 
 export default function InstallPage() {
   return (
     <main>
       <section className="hero-section">
         <div className="container">
-          <p className="eyebrow">Providers</p>
-          <h1 className="page-title">Register a compute provider.</h1>
+          <p className="eyebrow">Provider onboarding</p>
+          <h1 className="page-title">Connect an upstream API to ClawFarm.</h1>
           <p className="page-copy">
-            Use the devnet v3 wrapper for current testing: register_provider_v3 creates the account, record_payment_v3 records wallet-paid usage, and finalized roots release provider USDC and CLAF. Mainnet target treasury and governance commitments are documented in the whitepaper and are not extra setup steps for the devnet provider wrapper.
-          </p>
-          <p className="page-copy">
-            The protocol does not ask where your capacity comes from, and would not
-            understand the answer.
+            Providers do not install a ClawFarm SDK. Onboarding connects an existing API to AIRouter, registers a public payout wallet, and lets the team configure the routing and settlement path.
           </p>
           <div className="hero-actions">
-            <a href="#setup" className="primary-button">Start registration →</a>
-            <Link href="/docs#provider" className="secondary-button">Read provider docs →</Link>
+            <a href="#process" className="primary-button">Review the process →</a>
+            <Link href="/docs#provider" className="secondary-button">Protocol details →</Link>
           </div>
+        </div>
+      </section>
+
+      <section className="section" id="process">
+        <div className="container">
+          <div className="section-heading">
+            <p className="section-kicker">Before contact</p>
+            <h2>Prepare six integration facts.</h2>
+          </div>
+          <div className="key-list">
+            {preparationRows.map(([label, detail]) => (
+              <Fragment key={label}>
+                <div>{label}</div>
+                <div>{detail}</div>
+              </Fragment>
+            ))}
+          </div>
+          <p className="section-footnote wide-footnote">
+            Never send a private key, seed phrase, or wallet file. ClawFarm needs only the public provider address. The upstream API key is separate from the Solana wallet and is stored encrypted by the operator.
+          </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
           <div className="section-heading">
-            <h2>One provider account path.</h2>
+            <p className="section-kicker">Production path</p>
+            <h2>Four operator-assisted steps.</h2>
           </div>
           <div className="two-column">
             <article className="border-panel">
-              <h3>Register a provider wallet.</h3>
+              <h3>01 · Contact</h3>
               <p>
-                If you run an inference service, model deployment, or compute capacity,
-                register the provider wallet with ClawFarm. Publish model list, pricing, and limits in the gateway or operator directory.
-                ProviderAccountV3 records provider wallet, pending provider USDC, status, and timestamps. Current v3 registration has no upfront USDC collateral transfer.
-              </p>
-              <p>
-                The on-chain registration is endpoint-agnostic: endpoint details remain in off-chain directory metadata.
+                Contact the ClawFarm team. Share the API protocol, base URL, model catalog, pricing, quota, and public Solana Mainnet provider wallet.
               </p>
             </article>
             <article className="border-panel">
-              <h3>Carry payment records, not identity.</h3>
+              <h3>02 · Secure handoff</h3>
               <p>
-                The protocol does not inspect where capacity comes from. It asks for a
-                wallet, off-chain directory metadata, and recorded payment facts for
-                each settled session.
+                Deliver the upstream API key through the secure channel agreed during onboarding. The team verifies upstream access and stores the credential encrypted for AIRouter.
+              </p>
+            </article>
+            <article className="border-panel">
+              <h3>03 · Configure</h3>
+              <p>
+                ClawFarm maps the models and limits into AIRouter, validates routing behavior, and bootstraps the wallet&apos;s <span className="mono">ProviderAccountV3</span> on Mainnet.
+              </p>
+            </article>
+            <article className="border-panel">
+              <h3>04 · Activate</h3>
+              <p>
+                After an end-to-end request and settlement check, the provider becomes available to eligible Buyer traffic. Changes to credentials, models, or pricing follow the same operator review.
               </p>
             </article>
           </div>
@@ -61,111 +93,25 @@ export default function InstallPage() {
         <div className="container">
           <div className="stat-grid">
             <div className="stat-cell">
-              <p className="stat-value">100% base</p>
-              <p className="stat-desc">provider pending USDC before configured tax</p>
+              <p className="stat-value">Native USDC</p>
+              <p className="stat-desc">Mainnet payment asset</p>
             </div>
             <div className="stat-cell">
               <p className="stat-value">70%</p>
               <p className="stat-desc">provider epoch weight share</p>
             </div>
             <div className="stat-cell">
-              <p className="stat-value">No collateral transfer</p>
-              <p className="stat-desc">current v3 provider registration</p>
+              <p className="stat-value">Zero transferred</p>
+              <p className="stat-desc">current v3 registration stake</p>
             </div>
             <div className="stat-cell">
-              <p className="stat-value">Direct claims</p>
-              <p className="stat-desc">CLAF transfers from reward vault</p>
+              <p className="stat-value">Merkle claims</p>
+              <p className="stat-desc">finalized USDC and CLAF settlement</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-heading">
-            <h2>How it works.</h2>
-          </div>
-          <div className="two-column">
-            <article className="border-panel">
-              <h3>Register</h3>
-              <p>
-                A provider wrapper can call <span className="mono">register_provider_v3</span> to create the on-chain ProviderAccountV3 with wallet, pending provider USDC, status, and timestamps. Current devnet v3 registration has no upfront provider-stake transfer. Configure endpoint, models, and pricing in an off-chain gateway or operator directory.
-              </p>
-            </article>
-            <article className="border-panel">
-              <h3>Serve</h3>
-              <p>
-                Apps and gateways choose your provider wallet from off-chain directory metadata. You serve inference after the payer token delegate is prepared for payment recording.
-              </p>
-            </article>
-            <article className="border-panel">
-              <h3>Record payment</h3>
-              <p>
-                A wrapper prepares the payment nonce hash and payment record. Masterpool v3 records the payment, then updates the epoch accumulator and payment bitmap.
-              </p>
-            </article>
-            <article className="border-panel">
-              <h3>Receive</h3>
-              <p>
-                After epoch settlement finalizes, provider base-charge Test USDC and provider-side CLAF rewards release through Merkle proof claims against the finalized settlement root.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="setup">
-        <div className="container">
-          <div className="section-heading">
-            <h2>SDK setup.</h2>
-          </div>
-          <p className="caption">Provider wrapper target</p>
-          <pre className="code-block"><code>{`# Wrapper target: calls register_provider_v3
-clawfarm provider register \
-  --cluster devnet \
-  --provider-wallet <provider-wallet> \
-  --provider-usdc-token <provider-usdc-token>
-
-# Wrapper target: writes off-chain directory metadata
-clawfarm directory configure \
-  --endpoint https://endpoint.invalid/v1 \
-  --models model-l-001,model-l-002`}</code></pre>
           <p className="section-footnote wide-footnote">
-            The provider wrapper signs with the provider wallet and supplies the ProviderAccountV3 accounts required by current devnet registration. Provider USDC and CLAF claims are handled later through finalized settlement roots; target treasury and governance policy does not add devnet provider setup steps.
+            Masterpool v3 records the base charge and configured tax separately. Base USDC waits in the provider-pending vault until a finalized settlement root authorizes the provider claim; the tax portion moves to the treasury vault at payment-record time.
           </p>
-
-          <div style={{ height: 32 }} />
-
-          <p className="caption">Operator directory config</p>
-          <pre className="code-block"><code>{`{
-  "endpoint": "https://endpoint.invalid/v1",
-  "wallet": "your_solana_wallet_address",
-  "pricing": {
-    "input_per_1m_tokens_usdc": 2.50,
-    "output_per_1m_tokens_usdc": 10.00
-  },
-  "models": ["model-l-001", "model-l-002"],
-  "limits": {
-    "max_requests_per_minute": 120,
-    "timeout_ms": 60000
-  }
-}`}</code></pre>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-heading">
-            <h2>Open-source repos.</h2>
-          </div>
-          <div className="key-list">
-            <div>clawfarm-protocol/contracts</div>
-            <div>Solana programs for payment settlement and reward accounting.</div>
-            <div>clawfarm-protocol/provider-sdk</div>
-            <div>Provider registration and payment-record tools.</div>
-            <div>clawfarm-protocol/sdk</div>
-            <div>Builder SDK.</div>
-          </div>
         </div>
       </section>
     </main>
