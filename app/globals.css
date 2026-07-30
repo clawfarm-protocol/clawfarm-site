@@ -934,6 +934,11 @@ strong {
   align-items: start;
 }
 
+.docs-toc,
+.docs-content {
+  min-width: 0;
+}
+
 .docs-toc {
   position: sticky;
   top: 32px;
@@ -973,7 +978,9 @@ strong {
 }
 
 .key-list div {
+  min-width: 0;
   padding: 12px 0;
+  overflow-wrap: anywhere;
   border-bottom: 1px solid var(--border);
 }
 
@@ -1277,8 +1284,9 @@ strong {
   .state-grid,
   .supply-grid,
   .action-columns,
-  .two-column {
-    grid-template-columns: 1fr;
+  .two-column,
+  .key-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

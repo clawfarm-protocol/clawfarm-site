@@ -13,16 +13,6 @@ import {
 const miningEvents: string[][] = []
 const miningEventsState: LiveSurfaceState = 'loading'
 
-const registryRows = [
-  ['model-l-001', '—', '—', '—'],
-  ['model-l-002', '—', '—', '—'],
-  ['model-l-003', '—', '—', '—'],
-  ['model-i-001', '—', '—', '—'],
-  ['model-i-002', '—', '—', '—'],
-  ['model-v-001', '—', '—', '—'],
-  ['model-v-002', '—', '—', '—'],
-]
-
 export default function Home() {
   return (
     <main>
@@ -139,36 +129,20 @@ export default function Home() {
 
       <section className="section" id="directory">
         <div className="container">
-          <SectionHeader eyebrow="Directory" title="Model labels for payment records." />
+          <SectionHeader eyebrow="Catalog" title="Discover models through AIRouter." />
           <p className="section-intro">
-            Any wallet can choose a provider. Directory data remains off-chain.
+            The available catalog is operational data, not a hard-coded protocol registry. Authenticated Buyers query AIRouter before selecting a model.
           </p>
-          <div className="protocol-table-shell">
-            <table className="protocol-table model-catalog-table">
-              <thead>
-                <tr>
-                  <th>Model</th>
-                  <th className="num-col">Providers</th>
-                  <th className="num-col">Price</th>
-                  <th className="num-col">30d volume</th>
-                </tr>
-              </thead>
-              <tbody>
-                {registryRows.map(([model, providers, price, volume]) => (
-                  <tr key={model}>
-                    <td>{model}</td>
-                    <td className="right">
-                      <a className="count-link" href="/state#overview" data-live-field={`${model}-provider-count`}>{providers}</a>
-                    </td>
-                    <td className="right" data-live-field={`${model}-price`}>{price}</td>
-                    <td className="right" data-live-field={`${model}-volume`}>{volume}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="key-list">
+            <div>Catalog</div>
+            <div><span className="mono">GET /clawfarm/v1/models</span> returns the model IDs currently exposed to the authenticated Buyer.</div>
+            <div>Selection</div>
+            <div>Send the selected ID through the matching OpenAI-, Anthropic-, or Google-compatible AIRouter route.</div>
+            <div>On-chain scope</div>
+            <div>Masterpool v3 records payment and settlement facts; model and endpoint metadata remain in AIRouter.</div>
           </div>
           <p className="table-action">
-            <a href="/docs#models">Full model directory →</a>
+            <a href="/docs#routes">AIRouter route reference →</a>
           </p>
         </div>
       </section>
