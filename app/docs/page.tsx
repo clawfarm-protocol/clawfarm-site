@@ -1,403 +1,202 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Documentation — ClawFarm',
-  description: 'Devnet SDK, payment lifecycle, epoch settlement, and Phase 1 protocol economics for ClawFarm.',
+  description: 'AIRouter HTTP integration, Provider onboarding, and masterpool v3 settlement reference for ClawFarm on Solana Mainnet.',
   alternates: { canonical: '/docs' },
 }
 
 const toc = [
-  ['Quickstart', '#quickstart'],
-  ['Install', '#install'],
-  ['Configure devnet', '#configure-devnet'],
-  ['SDK wrapper target', '#sdk-wrapper-target'],
-  ['Current contract shape', '#current-contract-shape'],
-  ['Gateway wrapper target', '#gateway-wrapper-target'],
-  ['Provider', '#provider'],
-  ['Models', '#models'],
-  ['Protocol', '#protocol'],
-  ['Architecture', '#architecture'],
-  ['Smart contracts', '#contracts'],
+  ['Buyer quickstart', '#quickstart'],
+  ['Authentication', '#authentication'],
+  ['HTTP routes', '#routes'],
+  ['Settlement', '#settlement'],
+  ['Provider onboarding', '#provider'],
+  ['Contract shape', '#contract'],
   ['Payment lifecycle', '#payment-lifecycle'],
-  ['Phase 1 economics', '#phase-1-economics'],
-  ['Challenges', '#challenges'],
-  ['Devnet parameters', '#devnet-parameters'],
-  ['Reproducibility', '#reproducibility'],
+  ['Mainnet parameters', '#mainnet-parameters'],
   ['Resources', '#resources'],
 ]
+
+const chatExample = `curl "$CLAWFARM_GATEWAY_URL/clawfarm/chat/completions" \\
+  -H "X-Api-Key: $CLAWFARM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "<model-id>",
+    "messages": [
+      {"role": "user", "content": "What is proof-based settlement?"}
+    ]
+  }'`
 
 export default function DocsPage() {
   return (
     <main>
       <section className="hero-section">
         <div className="container">
+          <p className="eyebrow">AIRouter · masterpool v3</p>
           <h1 className="page-title">Documentation</h1>
-          <p className="page-copy">Devnet integration guides and Phase 1 payment and epoch-settlement specification.</p>
+          <p className="page-copy">
+            Direct HTTP integration for Buyers, operator-assisted onboarding for Providers, and the on-chain settlement facts behind both paths.
+          </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container docs-layout">
           <nav className="docs-toc" aria-label="Documentation sections">
-            {toc.map(([label, href], index) => (
-              <a className={index > 0 && index < 7 ? 'toc-sub' : undefined} href={href} key={href}>
-                {label}
-              </a>
-            ))}
+            {toc.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
           </nav>
 
           <article className="docs-content">
             <section id="quickstart">
-              <h2>Quickstart</h2>
+              <h2>Buyer quickstart</h2>
               <p>
-                The devnet contract path is Solana-native. SDK examples on this page are wrapper targets: the wrapper must build payment indexes, payment nonce hashes, payer token delegates, epoch PDAs, Merkle settlement artifacts, and masterpool v3 accounts before sending transactions.
+                Contact the ClawFarm team to receive a one-time <span className="mono">cfk_*</span> API key and bind a public Solana Mainnet wallet. Fund that wallet with native Mainnet USDC before sending paid traffic. Never provide the wallet&apos;s private key or seed phrase.
               </p>
               <p>
-                This page separates current devnet v3 behavior from mainnet targets. Devnet v3 is live with 300-second epochs, a 60-second challenge window, a 3 percent payment-tax cap, zero upfront provider-stake transfer, and proof-based claims. The mainnet target keeps a 1-hour epoch, treasury split and buyback policy, bounded governance, and protocol-owned liquidity as whitepaper-level launch commitments.
+                ClawFarm does not require an SDK. Call AIRouter from a trusted server environment using the issued key and a model returned by the models endpoint.
               </p>
-              <h3 id="install">Install</h3>
-              <pre className="code-block"><code>{`npm install @clawfarm/sdk`}</code></pre>
-              <h3 id="configure-devnet">Configure devnet</h3>
-              <pre className="code-block"><code>{`import { ClawFarm } from '@clawfarm/sdk'
-
-const cf = new ClawFarm({
-  cluster: 'devnet',
-})`}</code></pre>
+              <h3>Environment</h3>
+              <pre className="code-block"><code>{`export CLAWFARM_GATEWAY_URL="<gateway-url>"
+export CLAWFARM_API_KEY="<issued-cfk-key>"`}</code></pre>
+              <h3>Discover models</h3>
+              <pre className="code-block"><code>{`curl "$CLAWFARM_GATEWAY_URL/clawfarm/v1/models" \\
+  -H "Authorization: Bearer $CLAWFARM_API_KEY"`}</code></pre>
+              <h3>Send a chat completion</h3>
+              <pre className="code-block"><code>{chatExample}</code></pre>
             </section>
 
-            <section id="sdk-wrapper-target">
-              <h2>SDK wrapper target</h2>
-              <p>
-                A contract-aligned wrapper records wallet-paid usage through masterpool v3, then settles ended epochs through aggregate roots and Merkle claims.
-              </p>
-              <h3>TypeScript</h3>
-              <pre className="code-block"><code>{`const payment = await cf.payments.record({
-  providerWallet,
-  payer: connectedWallet.publicKey,
-  payerUsdcToken,
-  paymentDelegate,
-  paymentIndex: 42n,
-  paymentNonceHash,
-  baseChargeUsdc: '0.025000',
-  taxRateBps: 300,
-  taxSweepThresholdAmount: 0n,
-})
+            <section id="authentication">
+              <h2>Authentication</h2>
+              <p>Use either accepted header form. Do not send both, log the credential, or expose it in browser-delivered JavaScript.</p>
+              <pre className="code-block"><code>{`Authorization: Bearer $CLAWFARM_API_KEY
 
-const settlement = await cf.epochs.commitSettlement({
-  epochId: payment.epochId,
-  usageRoot,
-  providerRoot,
-  buyerRoot,
-  artifactHash,
-  artifactUriHash,
-  totals: payment.epochTotals,
-  providerPoolClaf,
-  buyerPoolClaf,
-})
-
-await cf.epochs.finalizeSettlement({ epochId: settlement.epochId })
-
-await cf.epochs.claimProviderEpoch({
-  epochId: settlement.epochId,
-  leafIndex,
-  totalProviderUsdc,
-  providerWeight,
-  providerClafReward,
-  proof,
-})
-
-await cf.epochs.claimBuyerReward({
-  epochId: settlement.epochId,
-  leafIndex,
-  buyerWeight,
-  buyerClafReward,
-  proof,
-})`}</code></pre>
-              <h3>Python</h3>
-              <pre className="code-block"><code>{`payment = cf.payments.record(
-    provider_wallet=provider_wallet,
-    payer=connected_wallet.public_key,
-    payer_usdc_token=payer_usdc_token,
-    payment_delegate=payment_delegate,
-    payment_index=42,
-    payment_nonce_hash=payment_nonce_hash,
-    base_charge_usdc="0.025000",
-    tax_rate_bps=300,
-    tax_sweep_threshold_amount=0,
-)
-
-settlement = cf.epochs.commit_settlement(
-    epoch_id=payment.epoch_id,
-    usage_root=usage_root,
-    provider_root=provider_root,
-    buyer_root=buyer_root,
-    artifact_hash=artifact_hash,
-    artifact_uri_hash=artifact_uri_hash,
-    totals=payment.epoch_totals,
-    provider_pool_claf=provider_pool_claf,
-    buyer_pool_claf=buyer_pool_claf,
-)
-
-cf.epochs.finalize_settlement(epoch_id=settlement.epoch_id)
-
-cf.epochs.claim_provider_epoch(
-    epoch_id=settlement.epoch_id,
-    leaf_index=leaf_index,
-    total_provider_usdc=total_provider_usdc,
-    provider_weight=provider_weight,
-    provider_claf_reward=provider_claf_reward,
-    proof=proof,
-)
-
-cf.epochs.claim_buyer_reward(
-    epoch_id=settlement.epoch_id,
-    leaf_index=leaf_index,
-    buyer_weight=buyer_weight,
-    buyer_claf_reward=buyer_claf_reward,
-    proof=proof,
-)`}</code></pre>
-              <h3>Rust</h3>
-              <pre className="code-block"><code>{`let payment = cf.payments().record()
-    .provider_wallet(provider_wallet)
-    .payer(connected_wallet.pubkey())
-    .payer_usdc_token(payer_usdc_token)
-    .payment_delegate(payment_delegate)
-    .payment_index(42)
-    .payment_nonce_hash(payment_nonce_hash)
-    .base_charge_usdc("0.025000")
-    .tax_rate_bps(300)
-    .tax_sweep_threshold_amount(0)
-    .send()
-    .await?;
-
-let settlement = cf.epochs().commit_settlement()
-    .epoch_id(payment.epoch_id)
-    .usage_root(usage_root)
-    .provider_root(provider_root)
-    .buyer_root(buyer_root)
-    .artifact_hash(artifact_hash)
-    .artifact_uri_hash(artifact_uri_hash)
-    .totals(payment.epoch_totals)
-    .provider_pool_claf(provider_pool_claf)
-    .buyer_pool_claf(buyer_pool_claf)
-    .send()
-    .await?;
-
-cf.epochs().finalize_settlement(settlement.epoch_id).send().await?;
-
-cf.epochs().claim_provider_epoch()
-    .epoch_id(settlement.epoch_id)
-    .leaf_index(leaf_index)
-    .total_provider_usdc(total_provider_usdc)
-    .provider_weight(provider_weight)
-    .provider_claf_reward(provider_claf_reward)
-    .proof(proof.clone())
-    .send()
-    .await?;
-
-cf.epochs().claim_buyer_reward()
-    .epoch_id(settlement.epoch_id)
-    .leaf_index(leaf_index)
-    .buyer_weight(buyer_weight)
-    .buyer_claf_reward(buyer_claf_reward)
-    .proof(proof)
-    .send()
-    .await?;`}</code></pre>
-            </section>
-
-            <section id="current-contract-shape">
-              <h2>Current devnet contract shape</h2>
-              <p>
-                The SDK wrapper target maps to `clawfarm_masterpool_v3`. The current masterpool records payments directly, accumulates epoch totals, commits settlement roots, and verifies Merkle proofs for claims. Model IDs, endpoint metadata, and price metadata remain off-chain inputs to wrapper artifacts.
-              </p>
+# or
+X-Api-Key: $CLAWFARM_API_KEY`}</code></pre>
               <div className="key-list">
-                <div>RecordPaymentV3Args</div>
-                <div>payment_index, payment_nonce_hash, base_charge_atomic, tax_rate_bps, and tax_sweep_threshold_amount.</div>
-                <div>Payment recording</div>
-                <div>The payer token delegate authorizes gross payment. Tax transfers to treasury, base charge transfers to provider pending, and the epoch accumulator records base, tax, gross, and payment count.</div>
-                <div>Payment bitmap</div>
-                <div>EpochPaymentBitmap marks payment indexes so the same payment index cannot be reused inside an epoch chunk.</div>
-                <div>Epoch settlement</div>
-                <div>After an epoch ends, the wrapper commits usage, provider, and buyer Merkle roots plus aggregate totals into an EpochSettlementBatch.</div>
-                <div>Claims</div>
-                <div>Finalized EpochSettlementRoot accounts release provider USDC and CLAF rewards through provider and buyer Merkle proofs.</div>
-                <div>Current versus target epoch</div>
-                <div>Current devnet v3 uses 300-second epochs for accelerated testing; the mainnet target is a 1-hour epoch.</div>
-                <div>Reserved payment field</div>
-                <div>record_payment_v3 accepts a payment nonce hash and tax_sweep_threshold_amount; current v3 deduplicates payment_index through the epoch bitmap and stores aggregate totals in the accumulator. Wrappers and indexers preserve per-payment identity and nonce metadata off-chain.</div>
-                <div>Payment tax range</div>
-                <div>Payment tax rate must be at least 50 bps and at or below GlobalConfigV3.tax_rate_bps.</div>
-                <div>CLAF pool calculation</div>
-                <div>commit_epoch_settlement_v3 stores provider_pool_claf and buyer_pool_claf supplied by the settlement artifact; current v3 does not compute emission on-chain.</div>
-                <div>Target treasury layer</div>
-                <div>Mainnet target treasury policy belongs to the whitepaper target layer, not the current devnet v3 masterpool settlement instruction set.</div>
+                <div>API key</div>
+                <div>A one-time <span className="mono">cfk_*</span> credential issued during Buyer onboarding.</div>
+                <div>Bound wallet</div>
+                <div>The public Mainnet wallet registered to the active billing configuration.</div>
+                <div>Funding</div>
+                <div>Native Solana Mainnet USDC funds paid inference; maintain the balance before sending traffic.</div>
               </div>
             </section>
 
-            <section id="gateway-wrapper-target">
-              <h2>Gateway wrapper target</h2>
-              <p>
-                A gateway API may collect usage metadata, but it must create or return Solana transactions that follow the current masterpool v3 shape. It is not a contract-native REST endpoint.
-              </p>
-              <pre className="code-block"><code>{`POST /devnet/payment-transactions
-{
-  "providerWallet": "<provider-wallet>",
-  "payer": "<payer-wallet>",
-  "payerUsdcToken": "<payer-usdc-token>",
-  "paymentIndex": "42",
-  "paymentNonceHash": "<client-generated-nonce-hash>",
-  "metadata": {
-    "model": "model-l-001",
-    "unit": "tokens"
-  },
-  "baseChargeUsdc": "0.025000",
-  "taxRateBps": 300,
-  "taxSweepThresholdAmount": "0"
-}`}</code></pre>
-              <p>
-                The gateway wrapper response should contain a transaction or signing payload for `record_payment_v3`. Epoch settlement wrappers later commit aggregate roots and claim proofs.
-              </p>
+            <section id="routes">
+              <h2>HTTP routes</h2>
+              <p>AIRouter exposes protocol-compatible request surfaces. Use the path matching the request and response format already used by your application.</p>
+              <div className="key-list">
+                <div>GET /clawfarm/v1/models</div>
+                <div>Lists the model IDs currently exposed through ClawFarm.</div>
+                <div>GET /clawfarm/v1/model-quota</div>
+                <div>Returns quota information for the authenticated Buyer and selected model context.</div>
+                <div>POST /clawfarm/chat/completions</div>
+                <div>OpenAI-compatible chat completions.</div>
+                <div>POST /clawfarm/v1/responses</div>
+                <div>OpenAI-compatible Responses requests.</div>
+                <div>POST /clawfarm/v1/messages</div>
+                <div>Anthropic-compatible Messages requests.</div>
+                <div>POST /clawfarm/google/v1/models/&lt;model&gt;:generateContent</div>
+                <div>Google-compatible generated content, including the corresponding <span className="mono">:streamGenerateContent</span> form.</div>
+                <div>POST /clawfarm/models/&lt;model&gt;:generateContent</div>
+                <div>Short Google-compatible path, also supporting the streaming method suffix.</div>
+              </div>
             </section>
 
-            <section id="gateway-selection">
-              <h2>Gateway selection</h2>
-              <p>Applications or gateways choose the provider before payment recording. Masterpool v3 records payment identities, base charge, tax, epoch accumulator state, and payment bitmap state; finalized epoch roots later carry usage, provider, and buyer allocation data.</p>
+            <section id="settlement">
+              <h2>Asynchronous settlement</h2>
+              <p>
+                AIRouter authorizes traffic against the active billing configuration and its bound wallet, meters the request, persists a receipt, and queues the masterpool v3 settlement path. The inference response does not wait for on-chain finalization.
+              </p>
               <div className="key-list">
-                <div>Directory</div>
-                <div>Endpoint, model, price, and limits are off-chain operator metadata.</div>
-                <div>Selection</div>
-                <div>Any app may choose a provider wallet before recording a masterpool v3 payment.</div>
-                <div>Settlement</div>
-                <div>Ended epochs settle through aggregate totals, usage roots, provider roots, buyer roots, and Merkle proof claims.</div>
+                <div>X-ClawFarm-Request-Nonce</div>
+                <div>Request identity used for payment, proof, and settlement lookup.</div>
+                <div>X-ClawFarm-Payment-Status</div>
+                <div><span className="mono">settlement_pending</span> means a durable receipt exists and settlement is queued; it is not a final on-chain confirmation.</div>
+                <div>X-ClawFarm-Max-Charge-Atomic</div>
+                <div>Maximum authorized charge in atomic USDC units.</div>
+                <div>X-ClawFarm-Charge-Atomic</div>
+                <div>Metered charge when available on the response.</div>
+                <div>X-ClawFarm-Receipt-Hash</div>
+                <div>Receipt identity when emitted by the asynchronous settlement path.</div>
               </div>
+              <p>
+                Public proof and settlement lookup surfaces can resolve records by request nonce or receipt hash. Preserve those response values with your application logs, without logging the API key.
+              </p>
             </section>
 
             <section id="provider">
-              <h2>Provider</h2>
-              <p>Providers register one wallet-controlled ProviderAccountV3. Current registration initializes staking state without requiring an upfront collateral transfer.</p>
+              <h2>Provider onboarding</h2>
+              <p>
+                Contact the ClawFarm team. Provide the supported API protocol, upstream base URL, model catalog, pricing, quota, rate limits, timeout constraints, and the public Solana Mainnet provider wallet.
+              </p>
+              <p>
+                Deliver the upstream API key only through the secure channel agreed with the team. ClawFarm verifies the upstream, stores the key encrypted, configures AIRouter, and bootstraps <span className="mono">ProviderAccountV3</span>. Never send a provider private key, seed phrase, or wallet file.
+              </p>
               <div className="key-list">
-                <div>Register</div>
-                <div>Masterpool registration records the provider wallet, initializes staked_usdc_amount to zero, and sets active status. Endpoint, model, and pricing metadata live in the off-chain gateway or operator directory layer.</div>
-                <div>Stake</div>
-                <div>GlobalConfigV3 retains provider_stake_usdc, but current register_provider_v3 initializes staked_usdc_amount to zero and does not enforce or transfer upfront collateral.</div>
-                <div>Pricing</div>
-                <div>Input, output, request, image, second, or task units.</div>
-                <div>Payment artifacts</div>
-                <div>Wrappers derive payment nonce hashes, epoch PDAs, accumulator accounts, bitmap chunks, and settlement artifacts before sending masterpool v3 transactions.</div>
-              </div>
-              <p>The masterpool account does not store endpoint infrastructure; applications and gateways bind endpoint metadata outside the on-chain provider account.</p>
-            </section>
-
-            <section id="models">
-              <h2>Models</h2>
-              <p>Model identifiers remain off-chain metadata used by applications and gateway directories. Masterpool v3 records payment and settlement artifacts, not model IDs.</p>
-              <div className="key-list">
-                <div>model-l-001</div>
-                <div>Language model label supplied to wrapper artifacts outside ProviderAccountV3.</div>
-                <div>model-i-001</div>
-                <div>Image model label supplied to wrapper artifacts outside ProviderAccountV3.</div>
-                <div>model-v-001</div>
-                <div>Video model label supplied to wrapper artifacts outside ProviderAccountV3.</div>
-              </div>
-            </section>
-
-            <section id="protocol">
-              <h2>Protocol</h2>
-              <p>ClawFarm Phase 1 is a payment-driven epoch settlement protocol for AI inference on Solana.</p>
-              <h3 id="architecture">Architecture</h3>
-              <pre className="code-block"><code>{`WALLET / APP LAYER
-  Users · Builders · Agents · Provider operators
-
-OFF-CHAIN DIRECTORY
-  Provider choices · Model labels · Endpoint metadata · Price metadata
-
-MASTERPOOL V3 PAYMENT LAYER
-  ProviderAccountV3 · EpochPaymentAccumulator · EpochPaymentBitmap · Treasury and provider pending vaults
-
-EPOCH SETTLEMENT LAYER
-  EpochSettlementBatch · EpochSettlementChallenge · EpochSettlementRoot · EpochClaimBitmap · Merkle proof claims`}</code></pre>
-              <h3 id="contracts">Smart contracts</h3>
-              <div className="key-list">
-                <div>clawfarm-masterpool-v3</div>
-                <div>Records payments, accumulates epoch totals, commits settlement roots, handles epoch settlement challenges, and verifies provider or buyer claim proofs.</div>
+                <div>Provider metadata</div>
+                <div>Endpoint, models, pricing, limits, and upstream credentials remain in the off-chain AIRouter operator layer.</div>
                 <div>ProviderAccountV3</div>
-                <div>Stores provider wallet, pending provider USDC, status, and timestamps.</div>
-                <div>EpochPaymentAccumulator</div>
-                <div>Stores epoch payment count plus total base, tax, and gross USDC recorded through masterpool v3.</div>
-                <div>EpochSettlementRoot</div>
-                <div>Stores finalized usage, provider, and buyer roots, aggregate totals, CLAF pools, claimed totals, and finalization timestamp.</div>
+                <div>Stores the provider wallet, pending provider USDC, status, and timestamps.</div>
+                <div>Current registration stake</div>
+                <div><span className="mono">register_provider_v3</span> initializes <span className="mono">staked_usdc_amount</span> to zero and transfers no upfront stake.</div>
+                <div>Configuration parameter</div>
+                <div>Mainnet GlobalConfigV3 stores a 100 USDC provider-stake parameter, but the current registration instruction does not collect it.</div>
               </div>
-              <h3 id="payment-lifecycle">Payment lifecycle</h3>
-              <pre className="code-block"><code>{`1. Wallet authorizes bounded Test USDC settlement through a payer token delegate.
-2. App or gateway prepares payment_index, payment_nonce_hash, base_charge_atomic, and tax_rate_bps.
-3. Masterpool v3 records payment, transfers tax to treasury, transfers base charge to provider pending, and marks the epoch payment bitmap.
-4. Epoch payment accumulator stores payment count plus total base, tax, and gross USDC.
-5. After the epoch ends, an authorized submitter commits usage, provider, and buyer Merkle roots into an EpochSettlementBatch.
-6. Settlement challenges may invalidate a pending batch until accepted or rejected by authority.
-7. After the challenge deadline, finalization writes an EpochSettlementRoot.
-8. Providers and buyers claim USDC or CLAF with Merkle proofs against the finalized root.`}</code></pre>
-              <h3 id="phase-1-economics">Phase 1 economics</h3>
-              <div className="key-list">
-                <div>Payment tax</div>
-                <div>Masterpool v3 computes tax from the configured tax_rate_bps. The current payment tax rate must be at least 50 bps and at or below the configured cap; gross payment equals base charge plus tax.</div>
-                <div>Provider pending</div>
-                <div>Base charge moves to the provider pending vault during payment recording and is released through provider Merkle claims after epoch settlement finalizes.</div>
-                <div>Epoch roots</div>
-                <div>Ended epochs settle through usage, provider, and buyer roots plus aggregate base, tax, and gross totals.</div>
-                <div>Pool split</div>
-                <div>Finalized settlement roots carry provider and buyer CLAF pools for Merkle proof claims.</div>
-                <div>Emission artifact</div>
-                <div>Current v3 stores settlement-root CLAF pool caps supplied by the wrapper or indexer artifact; epoch length changes cadence and per-epoch pool size, not the total scheduled CLAF emission.</div>
-                <div>Claim protection</div>
-                <div>EpochClaimBitmap accounts prevent repeated provider or buyer claims for the same epoch leaf.</div>
-              </div>
-              <h3 id="challenges">Challenges</h3>
-              <div className="key-list">
-                <div>Challenge scope</div>
-                <div>Challenges apply to pending EpochSettlementBatch accounts before finalization.</div>
-                <div>Open challenge</div>
-                <div>Opening a challenge invalidates the pending batch and stores evidence hashes in an EpochSettlementChallenge account.</div>
-                <div>Rejected challenge</div>
-                <div>The authority rejects the challenge and restores the batch to pending so it can finalize after the challenge deadline.</div>
-                <div>Accepted challenge</div>
-                <div>The authority accepts the challenge and closes the invalidated batch and challenge accounts.</div>
-              </div>
-              <h3 id="devnet-parameters">Devnet parameters</h3>
-              <div className="key-list">
-                <div>Cluster</div><div>Solana devnet</div>
-                <div>Masterpool implementation</div><div>clawfarm_masterpool_v3</div>
-                <div>Program source</div><div>Latest implementation facts derive from the sibling clawfarm-masterpool repository.</div>
-                <div>Provider collateral</div><div>ProviderAccountV3 includes staked_usdc_amount, but current registration initializes it to zero and does not transfer upfront collateral.</div>
-                <div>Payment tax</div><div>Config-capped in GlobalConfigV3; record_payment_v3 accepts payment rates from 50 bps through the configured cap.</div>
-                <div>Current epoch duration</div><div>300 seconds on devnet v3 for accelerated testing; 1 hour is the mainnet target.</div>
-                <div>Current challenge window</div><div>60 seconds on devnet v3.</div>
-                <div>Epoch settlement</div><div>Uses accumulator totals, payment bitmaps, settlement batches, challenges, finalized roots, and claim bitmaps.</div>
-                <div>Treasury target</div><div>Buyback, burn, and protocol-owned-liquidity policy are whitepaper target commitments, not current devnet masterpool instructions.</div>
-              </div>
+              <p><Link href="/install">Open the full Provider onboarding checklist →</Link></p>
             </section>
 
-            <section id="reproducibility">
-              <h2>Reproducibility</h2>
-              <p>Contract builds should be verified against the current clawfarm-masterpool repository. The command below exposes the v3 bootstrap wrapper surface for testnet/devnet setup flows.</p>
-              <h3>V3 wrapper command surface</h3>
-              <pre className="code-block"><code>{`yarn phase1:v3:bootstrap:testnet --help`}</code></pre>
-              <h3>Contract build</h3>
-              <pre className="code-block"><code>{`git clone <contract-source-url>
-cd clawfarm-masterpool
-anchor build
-anchor test`}</code></pre>
+            <section id="contract">
+              <h2>Current contract shape</h2>
+              <p>
+                Masterpool v3 is the protocol source of truth for payment and epoch settlement. AIRouter owns endpoint selection, model metadata, usage metering, receipt persistence, and settlement orchestration; those fields are not stored in ProviderAccountV3.
+              </p>
+              <div className="key-list">
+                <div>Payment recording</div>
+                <div>Records payer and provider identities, base charge, configured tax, payment index state, and epoch aggregates.</div>
+                <div>Vault movement</div>
+                <div>Tax moves to treasury and base USDC moves to provider pending when the payment is recorded.</div>
+                <div>Settlement batches</div>
+                <div>Authorized submissions commit usage, provider, and buyer roots with aggregate totals for an ended epoch.</div>
+                <div>Challenges</div>
+                <div>Accepted challenges invalidate bad pending batches; rejected challenges restore the batch to pending.</div>
+                <div>Claims</div>
+                <div>Finalized roots authorize Merkle-proof claims for provider USDC, provider CLAF, and Buyer CLAF.</div>
+              </div>
+
+              <h3 id="payment-lifecycle">Payment lifecycle</h3>
+              <pre className="code-block"><code>{`1. AIRouter authenticates the cfk_* key and resolves its active wallet-bound billing configuration.
+2. AIRouter selects an eligible upstream provider and bounds the maximum USDC charge.
+3. The upstream response is metered and a durable ClawFarm receipt is persisted.
+4. The response returns with settlement_pending while asynchronous settlement is queued.
+5. Masterpool v3 records the payment and moves tax and base USDC into their respective vaults.
+6. After the epoch ends, an authorized submitter commits aggregate settlement roots.
+7. A valid batch finalizes after review; Merkle proofs then authorize provider and Buyer claims.`}</code></pre>
+            </section>
+
+            <section id="mainnet-parameters">
+              <h2>Mainnet parameters</h2>
+              <div className="key-list">
+                <div>Cluster</div><div>Solana Mainnet</div>
+                <div>Payment mint</div><div>Native Solana Mainnet USDC</div>
+                <div>Epoch duration</div><div>3,600 seconds</div>
+                <div>Reward split</div><div>70 percent Provider / 30 percent Buyer</div>
+                <div>Payment tax cap</div><div>300 basis points</div>
+                <div>Emission inventory</div><div>1,000,000,000 CLAF over the configured emission duration</div>
+                <div>Pause state at snapshot</div><div>Payments, settlements, and claims are enabled</div>
+              </div>
+              <p><Link href="/network">Inspect program addresses and the dated Mainnet snapshot →</Link></p>
             </section>
 
             <section id="resources">
               <h2>Resources</h2>
-              <p>Reference files and mirrors for developers, providers, and auditors.</p>
               <div className="key-list">
-                <div>Contract source</div>
-                <div>Protocol facts derive from the current clawfarm-masterpool repository.</div>
-                <div>Phase 1 economics</div>
-                <div>Payment recording, epoch settlement roots, challenges, and Merkle claim accounting.</div>
-                <div>Website source</div>
-                <div>Repository URL publishes after protocol organization migration.</div>
+                <div>Network state</div><div><Link href="/network">Program addresses, config, and vault balances</Link></div>
+                <div>Protocol state</div><div><Link href="/state">Selected-network state overview</Link></div>
+                <div>Whitepaper</div><div><Link href="/whitepaper">Economics, launch commitments, and governance bounds</Link></div>
+                <div>Provider onboarding</div><div><Link href="/install">Operator-assisted integration checklist</Link></div>
               </div>
             </section>
           </article>

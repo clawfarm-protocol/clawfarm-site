@@ -15,7 +15,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
             <div className="nav-tools">
               <nav className="nav-links" aria-label="Primary">
                 <a href="/providers" className="nav-link">Providers</a>
-                <a href="/builders" className="nav-link">Developers</a>
+                <a href="/builders" className="nav-link">Buyers</a>
                 <a href="/state" className="nav-link">State</a>
                 <a href="/docs" className="nav-link">Docs</a>
                 <a href="/whitepaper" className="nav-link">Whitepaper</a>
@@ -35,7 +35,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
                 <nav className="footer-links" aria-label="Footer">
                   <a href="/providers">Providers</a>
                   <span>.</span>
-                  <a href="/builders">Developers</a>
+                  <a href="/builders">Buyers</a>
                   <span>.</span>
                   <a href="/state">State</a>
                   <span>.</span>

@@ -1,97 +1,102 @@
 import type { Metadata } from 'next'
-
-import CodeTabs from '../components/CodeTabs'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Developers — ClawFarm',
-  description: 'Developer surface for open ClawFarm inference consumption, SDK calls, and USDC settlement.',
+  title: 'Buyers — ClawFarm',
+  description: 'Connect a Buyer to AIRouter with a wallet-bound ClawFarm API key and settle inference usage in native USDC on Solana Mainnet.',
   alternates: { canonical: '/builders' },
 }
+
+const buyerSteps = [
+  ['01', 'Contact the ClawFarm team', 'Request Buyer access and describe the models and traffic profile you intend to use.'],
+  ['02', 'Receive an API key', 'ClawFarm issues a one-time cfk_* credential. Store it as a secret and do not embed it in browser code or commit it to source control.'],
+  ['03', 'Bind a wallet', 'Register the public Solana Mainnet wallet that will fund usage and receive Buyer-side CLAF claims. Never provide its private key or seed phrase.'],
+  ['04', 'Fund with native USDC', 'Deposit native Solana Mainnet USDC into the bound wallet and retain enough SOL for any wallet-side network fees.'],
+  ['05', 'Call AIRouter', 'Send an authenticated HTTP request directly to a ClawFarm route. AIRouter selects eligible provider capacity and queues settlement.'],
+]
+
+const curlExample = `curl "$CLAWFARM_GATEWAY_URL/clawfarm/chat/completions" \\
+  -H "Authorization: Bearer $CLAWFARM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "<model-id>",
+    "messages": [
+      {"role": "user", "content": "Explain epoch settlement in one sentence."}
+    ]
+  }'`
 
 export default function BuildersPage() {
   return (
     <main>
       <section className="hero-section">
         <div className="container paper-column">
-          <p className="hero-status">Developers</p>
-          <h1 className="hero-title">Consume inference.</h1>
+          <p className="hero-status">Buyers · Solana Mainnet</p>
+          <h1 className="hero-title">Consume inference through AIRouter.</h1>
           <p className="hero-copy">
-            Any wallet can pay for a payment-record-backed inference request. Finalized devnet v3 roots carry buyer-side CLAF allocations, and the mainnet target keeps the same settlement shape with a 1-hour epoch cadence.
+            A Buyer uses a wallet-bound ClawFarm API key, funds the registered wallet with native USDC, and calls familiar HTTP endpoints. No ClawFarm SDK is required.
           </p>
+          <div className="hero-actions">
+            <a href="#onboarding" className="primary-button">Buyer onboarding →</a>
+            <Link href="/docs" className="secondary-button">HTTP reference →</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="onboarding">
+        <div className="container">
+          <SectionTitle eyebrow="Access" title="From contact to first request." />
+          <div className="supply-grid">
+            {buyerSteps.map(([number, title, body]) => (
+              <article className="supply-layer" key={number}>
+                <h3><span>{number}</span></h3>
+                <p className="mechanism-title">{title}</p>
+                <p>{body}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="section" id="quickstart">
         <div className="container">
-          <div className="two-column">
-            <article className="border-panel">
-              <h3>Open consumption</h3>
-              <p>Applications, builders, and wallets submit payment-record-backed requests after choosing a provider from off-chain directory metadata. No named consumer application is required.</p>
-            </article>
-            <article className="border-panel">
-              <h3>Epoch pool weight</h3>
-              <p>Finalized epoch roots carry buyer-side CLAF allocations. Buyer rewards are claimed through Merkle proofs against the finalized root.</p>
-            </article>
-            <article className="border-panel">
-              <h3>Economic record</h3>
-              <p>Each recorded payment updates epoch totals and a payment bitmap. Provider base-charge USDC remains pending until epoch settlement finalizes and provider claims verify against the root.</p>
-            </article>
-          </div>
+          <SectionTitle eyebrow="HTTP" title="Make the first call." />
+          <p className="section-intro">
+            Set the gateway URL and the issued API key in your server environment, then choose a model returned by <span className="mono">GET /clawfarm/v1/models</span>.
+          </p>
+          <pre className="code-block"><code>{`export CLAWFARM_GATEWAY_URL="<gateway-url>"
+export CLAWFARM_API_KEY="<issued-cfk-key>"`}</code></pre>
+          <pre className="code-block"><code>{curlExample}</code></pre>
+          <p className="section-footnote wide-footnote">
+            <span className="mono">X-Api-Key: $CLAWFARM_API_KEY</span> is also accepted. Keep both the API key and wallet signing material out of client-side code.
+          </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <SectionTitle eyebrow="SDK" title="Start with the SDK." />
-          <CodeTabs />
-          <p className="interface-note">SDK reference: <a href="/docs#sdk-wrapper-target">/docs#sdk-wrapper-target →</a></p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <SectionTitle eyebrow="Usage" title="Recent calls" meta="Wallet-bound" />
-          <div className="protocol-table-shell">
-            <table className="protocol-table">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Model</th>
-                  <th className="num-col">Tokens</th>
-                  <th className="num-col">USDC</th>
-                  <th className="num-col">Epoch weight</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="empty-row" colSpan={5}>Connect a wallet to view payment-record-backed usage.</td>
-                </tr>
-              </tbody>
-            </table>
+          <SectionTitle eyebrow="Receipt" title="Read the settlement result." />
+          <div className="key-list">
+            <div>X-ClawFarm-Request-Nonce</div>
+            <div>Stable request identity used to look up the corresponding payment and settlement records.</div>
+            <div>X-ClawFarm-Payment-Status</div>
+            <div><span className="mono">settlement_pending</span> means the response has a durable receipt and asynchronous on-chain settlement is queued.</div>
+            <div>X-ClawFarm-Max-Charge-Atomic</div>
+            <div>The maximum bounded charge for the request, expressed in atomic USDC units.</div>
+            <div>X-ClawFarm-Charge-Atomic</div>
+            <div>The metered charge when it is available at response time.</div>
           </div>
-
-          <SectionTitle eyebrow="Balance" title="USDC allowance" />
-          <div className="dapp-card narrow">
-            <span className="card-label">Payment allowance</span>
-            <p className="balance-value">Not connected</p>
-            <p className="card-meta">Payment recording uses configured payer token accounts and delegated transfer authority in masterpool v3.</p>
-            <div className="dapp-actions">
-              <button className="btn primary" disabled type="button">Connect wallet</button>
-              <a className="btn ghost" href="/docs#payment-lifecycle">Read payment docs</a>
-            </div>
-          </div>
+          <p className="table-action"><Link href="/docs#settlement">Full settlement reference →</Link></p>
         </div>
       </section>
     </main>
   )
 }
 
-function SectionTitle({ eyebrow, title, meta }: { eyebrow: string; title: string; meta?: string }) {
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div className="section-heading dapp-header">
       <p className="section-kicker">{eyebrow}</p>
       <h2>{title}</h2>
-      {meta ? <p className="section-footnote">{meta}</p> : null}
     </div>
   )
 }

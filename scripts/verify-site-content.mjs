@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 
 const sourceRoots = ['app', 'README.md', 'docs/superpowers/specs', 'scripts/generate-whitepaper-v1.py']
 const sourceArgs = sourceRoots.map((root) => `'${root}'`).join(' ')
@@ -20,7 +20,7 @@ const files = [
   ...listFiles(`git ls-files --others --exclude-standard ${sourceArgs}`),
 ]
 
-const uniqueFiles = [...new Set(files)].filter((file) => !file.endsWith('.png') && !file.endsWith('.pdf'))
+const uniqueFiles = [...new Set(files)].filter((file) => existsSync(file) && !file.endsWith('.png') && !file.endsWith('.pdf'))
 
 const globalChecks = [
   { name: 'Chinese text', pattern: /[\p{Script=Han}]/u },

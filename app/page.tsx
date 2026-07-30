@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 
-import CodeTabs from './components/CodeTabs'
 import SettlementFeed from './components/SettlementFeed'
 import type { LiveSurfaceState } from './lib/config'
 import {
@@ -29,23 +28,23 @@ export default function Home() {
     <main>
       <section className="hero-section">
         <div className="container paper-column">
-          <p className="hero-status">Devnet active . Mainnet pending . Solana</p>
+          <p className="hero-status">Mainnet active · Solana</p>
           <h1 className="hero-title">Receipt settlement for inference.</h1>
           <ProtocolStatusStrip />
           <NetworkBadge />
           <p className="hero-copy">
-            ClawFarm records wallet-paid inference payments, routes base Test USDC to provider pending revenue, and turns finalized epoch roots into CLAF reward claims.
+            ClawFarm routes wallet-funded inference through AIRouter, records native USDC settlement on Solana Mainnet, and turns finalized epoch roots into auditable provider and Buyer claims.
           </p>
           <div className="hero-role-grid" aria-label="Protocol entry paths">
             <a className="role-entry" href="/providers">
               <span>Providers</span>
-              <strong>Register a provider account →</strong>
-              <small>Register a wallet-backed ProviderAccount. Provider USDC releases after epoch settlement finalizes and the provider claim verifies against the finalized root.</small>
+              <strong>Connect an upstream API →</strong>
+              <small>Share API compatibility, model and pricing metadata, an upstream credential through a secure channel, and a public provider wallet.</small>
             </a>
             <a className="role-entry" href="/builders">
-              <span>Developers</span>
-              <strong>Start with the SDK →</strong>
-              <small>Record payments through masterpool v3. Finalized epoch roots carry buyer-side reward allocations.</small>
+              <span>Buyers</span>
+              <strong>Request AIRouter access →</strong>
+              <small>Receive a wallet-bound cfk_* key, fund the registered Mainnet wallet with native USDC, and call AIRouter over HTTP.</small>
             </a>
           </div>
           <p className="tertiary-link">
@@ -68,7 +67,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Mining" title="Mining." />
           <p className="section-intro">
-            Payment records do not pay direct per-call rewards. Finalized epoch roots carry buyer and provider allocations, and Merkle claims transfer CLAF directly from the reward vault. Devnet v3 uses 300-second epochs for testing cadence; the mainnet target keeps 1-hour epochs without changing the total scheduled CLAF emission.
+            Payment records do not pay direct per-call rewards. Finalized epoch roots carry Buyer and Provider allocations, and Merkle claims transfer CLAF directly from the reward vault. Mainnet uses 1-hour epochs without changing the configured CLAF emission inventory.
           </p>
           <div className="stat-strip mining-strip">
             <div className="treasury-stat">
@@ -84,12 +83,12 @@ export default function Home() {
               <p>Direct</p>
             </div>
             <div className="treasury-stat">
-              <span>Devnet challenge window</span>
-              <p>60 sec</p>
+              <span>Mainnet epoch cadence</span>
+              <p>1 hour</p>
             </div>
           </div>
           <p className="section-footnote wide-footnote">
-            The devnet challenge window is intentionally short for testing. Mainnet target timing is 1 hour per epoch and remains pending until mainnet config is deployed.
+            Mainnet epoch duration is stored in GlobalConfigV3. Settlement batches and finalized roots determine when Provider and Buyer claims become available.
           </p>
           <div className="protocol-table-shell burn-table-shell" data-live-state={miningEventsState}>
             <table className="protocol-table">
@@ -133,7 +132,7 @@ export default function Home() {
           <SectionHeader eyebrow="State" title="The protocol, in four numbers." />
           <ProtocolNumberWall />
           <p className="section-footnote wide-footnote">
-            Values are rendered from the selected network profile. Devnet is the default first-visit network.
+            Values are rendered from the selected network profile. Mainnet is the default on first visit; Devnet remains available in the network selector.
           </p>
         </div>
       </section>
@@ -205,7 +204,7 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Treasury" title="Treasury and pending revenue." />
           <p className="section-intro">
-            In devnet v3, every payment uses a bounded payment tax rate. The tax moves to the treasury vault, while the base charge moves to provider pending revenue. The whitepaper target adds treasury split, buyback, burn, and protocol-owned-liquidity policy for mainnet. The live masterpool settlement program exposes payment, settlement-root, and claim instructions only.
+            Every Mainnet payment uses a bounded payment tax rate. The tax moves to the treasury vault, while the base charge moves to provider pending revenue. The live masterpool program exposes payment, settlement-root, challenge, and claim instructions; treasury operations beyond those instructions remain policy commitments.
           </p>
           <TreasurySnapshot />
           <div className="key-list">
@@ -214,7 +213,7 @@ export default function Home() {
             <div>Event stream</div>
             <div>No automated swap-and-retirement event stream is exposed by the current contract.</div>
           </div>
-          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from a refreshed point-in-time devnet v3 snapshot. Mainnet target policy remains pending until deployment records exist.</p>
+          <p className="section-footnote wide-footnote">Treasury and pending provider balances come from the dated point-in-time snapshot shown for the selected network.</p>
           <p className="table-action">
             <a href="/network#config">Full state view →</a>
           </p>
@@ -225,10 +224,13 @@ export default function Home() {
         <div className="container">
           <SectionHeader eyebrow="Interface" title="The interface." />
           <p className="section-intro">
-            One SDK. Identical surface across off-chain provider choices and wallet-settled calls.
+            Direct AIRouter HTTP. Authenticate with the wallet-bound Buyer key and use a model returned by the live model catalog.
           </p>
-          <CodeTabs />
-          <p className="interface-note">SDK in TypeScript, Python, Rust. <a href="/docs#sdk-wrapper-target">→ SDK reference</a></p>
+          <pre className="code-block"><code>{`curl "$CLAWFARM_GATEWAY_URL/clawfarm/chat/completions" \\
+  -H "Authorization: Bearer $CLAWFARM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"model":"<model-id>","messages":[{"role":"user","content":"Hello"}]}'`}</code></pre>
+          <p className="interface-note">No ClawFarm SDK is required. <a href="/docs#quickstart">→ HTTP quickstart</a></p>
         </div>
       </section>
 
@@ -256,18 +258,18 @@ export default function Home() {
         <div className="container">
           <div className="action-columns">
             <article className="action-column">
-              <h2>For developers.</h2>
+              <h2>For Buyers.</h2>
               <p>
-                Add settlement to your AI app or agent. Same compatible interface, three lines to switch in. Settlement is metered per request — no minimums, no setup fees, and portable SDK wrappers.
+                Contact the ClawFarm team to receive a one-time cfk_* API key, bind a public Solana Mainnet wallet, fund it with native USDC, and call AIRouter directly over HTTP.
               </p>
-              <a href="/builders">Start with the SDK →</a>
+              <a href="/builders">Open Buyer onboarding →</a>
             </article>
             <article className="action-column">
               <h2>For providers.</h2>
               <p>
-                Register a provider account. The protocol does not ask where capacity comes from. Provider USDC releases after epoch settlement finalizes and the provider claim verifies against the finalized root. CLAF rewards accrue through finalized epoch weight.
+                Contact the ClawFarm team with the upstream API protocol, base URL, model and pricing metadata, a securely delivered API key, and a public Mainnet provider wallet.
               </p>
-              <a href="/providers">Register a provider account →</a>
+              <a href="/providers">Open Provider onboarding →</a>
             </article>
           </div>
         </div>
