@@ -42,6 +42,8 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
                   <a href="/docs">Docs</a>
                   <span>.</span>
                   <a href="/whitepaper">Whitepaper</a>
+                  <span>.</span>
+                  <a href="/donate">Support</a>
                 </nav>
                 <p>Mining inference on Solana</p>
               </div>

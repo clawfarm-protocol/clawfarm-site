@@ -191,6 +191,9 @@ export default function Home() {
           <p className="table-action">
             <a href="/network#config">Full state view →</a>
           </p>
+          <p className="table-action">
+            <a href="/donate">Support protocol infrastructure →</a>
+          </p>
         </div>
       </section>
 
